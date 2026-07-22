@@ -1,0 +1,259 @@
+---
+import SubmitOrb from '../react/SubmitOrb';
+
+interface FormCopy {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  industry: string;
+  industryOptions: string[];
+  solution: string;
+  solutionOptions: string[];
+  challenge: string;
+  challengePlaceholder: string;
+  submit: string;
+  submitting: string;
+  success: string;
+  error: string;
+  required: string;
+  select: string;
+}
+
+interface Props {
+  form: FormCopy;
+  lang: 'es' | 'en';
+}
+
+const { form, lang } = Astro.props;
+---
+
+<form
+  id="contact-form"
+  class="contact-form"
+  novalidate
+  data-lang={lang}
+  data-submitting={form.submitting}
+  data-success={form.success}
+  data-error={form.error}
+>
+  <div class="row">
+    <label>
+      {form.firstName}
+      <input type="text" name="firstName" required maxlength="80" autocomplete="given-name" />
+    </label>
+    <label>
+      {form.lastName}
+      <input type="text" name="lastName" required maxlength="80" autocomplete="family-name" />
+    </label>
+  </div>
+
+  <div class="row">
+    <label>
+      {form.email}
+      <input type="email" name="email" required maxlength="120" autocomplete="email" />
+    </label>
+    <label>
+      {form.phone}
+      <input type="tel" name="phone" maxlength="30" autocomplete="tel" />
+    </label>
+  </div>
+
+  <label>
+    {form.company}
+    <input type="text" name="company" required maxlength="120" autocomplete="organization" />
+  </label>
+
+  <div class="row">
+    <label>
+      {form.industry}
+      <select name="industry" required>
+        <option value="" disabled selected>{form.select}</option>
+        {form.industryOptions.map((opt) => <option value={opt}>{opt}</option>)}
+      </select>
+    </label>
+    <label>
+      {form.solution}
+      <select name="solution" required>
+        <option value="" disabled selected>{form.select}</option>
+        {form.solutionOptions.map((opt) => <option value={opt}>{opt}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <label>
+    {form.challenge}
+    <textarea name="challenge" required maxlength="2000" rows="4" placeholder={form.challengePlaceholder}></textarea>
+  </label>
+
+  <!-- Honeypot: campo oculto para bots. Nunca debe llenarse por un humano. -->
+  <div class="honeypot" aria-hidden="true">
+    <label>
+      Website
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+  <input type="hidden" name="formLoadedAt" value="" />
+
+  <button type="submit" class="submit-button">
+    <span class="label">{form.submit}</span>
+    <SubmitOrb label={form.submitting} client:load />
+  </button>
+
+  <p class="status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('#contact-form');
+
+  forms.forEach((form) => {
+    const loadedAtInput = form.querySelector<HTMLInputElement>('input[name="formLoadedAt"]');
+    if (loadedAtInput) loadedAtInput.value = String(Date.now());
+
+    const submitButton = form.querySelector<HTMLButtonElement>('.submit-button');
+    const submitLabel = submitButton?.querySelector<HTMLSpanElement>('.label');
+    const status = form.querySelector<HTMLParagraphElement>('.status');
+    const defaultLabel = submitLabel?.textContent ?? '';
+    const { submitting, success, error } = form.dataset;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      if (submitButton) submitButton.disabled = true;
+      if (submitLabel) submitLabel.textContent = submitting ?? '';
+      document.dispatchEvent(new CustomEvent('contact-form:submitting', { detail: true }));
+      if (status) {
+        status.textContent = '';
+        status.className = 'status';
+      }
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+
+        if (json.status === 'success') {
+          if (status) {
+            status.textContent = success ?? '';
+            status.className = 'status success';
+          }
+          form.reset();
+          if (loadedAtInput) loadedAtInput.value = String(Date.now());
+        } else {
+          if (status) {
+            status.textContent = error ?? '';
+            status.className = 'status error';
+          }
+        }
+      } catch {
+        if (status) {
+          status.textContent = error ?? '';
+          status.className = 'status error';
+        }
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+        if (submitLabel) submitLabel.textContent = defaultLabel;
+        document.dispatchEvent(new CustomEvent('contact-form:submitting', { detail: false }));
+      }
+    });
+  });
+</script>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  input,
+  select,
+  textarea {
+    background: var(--dot-gray);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 0.9rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  textarea {
+    resize: vertical;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .submit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-xs);
+    align-self: flex-start;
+    background: var(--accent);
+    color: var(--on-accent);
+    border: none;
+    font-weight: 500;
+    font-size: var(--text-base);
+    padding: 0.9rem 2rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+  }
+  .submit-button:hover:not(:disabled) {
+    background: var(--accent-hover);
+  }
+  .submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .status {
+    font-size: var(--text-sm);
+    min-height: 1.5em;
+  }
+  .status.success {
+    color: var(--accent);
+  }
+  .status.error {
+    color: color-mix(in srgb, var(--dot-light) 70%, red 30%);
+  }
+
+  @media (min-width: 640px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

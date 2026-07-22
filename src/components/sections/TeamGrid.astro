@@ -1,0 +1,103 @@
+---
+interface Member {
+  name: string;
+  role: string;
+}
+
+interface Props {
+  members: Member[];
+}
+
+const { members } = Astro.props;
+
+// Orden 1:1 con about.team.members en los diccionarios de i18n.
+const TEAM_FILES = [
+  'hector-vera.jpg',
+  'felipe-machuca.jpg',
+  'manuel-villavicencio.jpg',
+  'benjamin-belfus.jpg',
+  'cristian-huerta.jpg',
+  'juan-vasquez.jpg',
+  'david-miranda.jpg',
+  'luis-felipe.jpg',
+];
+
+function initials(name: string) {
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+---
+
+<div class="team-grid">
+  {members.map((member, i) => (
+    <figure class="member" data-reveal>
+      <div class="photo">
+        {TEAM_FILES[i] ? (
+          <img src={`/team/${TEAM_FILES[i]}`} alt={member.name} loading="lazy" />
+        ) : (
+          <span class="fallback">{initials(member.name)}</span>
+        )}
+      </div>
+      <figcaption>
+        <p class="name">{member.name}</p>
+        <p class="role">{member.role}</p>
+      </figcaption>
+    </figure>
+  ))}
+</div>
+
+<style>
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .member {
+    margin: 0;
+    text-align: center;
+  }
+
+  .photo {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--dot-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .fallback {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    color: var(--accent-secondary);
+  }
+
+  figcaption {
+    margin-top: var(--space-xs);
+  }
+  .name {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .role {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .team-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import ContactForm from '../components/sections/ContactForm.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const c = t.contacto;
+---
+
+<Layout title={`${c.metaTitle} — DOT Solutions`} description={c.metaDescription} lang={lang} path="/contacto">
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} subtitle={c.hero.subtitle} image="/images/contact-rep.jpg" />
+
+  <section class="section">
+    <div class="container two-col">
+      <div class="form-col" data-reveal>
+        <ContactForm form={c.form} lang={lang} />
+      </div>
+
+      <aside class="direct-col" data-reveal>
+        <h2>{c.direct.title}</h2>
+        <p class="label">Email</p>
+        <a href={`mailto:${c.direct.email}`} class="value">{c.direct.email}</a>
+        <p class="label">{c.direct.addressLabel}</p>
+        <p class="value">{c.direct.address}</p>
+        <img src="/images/contact-rep.jpg" alt="" class="aside-image" loading="lazy" />
+      </aside>
+    </div>
+  </section>
+
+  <ClientLogos title={t.common.clientsTitle} />
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+
+  .two-col {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .direct-col {
+    background: var(--dot-gray);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    align-self: start;
+  }
+  .direct-col h2 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--text-xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+  }
+  .direct-col .label {
+    font-size: var(--text-xs);
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: var(--space-sm);
+  }
+  .direct-col .value {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: var(--text-base);
+  }
+  .direct-col a.value:hover {
+    color: var(--accent);
+  }
+  .aside-image {
+    width: 100%;
+    margin-top: var(--space-md);
+    border-radius: var(--radius-md);
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+
+  @media (min-width: 900px) {
+    .two-col {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+</style>

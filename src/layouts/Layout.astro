@@ -1,0 +1,138 @@
+---
+// src/layouts/Layout.astro
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: 'es' | 'en';
+  path: string;
+  image?: string;
+  /** Oculta el Footer compartido — usado cuando la página trae su propio
+      cierre (ej. ContactFooter, que combina CTA + footer en una pieza). */
+  hideFooter?: boolean;
+}
+
+const { title, description, lang, path, image, hideFooter = false } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <!-- Desactiva el scroll restoration nativo del navegador: sin esto, al recargar (F5) el
+         navegador restaura scrollY ANTES de que Lenis/ScrollTrigger terminen de calcular los
+         pines de la página, dejando secciones pinneadas en un estado intermedio. -->
+    <script is:inline>
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    </script>
+
+    <BaseHead title={title} description={description} lang={lang} path={path} image={image} />
+
+    <ClientRouter />
+  </head>
+
+  <body>
+    <Header lang={lang} path={path} />
+
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main>
+          <slot />
+        </main>
+        {!hideFooter && <Footer lang={lang} />}
+      </div>
+    </div>
+
+    <!-- Motor de movimiento global — Lenis + GSAP -->
+    <script>
+      import Lenis from 'lenis';
+      import { gsap } from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // La barra de URL móvil cambia el alto del viewport al scrollear — sin esto, cada
+      // cambio dispara un refresh que rompe pins/scrubs.
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      let lenis: InstanceType<typeof Lenis> | undefined;
+      let rafCallback: ((time: number) => void) | undefined;
+      let refreshHandler: (() => void) | undefined;
+
+      function init() {
+        window.scrollTo(0, 0);
+
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          smoothWheel: true,
+        });
+
+        lenis.on('scroll', ScrollTrigger.update);
+
+        refreshHandler = () => lenis?.resize();
+        ScrollTrigger.addEventListener('refresh', refreshHandler);
+
+        // Las fuentes de Google Fonts cargan async y pueden reflowear texto
+        // (alturas de sección distintas) después de que ScrollTrigger ya
+        // midió las posiciones de start/end de cada trigger — eso deja los
+        // triggers (ej. los curve swipes con scrub) calculados contra un
+        // layout viejo, causando saltos o que el efecto corte antes/después
+        // de lo esperado. Recalculamos apenas las fuentes terminan de cargar.
+        document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
+        rafCallback = (time: number) => {
+          lenis!.raf(time * 1000);
+        };
+        gsap.ticker.add(rafCallback);
+        gsap.ticker.lagSmoothing(0);
+
+        // Reveal genérico: cualquier elemento con [data-reveal] entra con fade-up
+        // al cruzar el viewport. prefers-reduced-motion ya desactiva las
+        // transiciones CSS vía theme.css; acá evitamos además animar con GSAP.
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = gsap.utils.toArray<HTMLElement>('[data-reveal]');
+        if (prefersReducedMotion) {
+          targets.forEach((el) => el.style.removeProperty('opacity'));
+        } else {
+          targets.forEach((el) => {
+            gsap.fromTo(
+              el,
+              { opacity: 0, y: 24 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                  trigger: el,
+                  start: 'top 85%',
+                  once: true,
+                },
+              }
+            );
+          });
+        }
+      }
+
+      document.addEventListener('astro:before-swap', () => {
+        lenis?.destroy();
+        if (rafCallback) {
+          gsap.ticker.remove(rafCallback);
+          rafCallback = undefined;
+        }
+        if (refreshHandler) {
+          ScrollTrigger.removeEventListener('refresh', refreshHandler);
+          refreshHandler = undefined;
+        }
+        ScrollTrigger.killAll();
+      });
+
+      document.addEventListener('astro:page-load', init);
+    </script>
+  </body>
+</html>

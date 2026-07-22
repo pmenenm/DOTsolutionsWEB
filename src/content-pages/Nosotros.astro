@@ -1,0 +1,179 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import HighlightPanel from '../components/sections/HighlightPanel.astro';
+import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import TeamGrid from '../components/sections/TeamGrid.astro';
+import StatBar from '../components/sections/StatBar.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const about = t.about;
+---
+
+<Layout
+  title={`${about.metaTitle} — DOT Solutions`}
+  description={about.metaDescription}
+  lang={lang}
+  path="/nosotros"
+>
+  <PageHero eyebrow={about.hero.eyebrow} title={about.hero.title} subtitle={about.hero.subtitle} image="/images/team-office.jpg" />
+
+  <section class="section">
+    <div class="container">
+      <figure class="office-photo" data-reveal>
+        <img src="/office/office-team.jpg" alt={about.office.alt} loading="lazy" />
+        <figcaption>{about.office.caption}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <HighlightPanel
+        eyebrow={about.mission.eyebrow}
+        title={about.mission.title}
+        body={about.mission.body}
+        points={about.mission.points}
+        image="/images/mycelium-roots.jpg"
+      />
+    </div>
+  </section>
+
+  <section class="section theme-light">
+    <div class="container">
+      <SectionHeading eyebrow={about.values.eyebrow} title={about.values.title} />
+      <div class="section-body">
+        <FeatureGrid items={about.values.items} cols={4} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={about.team.eyebrow} title={about.team.title} />
+      <div class="section-body">
+        <TeamGrid members={about.team.members} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="presence">
+        <div class="presence-text" data-reveal>
+          <SectionHeading eyebrow={about.presence.eyebrow} title={about.presence.title} subtitle={about.presence.subtitle} />
+          <ul class="countries">
+            {t.nav.countries.map((c) => <li>{c.flag} {c.name}</li>)}
+          </ul>
+          <p class="office-label">{about.presence.officeLabel}</p>
+          <p class="office-address">{about.presence.office}</p>
+        </div>
+        <img class="presence-photo" src="/office/office-santiago.jpg" alt={about.presence.photoAlt} loading="lazy" data-reveal />
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-light">
+    <div class="container">
+      <SectionHeading eyebrow={about.credibility.eyebrow} title={about.credibility.title} align="center" />
+      <p class="partner-badge" data-reveal>{about.credibility.partner}</p>
+      <div class="section-body">
+        <StatBar stats={t.common.stats} />
+      </div>
+    </div>
+  </section>
+
+  <ClientLogos title={t.common.clientsTitle} />
+
+  <div class="container">
+    <CTASection
+      title={about.cta.title}
+      body={about.cta.body}
+      button={about.cta.button}
+      href={getRelativeLocaleUrl(lang, 'contacto')}
+    />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+
+  .office-photo img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    aspect-ratio: 21/9;
+    object-fit: cover;
+  }
+  .office-photo figcaption {
+    margin-top: var(--space-sm);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    text-align: center;
+  }
+
+  .presence {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+  .countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-md);
+  }
+  .countries li {
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: 0.4rem 0.9rem;
+  }
+  .office-label {
+    margin-top: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .office-address {
+    color: var(--text-secondary);
+  }
+  .presence-photo {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+
+  .partner-badge {
+    text-align: center;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: var(--space-sm);
+  }
+
+  @media (min-width: 900px) {
+    .presence {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

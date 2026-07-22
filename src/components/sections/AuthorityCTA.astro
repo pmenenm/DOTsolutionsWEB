@@ -1,0 +1,217 @@
+---
+interface Stat {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+  sub: string;
+}
+
+interface Props {
+  title: string;
+  stats: Stat[];
+  cta: string;
+  ctaHref: string;
+}
+
+const { title, stats, cta, ctaHref } = Astro.props;
+---
+
+<section class="authority">
+  <svg class="curve-swipe" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M 0 100 Q 50 -50 100 100 L 100 100 Z"></path>
+  </svg>
+
+  <div class="container">
+    <h2>{title}</h2>
+
+    <div class="stat-grid" id="authority-stats">
+      {stats.map((stat) => (
+        <div class="stat">
+          <p class="value">
+            <span>{stat.prefix}</span><span class="count" data-target={stat.value}>0</span><span>{stat.suffix}</span>
+          </p>
+          <p class="label">{stat.label}</p>
+          <p class="sub">{stat.sub}</p>
+        </div>
+      ))}
+    </div>
+
+    <a href={ctaHref} class="cta-monumental">{cta}</a>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // "Curve swipe": el domo pronunciado (Q 50 -50 100 100) se aplana hasta
+  // una línea recta (Q 50 100 100 100) a medida que la sección entra en
+  // pantalla. scrub liga el progreso directo al scroll (sin estado
+  // "disparado o no" — el path es siempre función de la posición actual,
+  // por eso no arrastra el mismo riesgo que un trigger de una sola vez).
+  function initCurveSwipe() {
+    const section = document.querySelector<HTMLElement>('.authority');
+    const path = document.querySelector<SVGPathElement>('.curve-swipe path');
+    if (!section || !path) return;
+
+    gsap.to(path, {
+      attr: { d: 'M 0 100 Q 50 100 100 100 L 100 100 Z' },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: 1,
+      },
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCurveSwipe);
+
+  function animateCount(el: HTMLElement) {
+    const target = Number(el.dataset.target ?? '0');
+    const counter = { value: 0 };
+    gsap.to(counter, {
+      value: target,
+      duration: 1.6,
+      ease: 'power2.out',
+      onUpdate: () => {
+        el.textContent = Math.round(counter.value).toString();
+      },
+    });
+  }
+
+  function initAuthorityStats() {
+    const grids = document.querySelectorAll<HTMLElement>('#authority-stats');
+    if (!grids.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    grids.forEach((grid) => {
+      const rect = grid.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        grid.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+      } else {
+        observer.observe(grid);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAuthorityStats);
+</script>
+
+<style>
+  /* Rompe el dark mode a propósito: bloque luminoso en Salvia Pálido con
+     texto en Negro Abisal, para dar impacto de cierre. */
+  .authority {
+    position: relative;
+    /* z-index explícito para que la curva que sobresale hacia arriba
+       siempre pinte encima de la sección anterior, sin depender de la
+       resolución implícita del navegador entre positioned y static. */
+    z-index: var(--z-above);
+    background: var(--dot-sage);
+    padding-block: var(--space-hero);
+    text-align: center;
+  }
+
+  /* Curve swipe: el SVG sobresale hacia arriba (top negativo = su propia
+     altura), superponiéndose a la sección oscura anterior. position:
+     absolute lo pinta por encima del contenido en flujo normal de esa
+     sección precedente, sin tocar su DOM. Mismo tratamiento visual que la
+     franja de ClientLogos — Luz Micelio difuminada y translúcida — el
+     blur/opacity no afectan la animación GSAP del atributo d. */
+  .curve-swipe {
+    position: absolute;
+    left: 0;
+    top: -10rem;
+    width: 100%;
+    height: 10rem;
+    display: block;
+    opacity: 0.22;
+    filter: blur(40px);
+  }
+  .curve-swipe path {
+    fill: var(--dot-micelio);
+  }
+
+  h2 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+    max-width: 32ch;
+    margin-inline: auto;
+  }
+
+  .stat-grid {
+    margin-top: var(--space-hero);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg) var(--space-md);
+  }
+
+  .stat {
+    max-width: 20rem;
+    margin-inline: auto;
+  }
+
+  .value {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1;
+    color: var(--dot-dark);
+  }
+
+  .label {
+    margin-top: 0.5rem;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--dot-dark);
+  }
+
+  .sub {
+    margin-top: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--dot-gray);
+  }
+
+  .cta-monumental {
+    display: inline-flex;
+    margin-top: var(--space-hero);
+    background: var(--dot-dark);
+    color: var(--dot-light);
+    text-decoration: none;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    padding: 1.5rem 3.5rem;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .cta-monumental:hover {
+    background: color-mix(in srgb, var(--dot-dark) 85%, var(--dot-micelio) 15%);
+    transform: scale(1.03);
+  }
+
+  @media (min-width: 768px) {
+    .stat-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

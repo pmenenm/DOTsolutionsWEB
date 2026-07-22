@@ -1,0 +1,379 @@
+---
+// src/components/sections/ContactFooter.astro
+// Réplica fiel del mecanismo y la estructura de ContactFooter.astro en el
+// proyecto de referencia dot-solutions (localhost:4323): CTA de contacto
+// grande (con "curve swipe" vía MorphSVG) + footer, en un solo contenedor
+// sin pin (scroll natural). Reveal en cascada al entrar al viewport + botón
+// magnético en el CTA. Contenido real de DOT Solutions (no el placeholder
+// de la referencia).
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = 2026;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+
+const companyLinks = [
+  { href: getRelativeLocaleUrl(lang, ''), label: t.nav.home },
+  { href: getRelativeLocaleUrl(lang, 'nosotros'), label: t.nav.about },
+  { href: getRelativeLocaleUrl(lang, 'servicios'), label: t.nav.services },
+  { href: contactHref, label: t.nav.contact },
+];
+---
+
+<section class="contact-footer" data-gsap-section="contact-footer">
+  <div class="contact-footer__contact">
+    <!-- "Curve swipe" vía MorphSVG: un único <path> muta entre 3 formas —
+         cobertura total (arranca así) → una "ola" a medio retirar →
+         plano/invisible. toggleActions con reverse: al scrollear hacia
+         arriba por encima del punto de disparo, se deshace por completo. -->
+    <svg class="contact-footer__swipe" data-cf-swipe viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+      <path
+        class="contact-footer__swipe-path"
+        data-cf-swipe-path
+        stroke-width="2px"
+        vector-effect="non-scaling-stroke"
+        d="M 0 100 V 0 Q 50 0 100 0 V 100 z"
+      />
+    </svg>
+
+    <h2 class="contact-footer__title" data-cf-item>{t.common.ctaTitle}</h2>
+    <p class="contact-footer__subtitle" data-cf-item>{t.common.ctaBody}</p>
+
+    <div class="contact-footer__row">
+      <img src="/animacion1.svg" alt="" class="contact-footer__animation" data-cf-item />
+      <a href={contactHref} class="contact-footer__cta" data-cf-item data-cf-magnetic>
+        {t.common.ctaButtonShort}
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+
+  <footer class="contact-footer__footer" data-cf-footer data-cf-item>
+    <div class="contact-footer__footer-grid">
+      <div class="contact-footer__brand">
+        <a href={getRelativeLocaleUrl(lang, '')} class="contact-footer__logo-link">
+          <img src="/logoweb.png" alt="DOT Solutions" class="contact-footer__logo" />
+        </a>
+        <p class="contact-footer__blurb">{t.footer.about}</p>
+        <p class="contact-footer__motto">{t.footer.motto}</p>
+      </div>
+
+      <div class="contact-footer__col">
+        <h3>{t.footer.company}</h3>
+        <ul>
+          {companyLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="contact-footer__col">
+        <h3>{t.footer.contact}</h3>
+        <ul>
+          <li><a href={`mailto:${t.footer.email}`}>{t.footer.email}</a></li>
+          <li class="contact-footer__address">{t.footer.address}</li>
+        </ul>
+        <ul class="contact-footer__countries" aria-label="Presencia LATAM">
+          {t.nav.countries.map((c) => <li title={c.name}>{c.flag}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="contact-footer__bottom">
+      <p>© {year} DOT Solutions. {t.footer.rights}</p>
+    </div>
+  </footer>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+
+  gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
+
+  function initContactFooter() {
+    const section = document.querySelector<HTMLElement>('[data-gsap-section="contact-footer"]');
+    if (!section) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = Array.from(section.querySelectorAll<HTMLElement>('[data-cf-item]'));
+    const magneticBtn = section.querySelector<HTMLElement>('[data-cf-magnetic]');
+    const swipePath = section.querySelector<SVGPathElement>('[data-cf-swipe-path]');
+
+    // Las 3 formas del "curve swipe": FULL cubre TODO el viewport (rectángulo,
+    // sin curva visible); WAVE es una ola a medio retirar (cresta arriba-
+    // centro); FLAT es un trazo sin área, pegado abajo — invisible.
+    const SWIPE_FULL = 'M 0 100 V 0 Q 50 0 100 0 V 100 z';
+    const SWIPE_WAVE = 'M 0 100 V 50 Q 50 0 100 50 V 100 z';
+    const SWIPE_FLAT = 'M 0 100 V 100 Q 50 100 100 100 V 100 z';
+
+    if (reduced) {
+      gsap.set(items, { opacity: 1, y: 0 });
+      gsap.set(swipePath, { morphSVG: SWIPE_FLAT });
+    } else {
+      gsap.set(items, { opacity: 0, y: 50 });
+      gsap.set(swipePath, { morphSVG: SWIPE_FULL });
+
+      // Reveal en cascada — sin pin, sin scrub (MorphSVG dentro de un timeline
+      // scrubbeado no tolera bien saltos de progreso). toggleActions explícito:
+      // por defecto ScrollTrigger es "play none none none" (nunca revierte) —
+      // "reverse" en el 4to slot (onLeaveBack) deshace todo al subir por
+      // encima del punto de disparo, y deja el timeline listo para
+      // reproducirse de nuevo la próxima vez que se baje.
+      gsap.timeline({
+        scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none reverse' },
+      })
+        .to(swipePath, { morphSVG: SWIPE_WAVE, duration: 0.45, ease: 'power2.in' })
+        .to(swipePath, { morphSVG: SWIPE_FLAT, duration: 0.45, ease: 'power2.out' })
+        .to(items, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.2 }, '-=0.15');
+    }
+
+    // Botón magnético — desktop (pointer: fine) únicamente
+    if (magneticBtn && !reduced && window.matchMedia('(pointer: fine)').matches) {
+      const qx = gsap.quickTo(magneticBtn, 'x', { duration: 0.5, ease: 'power3.out' });
+      const qy = gsap.quickTo(magneticBtn, 'y', { duration: 0.5, ease: 'power3.out' });
+
+      magneticBtn.addEventListener('mousemove', (e) => {
+        const r = magneticBtn.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        qx((e.clientX - cx) * 0.35);
+        qy((e.clientY - cy) * 0.35);
+      });
+
+      magneticBtn.addEventListener('mouseleave', () => {
+        gsap.to(magneticBtn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', initContactFooter);
+</script>
+
+<style>
+  .contact-footer {
+    position: relative;
+    z-index: var(--z-above);
+    min-height: 100vh;
+    min-height: 100svh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--dot-dark);
+  }
+
+  /* Área de contacto: centrada vertical y horizontal, ocupa el espacio
+     disponible. position:relative ancla al <svg> del curve swipe
+     (position:absolute;inset:0 adentro). */
+  .contact-footer__contact {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-sm);
+    padding: var(--space-xl) var(--container-pad);
+  }
+
+  /* "Curve swipe" — el <path> muta de forma (MorphSVGPlugin) entre cobertura
+     total, "ola" y plano/invisible. stroke = fill (mismo color) para que no
+     quede un borde de 2px de otro color en el filo mientras muta. Color
+     sólido a propósito: es una cortina, tiene que tapar el contenido. */
+  .contact-footer__swipe {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .contact-footer__swipe-path {
+    fill: var(--dot-sage);
+    stroke: var(--dot-sage);
+    will-change: d;
+  }
+
+  .contact-footer__title {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 4.9vw, 3.85rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--dot-light);
+    max-width: 20ch;
+  }
+
+  .contact-footer__subtitle {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.77rem, 1.26vw, 0.98rem);
+    line-height: 1.5;
+    color: var(--dot-sage);
+    max-width: 36rem;
+  }
+
+  /* SVG animado (SMIL, se anima solo — no necesita GSAP ni JS) provisto
+     por el usuario, entre el subtítulo y el botón de CTA. */
+  .contact-footer__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .contact-footer__animation {
+    /* Sin width:100% a propósito: dentro de un flex row, eso hacía que
+       ocupara todo el ancho disponible y empujara el botón a la línea de
+       abajo, sin importar el ancho real de la pantalla. */
+    flex-shrink: 0;
+    width: auto;
+    max-width: 10rem;
+    height: auto;
+  }
+
+  /* Botón magnético — borde Verde Raíz en reposo, fondo Luz Micelio
+     translúcido al hover (el hover SÍ es acción — ahí corresponde el color
+     exclusivo). */
+  .contact-footer__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.1rem 2.75rem;
+    border: 1px solid var(--dot-moss);
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--text-base);
+    color: var(--dot-light);
+    text-decoration: none;
+    background-color: transparent;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    will-change: transform;
+  }
+  .contact-footer__cta:hover {
+    background-color: color-mix(in srgb, var(--dot-micelio) 12%, transparent);
+    border-color: var(--dot-micelio);
+  }
+  .contact-footer__cta .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .contact-footer__cta:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Footer — misma info y estructura que tenía antes (3 columnas: marca,
+     compañía, contacto+países), ahora dentro del contenedor de la cortina
+     en vez del Footer compartido. */
+  .contact-footer__footer {
+    position: relative;
+    width: 100%;
+    padding-block: var(--space-lg) var(--space-md);
+    border-top: 1px solid var(--dot-gray);
+    will-change: opacity;
+  }
+
+  .contact-footer__footer-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+    padding-inline: var(--container-pad);
+  }
+
+  .contact-footer__brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-footer__logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    margin-bottom: var(--space-sm);
+  }
+  .contact-footer__logo {
+    height: 1.75rem;
+    width: auto;
+  }
+  .contact-footer__blurb {
+    color: var(--dot-sage);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 32rem;
+    margin-bottom: var(--space-xs);
+  }
+  .contact-footer__motto {
+    color: var(--dot-light);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: color var(--transition-fast), font-size var(--transition-fast);
+  }
+  .contact-footer__motto:hover {
+    color: var(--dot-micelio);
+    font-size: calc(var(--text-sm) * 1.2);
+  }
+
+  .contact-footer__col h3 {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--dot-light);
+    margin-bottom: var(--space-xs);
+  }
+  .contact-footer__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .contact-footer__col a {
+    color: var(--dot-sage);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color var(--transition-fast);
+  }
+  .contact-footer__col a:hover {
+    color: var(--dot-micelio);
+  }
+  .contact-footer__address {
+    color: var(--dot-sage);
+    font-size: var(--text-sm);
+  }
+
+  .contact-footer__countries {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 0.4rem !important;
+    margin-top: var(--space-xs);
+    font-size: var(--text-lg);
+  }
+  .contact-footer__countries li {
+    opacity: 0.85;
+  }
+
+  .contact-footer__bottom {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-sm);
+    padding-inline: var(--container-pad);
+    border-top: 1px solid var(--dot-gray);
+    color: var(--dot-sage);
+    font-size: var(--text-xs);
+  }
+
+  @media (min-width: 768px) {
+    .contact-footer__footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

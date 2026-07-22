@@ -1,0 +1,60 @@
+---
+// src/components/BaseHead.astro
+import '../styles/theme.css';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: 'es' | 'en';
+  /** Path relative to the locale root, e.g. "/nosotros" or "/" for home */
+  path: string;
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  path,
+  image = '/images/og-default.jpg',
+} = Astro.props;
+
+const canonicalUrl = new URL(getRelativeLocaleUrl(lang, path.replace(/^\//, '')), Astro.site);
+const esUrl = new URL(getRelativeLocaleUrl('es', path.replace(/^\//, '')), Astro.site);
+const enUrl = new URL(getRelativeLocaleUrl('en', path.replace(/^\//, '')), Astro.site);
+
+const GOOGLE_FONTS_URL =
+  'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,900;1,400&family=PT+Serif:ital@0;1&display=swap';
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+
+<link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" hreflang="es" href={esUrl} />
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="x-default" href={esUrl} />
+
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
+
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonicalUrl} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href={GOOGLE_FONTS_URL} rel="stylesheet" />

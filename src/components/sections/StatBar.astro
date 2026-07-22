@@ -1,0 +1,118 @@
+---
+interface Stat {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="stat-bar" data-reveal>
+  {stats.map((stat) => (
+    <div class="stat">
+      <p class="value">
+        <span>{stat.prefix}</span><span class="count" data-target={stat.value}>0</span><span>{stat.suffix}</span>
+      </p>
+      <p class="label">{stat.label}</p>
+    </div>
+  ))}
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Cuenta hacia arriba cuando la barra de stats entra en viewport. Usa
+  // IntersectionObserver nativo en vez de GSAP ScrollTrigger: en este
+  // proyecto, ScrollTrigger sincronizado con Lenis no siempre disparaba de
+  // forma confiable para elementos ya visibles al cargar o en ciertas
+  // posiciones de scroll — IntersectionObserver es la API del navegador
+  // para exactamente este caso, sin depender de esa sincronización.
+  let observer: IntersectionObserver | undefined;
+
+  function animateCount(el: HTMLElement) {
+    const target = Number(el.dataset.target ?? '0');
+    const counter = { value: 0 };
+    gsap.to(counter, {
+      value: target,
+      duration: 1.6,
+      ease: 'power2.out',
+      onUpdate: () => {
+        el.textContent = Math.round(counter.value).toString();
+      },
+    });
+  }
+
+  function initCounters() {
+    const bars = document.querySelectorAll<HTMLElement>('.stat-bar');
+    if (!bars.length) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+          observer?.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    bars.forEach((bar) => {
+      // Si ya está visible en el momento de cargar (ej. viewport alto o
+      // sección corta), anima directo en vez de esperar un evento de
+      // intersección que quizá ya no vuelva a disparar.
+      const rect = bar.getBoundingClientRect();
+      const alreadyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      if (alreadyVisible) {
+        bar.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+      } else {
+        observer!.observe(bar);
+      }
+    });
+  }
+
+  document.addEventListener('astro:before-swap', () => {
+    observer?.disconnect();
+    observer = undefined;
+  });
+
+  document.addEventListener('astro:page-load', initCounters);
+</script>
+
+<style>
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .value {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .label {
+    margin-top: var(--space-xs);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .stat-bar {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

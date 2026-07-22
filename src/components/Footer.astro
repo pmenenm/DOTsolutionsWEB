@@ -1,0 +1,168 @@
+---
+// src/components/Footer.astro
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = 2026;
+
+const companyLinks = [
+  { href: getRelativeLocaleUrl(lang, ''), label: t.nav.home },
+  { href: getRelativeLocaleUrl(lang, 'nosotros'), label: t.nav.about },
+  { href: getRelativeLocaleUrl(lang, 'servicios'), label: t.nav.services },
+  { href: getRelativeLocaleUrl(lang, 'contacto'), label: t.nav.contact },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href={getRelativeLocaleUrl(lang, '')} class="logo">
+        <img src="/logoweb.png" alt="DOT Solutions" class="logo-image" />
+      </a>
+      <p class="blurb">{t.footer.about}</p>
+      <p class="motto">{t.footer.motto}</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>{t.footer.company}</h3>
+      <ul>
+        {companyLinks.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>{t.footer.contact}</h3>
+      <ul>
+        <li><a href={`mailto:${t.footer.email}`}>{t.footer.email}</a></li>
+        <li class="address">{t.footer.address}</li>
+      </ul>
+      <ul class="countries" aria-label="Presencia LATAM">
+        {t.nav.countries.map((c) => <li title={c.name}>{c.flag}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© {year} DOT Solutions. {t.footer.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    background: var(--dot-dark);
+    color: var(--text-primary);
+    padding-block: var(--space-lg) var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  /* Mismo negro abisal que el resto del sitio, diferenciado del fondo por
+     un hairline superior y un glow radial sutil (mezcla con --dot-gray a
+     baja opacidad) en vez de un color distinto — look premium sin salir
+     de la paleta ni usar sombras (el sistema DOT no usa shadows). */
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 70% 55% at 50% 0%,
+      color-mix(in srgb, var(--dot-gray) 40%, transparent) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+  .footer-grid,
+  .footer-bottom {
+    position: relative;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+
+  .footer-brand .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    margin-bottom: var(--space-sm);
+  }
+  .logo-image {
+    height: 1.75rem;
+    width: auto;
+  }
+
+  .blurb {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 32rem;
+    margin-bottom: var(--space-xs);
+  }
+  .motto {
+    color: var(--accent);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .footer-col h3 {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+  }
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .footer-col a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color var(--transition-fast);
+  }
+  .footer-col a:hover {
+    color: var(--accent);
+  }
+  .address {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .countries {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 0.4rem !important;
+    margin-top: var(--space-xs);
+    font-size: var(--text-lg);
+  }
+  .countries li {
+    opacity: 0.85;
+  }
+
+  .footer-bottom {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,376 @@
+---
+// src/components/sections/ServicesShowcase.astro
+// "Nuestras soluciones" — slider manual asimétrico (40/60), sin scroll-jack:
+// el usuario controla el avance con flechas. Cada clic dispara, vía GSAP, una
+// transición arquitectónica: el panel activo sale (fade + y:20) y el nuevo
+// entra con un Hard-Edge Mask Reveal del titular (clip-path) seguido de un
+// stagger de las tarjetas.
+interface Product {
+  name: string;
+  logo: string;
+  desc: string;
+}
+
+interface ServiceItem {
+  headline: string;
+  products: Product[];
+}
+
+interface Props {
+  eyebrow: string;
+  titleHighlight: string;
+  titleRest: string;
+  subtitle: string;
+  items: ServiceItem[];
+}
+
+const { eyebrow, titleHighlight, titleRest, subtitle, items } = Astro.props;
+---
+
+<section class="showcase" data-showcase>
+  <div class="container showcase-grid">
+    <div class="showcase-intro">
+      <div class="showcase-heading">
+        <p class="showcase-eyebrow">
+          <span class="dot"></span>
+          {eyebrow}
+        </p>
+        <h2 class="showcase-title">
+          <span class="showcase-title-highlight">{titleHighlight}</span>{titleRest}
+        </h2>
+        <p class="showcase-subtitle-text">{subtitle}</p>
+      </div>
+
+      <div class="showcase-nav">
+        <button type="button" class="showcase-arrow" data-showcase-prev aria-label="Anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button type="button" class="showcase-arrow" data-showcase-next aria-label="Siguiente">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="showcase-viewer" data-showcase-viewer>
+      {items.map((item, i) => (
+        <div class={`showcase-panel${i === 0 ? ' is-active' : ''}`} data-showcase-panel>
+          <h3 class="showcase-headline">{item.headline}</h3>
+          <div class="showcase-bento">
+            {item.products.map((p) => (
+              <article class="showcase-card" data-showcase-card>
+                <img src={p.logo} alt="" class="showcase-card-logo" loading="lazy" />
+                <h4>{p.name}</h4>
+                <p>{p.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  let scrollHandler: (() => void) | undefined;
+
+  function initShowcase() {
+    document.querySelectorAll<HTMLElement>('[data-showcase]').forEach((section) => {
+      const viewer = section.querySelector<HTMLElement>('[data-showcase-viewer]');
+      const panels = Array.from(section.querySelectorAll<HTMLElement>('[data-showcase-panel]'));
+      const prevBtn = section.querySelector<HTMLButtonElement>('[data-showcase-prev]');
+      const nextBtn = section.querySelector<HTMLButtonElement>('[data-showcase-next]');
+      if (!viewer || panels.length === 0) return;
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let active = panels.findIndex((p) => p.classList.contains('is-active'));
+      if (active < 0) active = 0;
+      let animating = false;
+
+      function syncHeight() {
+        if (viewer) viewer.style.height = `${panels[active].scrollHeight}px`;
+      }
+
+      function goTo(index: number) {
+        if (animating || index === active) return;
+
+        const outgoing = panels[active];
+        const incoming = panels[index];
+        const headline = incoming.querySelector<HTMLElement>('.showcase-headline');
+        const cards = Array.from(incoming.querySelectorAll<HTMLElement>('[data-showcase-card]'));
+
+        if (reduced) {
+          outgoing.classList.remove('is-active');
+          incoming.classList.add('is-active');
+          active = index;
+          syncHeight();
+          return;
+        }
+
+        animating = true;
+        gsap
+          .timeline({ onComplete: () => (animating = false) })
+          .to(outgoing, { opacity: 0, y: 20, duration: 0.35, ease: 'power2.in' })
+          .add(() => {
+            outgoing.classList.remove('is-active');
+            incoming.classList.add('is-active');
+            active = index;
+            syncHeight();
+            gsap.set(incoming, { opacity: 1, y: 0 });
+            gsap.set(headline, { clipPath: 'inset(0 0 100% 0)' });
+            gsap.set(cards, { opacity: 0, y: 24 });
+          })
+          .to(headline, { clipPath: 'inset(0 0 0% 0)', duration: 0.7, ease: 'power3.out' })
+          .to(cards, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12 }, '-=0.4');
+      }
+
+      prevBtn?.addEventListener('click', () => goTo((active - 1 + panels.length) % panels.length));
+      nextBtn?.addEventListener('click', () => goTo((active + 1) % panels.length));
+
+      // Avance sutil con el scroll normal de la página — sin pin, sin
+      // hijack: el usuario nunca pierde el control del scroll, solo se
+      // suma como otra forma de cambiar de panel. Un cooldown evita que
+      // cambie "tan rápido" (varios paneles de un tirón) en un solo gesto
+      // de scroll; solo cuenta mientras la sección está centrada en la
+      // pantalla.
+      let lastScrollY = window.scrollY;
+      let scrollCooldown = false;
+
+      function onWindowScroll() {
+        if (scrollCooldown) return;
+
+        const rect = section.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight * 0.6 && rect.bottom > window.innerHeight * 0.4;
+        const dy = window.scrollY - lastScrollY;
+        lastScrollY = window.scrollY;
+
+        if (!inView || Math.abs(dy) < 4) return;
+
+        scrollCooldown = true;
+        setTimeout(() => {
+          scrollCooldown = false;
+        }, 900);
+
+        if (dy > 0) goTo((active + 1) % panels.length);
+        else goTo((active - 1 + panels.length) % panels.length);
+      }
+
+      scrollHandler = onWindowScroll;
+      window.addEventListener('scroll', onWindowScroll, { passive: true });
+
+      syncHeight();
+      window.addEventListener('resize', syncHeight);
+    });
+  }
+
+  document.addEventListener('astro:before-swap', () => {
+    if (scrollHandler) window.removeEventListener('scroll', scrollHandler);
+  });
+
+  document.addEventListener('astro:page-load', initShowcase);
+</script>
+
+<style>
+  .showcase {
+    background: var(--dot-dark);
+    padding-block: var(--space-lg);
+  }
+
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  /* Réplica del look de SectionHeading (eyebrow + título + subtítulo) —
+     hecho a mano acá en vez de reusar el componente para poder envolver
+     solo "Un ecosistema de productos" en su propio span animado. */
+  .showcase-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-xs);
+  }
+  .showcase-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .showcase-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  /* Gradiente lento en loop, en tonos verdes de marca (Verde Raíz ↔ Luz
+     Micelio) — texto transparente con el gradiente recortado a su forma. */
+  .showcase-title-highlight {
+    background: linear-gradient(90deg, var(--dot-moss), var(--dot-micelio), var(--dot-moss));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: showcase-title-shimmer 6s linear infinite;
+  }
+  @keyframes showcase-title-shimmer {
+    to {
+      background-position: -200% center;
+    }
+  }
+  .showcase-subtitle-text {
+    margin-top: var(--space-xs);
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  .showcase-nav {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+  .showcase-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+  }
+  .showcase-arrow svg {
+    width: 1.95rem;
+    height: 1.95rem;
+  }
+  .showcase-arrow:hover {
+    color: var(--dot-micelio);
+  }
+  .showcase-arrow:first-child:hover {
+    transform: translateX(-2px);
+  }
+  .showcase-arrow:last-child:hover {
+    transform: translateX(2px);
+  }
+
+  .showcase-viewer {
+    position: relative;
+    transition: height 0.4s var(--ease-out);
+  }
+
+  .showcase-panel {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .showcase-panel.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .showcase-headline {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--dot-light);
+    max-width: 24ch;
+    margin-bottom: var(--space-lg);
+  }
+
+  .showcase-bento {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .showcase-card {
+    background: var(--dot-light);
+    border: 1px solid var(--dot-dark);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .showcase-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--dot-micelio);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--dot-micelio) 25%, transparent);
+  }
+  /* Hostdot es la única tarjeta de su panel — en vez de quedar apretada en
+     media cuadrícula (cuadrada), ocupa el ancho completo (rectangular),
+     manteniendo el mismo apilado vertical (logo arriba, texto abajo). */
+  .showcase-card:has(.showcase-card-logo[src*='hostdot']) {
+    grid-column: 1 / -1;
+  }
+  .showcase-card-logo {
+    height: 1.75rem;
+    width: auto;
+    max-width: 9rem;
+    object-fit: contain;
+    margin-bottom: var(--space-sm);
+  }
+  /* Smart Order, DTE y TCPOS se ven visiblemente más chicos que el resto a
+     la misma altura fija — 30% más grandes para emparejar el peso visual. */
+  .showcase-card-logo[src*='smart-order'],
+  .showcase-card-logo[src*='dte'],
+  .showcase-card-logo[src*='tcpos'] {
+    height: 2.96rem;
+  }
+  .showcase-card-logo[src*='retailpro'],
+  .showcase-card-logo[src*='loyalty'] {
+    height: 2.1rem;
+  }
+  .showcase-card-logo[src*='hostdot'] {
+    height: 2.94rem;
+  }
+  .showcase-card h4 {
+    font-family: var(--font-heading);
+    font-weight: 300;
+    font-size: var(--text-lg);
+    color: var(--dot-dark);
+    margin-bottom: var(--space-xs);
+  }
+  .showcase-card p {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--dot-gray);
+  }
+
+  @media (min-width: 640px) {
+    .showcase-bento {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .showcase-grid {
+      grid-template-columns: 1fr;
+    }
+    .showcase-viewer {
+      margin-top: var(--space-lg);
+    }
+  }
+</style>

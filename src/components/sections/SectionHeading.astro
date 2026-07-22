@@ -1,0 +1,70 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center';
+  as?: 'h1' | 'h2' | 'h3';
+}
+
+const { eyebrow, title, subtitle, align = 'left', as: Tag = 'h2' } = Astro.props;
+---
+
+<div class:list={['heading', align]} data-reveal>
+  {eyebrow && (
+    <p class="eyebrow">
+      <span class="dot"></span>
+      {eyebrow}
+    </p>
+  )}
+  <Tag class="title">{title}</Tag>
+  {subtitle && <p class="subtitle">{subtitle}</p>}
+</div>
+
+<style>
+  .heading {
+    max-width: var(--content-max);
+  }
+  .heading.center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-xs);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .center .eyebrow {
+    justify-content: center;
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    margin-top: var(--space-xs);
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+</style>

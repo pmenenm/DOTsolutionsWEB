@@ -1,0 +1,70 @@
+---
+interface Step {
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="timeline">
+  {steps.map((step, i) => (
+    <li class="step" data-reveal>
+      <span class="number">{String(i + 1).padStart(2, '0')}</span>
+      <div>
+        <h3>{step.title}</h3>
+        <p>{step.desc}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    align-items: start;
+    padding-block: var(--space-sm);
+    border-top: 1px solid var(--border);
+  }
+  .step:first-child {
+    border-top: none;
+  }
+
+  .number {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+</style>

@@ -1,0 +1,202 @@
+/* ============================================================
+   src/styles/theme.css
+   CONTRATO ESTILÍSTICO — solo editar los valores, nunca la estructura
+   El Agente UI modifica únicamente este archivo para cambiar identidad visual
+   ============================================================ */
+
+/* Reset y base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Cursor custom (island de React, §19) — oculta el nativo solo si el island montó
+   correctamente y solo en puntero fino. Si el JS falla, el cursor nativo nunca desaparece. */
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button {
+    cursor: none;
+  }
+}
+
+/* ─── CONTRATO: Variables que la Fábrica manipula ─────────── */
+:root {
+  /* Colores — Sistema DOT Solutions v4 "Bioluminiscencia Corporativa" (tecnología, ecosistema
+     y claridad). 7 tokens oficiales, nombres fijos — no editar los hex sin actualizar aquí
+     primero; el resto del archivo consume estos tokens vía variables semánticas, nunca los
+     hex directamente. Uso ESTRICTO por token (§20.2 CLAUDE.md):
+     1. Negro Abisal / Gris Interfaz — cimientos oscuros (fondo principal / contenedores).
+     2. Verde Sustrato / Verde Raíz — núcleo corporativo (fondos de sección y teñido de
+        imágenes / elementos interactivos EN REPOSO, bordes de separación, encabezados
+        secundarios — NUNCA el color de acción en sí).
+     3. Luz Micelio — EXCLUSIVO para interactividad y acción: botones principales (CTA),
+        enlaces, hovers e indicadores de estado activo. No usar para tintes decorativos,
+        íconos ilustrativos, glows ambientales ni gradientes de "shimmer" — para eso está
+        Verde Raíz (--accent-secondary).
+     4. Salvia Pálido / Bruma Digital — claros y bruma (fondo claro de secciones luminosas /
+        texto principal sobre fondo oscuro y contenedores sutiles sobre fondo claro). */
+  --dot-dark:    #1b1b1b; /* Negro Abisal — fondo principal (Dark Mode) */
+  --dot-gray:    #383838; /* Gris Interfaz — contenedores/tarjetas que flotan sobre el Negro Abisal */
+  --dot-forest:  #0d3518; /* Verde Sustrato — fondos de sección que rompen la monotonía oscura / teñido de imágenes */
+  --dot-moss:    #1f6536; /* Verde Raíz — interactivos EN REPOSO, bordes de separación, encabezados secundarios */
+  --dot-micelio: #5ddb88; /* Luz Micelio — EXCLUSIVO acción: CTAs, enlaces, hovers, indicadores activos */
+  --dot-sage:    #b4c1a3; /* Salvia Pálido — fondo claro principal de las secciones luminosas */
+  --dot-light:   #ebe9e3; /* Bruma Digital — texto principal sobre fondo oscuro / contenedores sutiles sobre fondo claro */
+  /* Gris neutro un tono por encima de --dot-dark — superficie de "canvas técnico" (paneles
+     elevados tipo mesa de diseño), no forma parte de la paleta de marca de 7 tokens. */
+  --dot-canvas: #222222;
+
+  /* Semánticas (tema oscuro, por defecto) — todo el sitio consume estas, nunca los --dot-* */
+  --bg-primary:        var(--dot-dark);
+  --bg-secondary:      var(--dot-forest);
+  --text-primary:      var(--dot-light);
+  /* dot-gray puro no tiene contraste suficiente como texto sobre --bg-primary (oscuro
+     sobre oscuro) — se aclara mezclándolo con dot-light, manteniendo la paleta como
+     única fuente de color (nada de hex nuevos fuera de los tokens de arriba). */
+  --text-secondary:    color-mix(in srgb, var(--dot-gray) 55%, var(--dot-light) 45%);
+  /* --accent = Luz Micelio, el color de ACCIÓN exclusivo (CTA/enlaces/hover/indicadores
+     activos) — nunca decorativo. Para tintes/íconos/glows decorativos, usar --accent-secondary. */
+  --accent:            var(--dot-micelio);
+  --accent-hover:      color-mix(in srgb, var(--dot-micelio) 80%, var(--dot-moss) 20%);
+  /* --accent-secondary = Verde Raíz — el verde "de marca" para todo lo que NO es acción:
+     tintes de eyebrow, íconos ilustrativos, números decorativos, glows, bordes de separador. */
+  --accent-secondary:  var(--dot-moss);
+  --accent-soft:       var(--dot-micelio); /* acento de acción sobre fondos claros/hover — ver BrandbookHeader */
+  --border:            var(--dot-gray);
+  /* Luz Micelio es un verde CLARO/vívido — texto blanco encima no tendría contraste
+     suficiente (a diferencia del --dot-moss oscuro que usaba esta variable antes). Texto
+     oscuro (Negro Abisal) es lo que realmente se lee sobre un botón en Luz Micelio. */
+  --on-accent:         var(--dot-dark);
+
+  /* Contra-tema para secciones claras (alternancia de dinamismo) — ver .theme-light abajo.
+     --bg-light ahora es Salvia Pálido (su rol oficial: "fondo claro principal para las
+     secciones luminosas"), no Bruma Digital — Bruma Digital pasó a ser específicamente
+     texto/contenedores sutiles, no el fondo en sí. */
+  --bg-light:               var(--dot-sage);
+  --bg-light-secondary:     color-mix(in srgb, var(--dot-sage) 70%, var(--dot-light) 30%);
+  --text-on-light:          var(--dot-dark);
+  --text-on-light-secondary:var(--dot-gray); /* dot-gray sobre fondo claro sí tiene buen contraste — directo, sin mezclar */
+  --border-on-light:        color-mix(in srgb, var(--dot-gray) 25%, var(--dot-sage) 75%);
+
+  /* Bruma Digital como superficie de tarjeta elevada sobre el fondo claro (Salvia Pálido) —
+     su rol oficial incluye "contenedores sutiles sobre fondos claros", encaja exacto acá.
+     Ya no hace falta un blanco puro fuera de la paleta: los 7 tokens cubren este caso. */
+  --bg-card:                var(--dot-light);
+
+  /* Tipografías — las URL de Google Fonts se pasan via BaseHead */
+  --font-heading:   'Poppins', sans-serif;
+  --font-body:      'Poppins', sans-serif;
+  --font-mono:      'Courier New', monospace;
+  /* Acentos editoriales/humanos (citas, subtítulos) — solo itálica, nunca
+     para UI/interfaz ni titulares estructurales (esos son Poppins). */
+  --font-serif:     'PT Serif', serif;
+
+  /* Escala tipográfica */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  2rem;
+  --text-3xl:  3rem;
+  --text-4xl:  4.5rem;
+
+  /* Espaciado modular — múltiplos estrictos de 8px */
+  --space-xs:  0.5rem;   /* 8px  */
+  --space-sm:  1rem;     /* 16px */
+  --space-md:  2rem;     /* 32px */
+  --space-lg:  4rem;     /* 64px */
+  --space-xl:  8rem;     /* 128px */
+  --space-2xl: 12rem;    /* 192px */
+  --space-block:   3rem;   /* 48px — entre componentes */
+  --space-section: 6rem;   /* 96px — entre bloques */
+  --space-hero:    10rem;  /* 160px — entre secciones grandes */
+
+  /* Contenedor */
+  --container-max: 1440px;
+  --content-max:   720px;
+  --container-pad: 1.5rem; /* 24px mobile — sobrescrito por breakpoint abajo */
+
+  /* Bordes */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Animación — usadas por GSAP y transiciones CSS */
+  --ease-expo:       cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:         cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:        cubic-bezier(0, 0, 0.2, 1);
+  --transition-fast: 0.22s var(--ease-out);
+  --transition-smooth: 0.7s var(--ease-expo);
+
+  /* Sombras — el sistema DOT no usa sombras (superficies planas) */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+
+  /* Z-index escala */
+  --z-base:    0;
+  --z-above:   10;
+  --z-modal:   100;
+  --z-overlay: 1000;
+}
+
+/* Utilidades base */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* Envolver cualquier sección con esta clase para invertir su tema local a claro.
+   Redefine las variables que los componentes ya consumen — cero cambios por componente. */
+.theme-light {
+  --bg-primary:     var(--bg-light);
+  --bg-secondary:   var(--bg-light-secondary);
+  --text-primary:   var(--text-on-light);
+  --text-secondary: var(--text-on-light-secondary);
+  --border:         var(--border-on-light);
+  transition: background-color 0.6s var(--ease-out);
+}
+
+/* Palabra/frase clave interactiva dentro de títulos — usar via set:html en el componente:
+   `Texto <span class="hl">frase clave</span> texto`. Se agranda y cambia de color al hover. */
+.hl {
+  display: inline-block;
+  color: color-mix(in srgb, var(--accent) 65%, var(--text-primary) 35%);
+  transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  cursor: default;
+}
+.hl:hover {
+  transform: scale(1.06);
+  color: var(--accent-hover);
+}
+
+/* Márgenes responsive obligatorios del sistema (§05): 24 / 72 / 160 */
+@media (min-width: 768px) {
+  :root { --container-pad: 4.5rem; } /* 72px tablet */
+}
+@media (min-width: 1280px) {
+  :root { --container-pad: 10rem; } /* 160px desktop */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,201 @@
+---
+interface Props {
+  line1: string;
+  line2: string;
+  line3: string;
+  subtitle: string;
+  paragraph: string;
+  cta: string;
+  ctaHref: string;
+  logo: string;
+}
+
+const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo } = Astro.props;
+---
+
+<section class="product-hero">
+  <div class="grid-texture" aria-hidden="true"></div>
+
+  <div class="container product-hero-grid">
+    <div class="product-hero-copy">
+      <h1>
+        <span class="line-mask"><span class="line-inner">{line1}</span></span>
+        <span class="line-mask"><span class="line-inner">{line2}</span></span>
+        <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line3}</span></span></span>
+      </h1>
+      <p class="subtitle">{subtitle}</p>
+      <p class="paragraph">{paragraph}</p>
+      <a href={ctaHref} class="cta">{cta}</a>
+    </div>
+
+    <div class="product-hero-visual" aria-hidden="true">
+      <div class="visual-panel">
+        <img src={logo} alt="" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-hero {
+    position: relative;
+    background: var(--dot-dark);
+    padding-block: calc(var(--space-hero) + var(--space-lg)) var(--space-hero);
+    overflow: hidden;
+  }
+
+  .grid-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
+  }
+
+  .product-hero-grid {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .product-hero-copy h1 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2rem, 4.8vw, 3.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    max-width: 18ch;
+  }
+
+  /* Hard-Edge Mask Reveal — mismo mecanismo que el Hero de Home: corte
+     sólido y limpio (sin opacity), easing de encaje largo y controlado. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+  }
+  .line-inner {
+    display: inline-block;
+    transform: translateY(100%);
+    animation: product-line-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes product-line-reveal {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0%);
+    }
+  }
+  .line-mask:nth-child(1) .line-inner {
+    animation-delay: 0.1s;
+  }
+  .line-mask:nth-child(2) .line-inner {
+    animation-delay: 0.28s;
+  }
+  .line-mask:nth-child(3) .line-inner {
+    animation-delay: 0.46s;
+  }
+
+  /* "SAP Business One" se enciende a Luz Micelio justo cuando su línea
+     termina de asentarse (0.46s delay + 0.9s duración = 1.36s). */
+  .sap-glow {
+    display: inline-block;
+    color: var(--text-primary);
+    text-shadow: none;
+    animation: product-sap-power-on 0.8s ease-in-out 1.36s forwards;
+  }
+  @keyframes product-sap-power-on {
+    from {
+      color: var(--text-primary);
+      text-shadow: none;
+    }
+    to {
+      color: var(--dot-micelio);
+      text-shadow: 0 0 16px rgba(93, 219, 136, 0.15);
+    }
+  }
+
+  .subtitle {
+    margin-top: var(--space-md);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--text-lg);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--dot-sage);
+    max-width: 42ch;
+  }
+
+  .paragraph {
+    margin-top: var(--space-sm);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 48ch;
+  }
+
+  .cta {
+    display: inline-flex;
+    margin-top: var(--space-lg);
+    background: var(--accent);
+    color: var(--on-accent);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 1rem 2.25rem;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .cta:hover {
+    background: var(--accent-hover);
+    transform: scale(1.03);
+  }
+
+  .product-hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .visual-panel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 22rem;
+    background: var(--dot-gray);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+  }
+  .visual-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, color-mix(in srgb, var(--dot-micelio) 18%, transparent) 0%, transparent 75%);
+    pointer-events: none;
+  }
+  .visual-panel img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  @media (min-width: 900px) {
+    .product-hero-grid {
+      grid-template-columns: 3fr 2fr;
+    }
+    .product-hero-copy h1 {
+      max-width: 14ch;
+    }
+  }
+</style>

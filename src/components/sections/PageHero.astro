@@ -1,0 +1,85 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  image?: string;
+}
+
+const { eyebrow, title, subtitle, image = '/images/background_1.jpg' } = Astro.props;
+---
+
+<section class="page-hero">
+  <img class="bg" src={image} alt="" loading="eager" />
+  <div class="overlay"></div>
+  <div class="container content">
+    <p class="eyebrow" data-reveal>
+      <span class="dot"></span>
+      {eyebrow}
+    </p>
+    <h1 data-reveal>{title}</h1>
+    <p class="subtitle" data-reveal>{subtitle}</p>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: calc(var(--space-hero) * 0.6) var(--space-lg);
+    overflow: hidden;
+    background: var(--dot-dark);
+  }
+  .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.25;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--dot-dark) 55%, transparent) 0%, var(--dot-dark) 95%);
+  }
+  .content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-sm);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    max-width: 24ch;
+  }
+
+  .subtitle {
+    margin-top: var(--space-sm);
+    font-size: var(--text-lg);
+    font-weight: 300;
+    color: var(--text-secondary);
+    max-width: 50ch;
+  }
+</style>

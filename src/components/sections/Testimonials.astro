@@ -1,0 +1,302 @@
+---
+// src/components/sections/Testimonials.astro
+// Carrusel "Cover Flow": tarjeta central en foco (escala 100%, opaca) con las
+// laterales detrás (escala 85%, opacidad reducida, blur). Auto-play cada 3s,
+// pausado en hover; flechas manuales reinician el temporizador. Posicionado
+// vía JS (translateX/scale/opacity/filter inline) + transition CSS — sin
+// dependencias nuevas (el proyecto no usa React/Framer Motion).
+interface Testimonial {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+  products: string[];
+}
+
+interface Props {
+  items: Testimonial[];
+  successHref: string;
+  successLabel: string;
+}
+
+const { items, successHref, successLabel } = Astro.props;
+
+const PHOTOS: Record<string, string> = {
+  'Héctor Pincheira': '/testimonials/hector-pincheira.jpg',
+  'Francisco Zegers': '/testimonials/francisco-zegers.jpg',
+  'Felipe Mansilla': '/testimonials/felipe-mansilla.jpg',
+};
+---
+
+<div class="testimonials-wrap">
+<div class="cf" data-cf>
+  <div class="cf-stage" data-cf-stage>
+    {items.map((item, i) => (
+      <article class="cf-card" data-cf-card data-cf-index={i}>
+        <p class="cf-quote">“{item.quote}”</p>
+        <div class="cf-author">
+          {PHOTOS[item.name] && <img src={PHOTOS[item.name]} alt={item.name} loading="lazy" />}
+          <div>
+            <p class="cf-name">{item.name}</p>
+            <p class="cf-role">{item.role} · {item.company}</p>
+          </div>
+        </div>
+        <ul class="cf-products">
+          {item.products.map((p) => <li>{p}</li>)}
+        </ul>
+      </article>
+    ))}
+  </div>
+
+  <button type="button" class="cf-arrow cf-arrow--prev" data-cf-prev aria-label="Anterior">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+  <button type="button" class="cf-arrow cf-arrow--next" data-cf-next aria-label="Siguiente">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</div>
+
+<a href={successHref} class="cf-success">
+  {successLabel}
+  <span class="arrow" aria-hidden="true">→</span>
+</a>
+</div>
+
+<script>
+  function initCoverflows() {
+    document.querySelectorAll<HTMLElement>('[data-cf]').forEach((root) => {
+      const stage = root.querySelector<HTMLElement>('[data-cf-stage]');
+      const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-cf-card]'));
+      const n = cards.length;
+      if (!stage || n === 0) return;
+      const stageEl = stage;
+
+      const prevBtn = root.querySelector<HTMLButtonElement>('[data-cf-prev]');
+      const nextBtn = root.querySelector<HTMLButtonElement>('[data-cf-next]');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let active = 0;
+      let timer: ReturnType<typeof setInterval> | undefined;
+
+      function render() {
+        cards.forEach((card, i) => {
+          let d = i - active;
+          if (d > n / 2) d -= n;
+          if (d < -n / 2) d += n;
+
+          const abs = Math.abs(d);
+          const offset = d * 62; // % del ancho propio de la tarjeta
+          let scale = 1;
+          let opacity = 1;
+          let blur = 0;
+          let z = n;
+
+          if (abs === 1) {
+            scale = 0.85;
+            opacity = 0.45;
+            blur = 4;
+            z = n - 1;
+          } else if (abs > 1) {
+            scale = 0.7;
+            opacity = 0;
+            blur = 6;
+            z = 0;
+          }
+
+          card.style.transform = `translateX(calc(-50% + ${offset}%)) scale(${scale})`;
+          card.style.opacity = String(opacity);
+          card.style.filter = blur ? `blur(${blur}px)` : 'none';
+          card.style.zIndex = String(z);
+          card.style.pointerEvents = abs === 0 ? 'auto' : 'none';
+          card.setAttribute('aria-hidden', abs === 0 ? 'false' : 'true');
+        });
+
+        // El alto del stage sigue al de la tarjeta activa — evita que las
+        // laterales (fuera de flujo) recorten o dejen espacio vacío.
+        stageEl.style.height = `${cards[active].scrollHeight}px`;
+      }
+
+      function goTo(index: number) {
+        active = ((index % n) + n) % n;
+        render();
+      }
+
+      function next() {
+        goTo(active + 1);
+      }
+      function prev() {
+        goTo(active - 1);
+      }
+
+      function startTimer() {
+        stopTimer();
+        if (reduced || n <= 1) return;
+        timer = setInterval(next, 3000);
+      }
+      function stopTimer() {
+        if (timer) clearInterval(timer);
+        timer = undefined;
+      }
+
+      nextBtn?.addEventListener('click', () => {
+        next();
+        startTimer();
+      });
+      prevBtn?.addEventListener('click', () => {
+        prev();
+        startTimer();
+      });
+
+      // Pausa en hover sobre la tarjeta central — las laterales tienen
+      // pointer-events:none, así que solo la activa puede disparar esto.
+      root.addEventListener('mouseenter', stopTimer);
+      root.addEventListener('mouseleave', startTimer);
+
+      window.addEventListener('resize', render);
+
+      render();
+      startTimer();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCoverflows);
+</script>
+
+<style>
+  .testimonials-wrap {
+    text-align: center;
+  }
+
+  .cf {
+    position: relative;
+    max-width: 48rem;
+    margin-inline: auto;
+    padding-inline: var(--space-xl);
+  }
+
+  .cf-stage {
+    position: relative;
+    transition: height var(--transition-smooth);
+  }
+
+  .cf-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(90vw, 34rem);
+    box-sizing: border-box;
+    background: var(--dot-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    transform-origin: center top;
+    transition: transform var(--transition-smooth), opacity var(--transition-smooth), filter var(--transition-smooth);
+    will-change: transform, opacity, filter;
+  }
+
+  .cf-quote {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--dot-light);
+  }
+
+  .cf-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+  }
+  .cf-author img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .cf-name {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: calc(var(--text-base) * 0.8);
+    color: var(--dot-light);
+  }
+  .cf-role {
+    font-family: var(--font-body);
+    font-size: calc(var(--text-sm) * 0.8);
+    color: var(--dot-sage);
+  }
+
+  .cf-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .cf-products li {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--dot-sage);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    padding: 0.2rem 0.6rem;
+  }
+
+  .cf-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--dot-moss);
+    background: transparent;
+    color: var(--dot-micelio);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  }
+  .cf-arrow:hover {
+    background-color: color-mix(in srgb, var(--dot-micelio) 12%, transparent);
+    border-color: var(--dot-micelio);
+  }
+  .cf-arrow svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .cf-arrow--prev {
+    left: 0;
+  }
+  .cf-arrow--next {
+    right: 0;
+  }
+
+  .cf-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-lg);
+    color: var(--dot-micelio);
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .cf-success .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .cf-success:hover .arrow {
+    transform: translateX(3px);
+  }
+</style>

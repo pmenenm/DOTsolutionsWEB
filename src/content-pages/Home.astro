@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/sections/Hero.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import IndustriesTeaser from '../components/sections/IndustriesTeaser.astro';
+import ServicesShowcase from '../components/sections/ServicesShowcase.astro';
+import StatBar from '../components/sections/StatBar.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import ContactFooter from '../components/sections/ContactFooter.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Layout title={t.meta.title} description={t.meta.description} lang={lang} path="/" hideFooter={true}>
+  <Hero
+    eyebrow={t.home.hero.eyebrow}
+    title1={t.home.hero.title1}
+    title2={t.home.hero.title2}
+    title3={t.home.hero.title3}
+    subtitle={t.home.hero.subtitle}
+    cta={t.home.hero.cta}
+    ctaHref={getRelativeLocaleUrl(lang, 'contacto')}
+    ctaSecondary={t.home.hero.ctaSecondary}
+    ctaSecondaryHref={getRelativeLocaleUrl(lang, 'servicios')}
+    capabilities={t.home.hero.capabilities}
+  />
+
+  <ClientLogos title={t.common.clientsTitle} />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow={t.home.industries.eyebrow}
+        title={t.home.industries.title}
+        subtitle={t.home.industries.subtitle}
+      />
+      <div class="section-body">
+        <IndustriesTeaser
+          featured={t.home.industries.featured}
+          othersLabel={t.home.industries.othersLabel}
+          others={t.home.industries.others}
+        />
+      </div>
+    </div>
+  </section>
+
+  <ServicesShowcase
+    eyebrow={t.home.servicesTeaser.eyebrow}
+    titleHighlight={t.home.servicesTeaser.titleHighlight}
+    titleRest={t.home.servicesTeaser.titleRest}
+    subtitle={t.home.servicesTeaser.subtitle}
+    items={t.home.servicesTeaser.items}
+  />
+
+  <section class="section theme-light">
+    <div class="container">
+      <SectionHeading title={t.common.statsTitle} align="center" />
+      <div class="section-body">
+        <StatBar stats={t.common.stats} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow={t.home.testimonials.eyebrow}
+        title={t.home.testimonials.title}
+      />
+      <div class="section-body">
+        <Testimonials
+          items={t.home.testimonials.items}
+          successHref={getRelativeLocaleUrl(lang, 'contacto')}
+          successLabel={t.home.testimonials.successCta}
+        />
+      </div>
+    </div>
+  </section>
+
+  <ContactFooter lang={lang} />
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+</style>

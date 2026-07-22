@@ -1,0 +1,302 @@
+---
+// src/components/sections/IndustriesTeaser.astro
+// "Ecosistemas por industria" como una espina dorsal vertical (spine) con
+// nodos que se iluminan — la industria como un brote del mismo sistema de
+// raíces (Verde Raíz / Luz Micelio), no tarjetas genéricas de grilla.
+interface Industry {
+  slug: string;
+  name: string;
+  headline: string;
+  desc: string;
+}
+
+interface Props {
+  featured: Industry[];
+  othersLabel: string;
+  others: string[];
+}
+
+const { featured, othersLabel, others } = Astro.props;
+
+const ACCENTS: Record<string, string> = {
+  gastronomia: 'var(--dot-micelio)',
+  retail: 'var(--dot-micelio)',
+};
+
+const ICONS: Record<string, string> = {
+  gastronomia:
+    '<path d="M6 2v6a2 2 0 0 0 4 0V2M8 2v18M14 2c-1.2 1.2-1.6 3-1.6 5s.4 3.8 1.6 5c1.2-1.2 1.6-3 1.6-5s-.4-3.8-1.6-5Zm0 10v8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+  retail:
+    '<path d="M6 8V6a4 4 0 1 1 8 0v2M4 8h12l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+---
+
+<div class="eco" data-eco>
+  <span class="eco-spine" data-eco-spine aria-hidden="true"></span>
+
+  {featured.map((industry, i) => (
+    <article class="eco-row" data-reveal style={`--accent: ${ACCENTS[industry.slug] ?? 'var(--dot-micelio)'}`}>
+      <div class="eco-marker" aria-hidden="true">
+        <span class="eco-node"></span>
+        <span class="eco-num">{String(i + 1).padStart(2, '0')}</span>
+      </div>
+
+      <div class="eco-body">
+        <p class="eco-name">{industry.name}</p>
+        <h3 class="eco-headline">{industry.headline}</h3>
+        <p class="eco-desc">{industry.desc}</p>
+      </div>
+
+      <div class="eco-orb" aria-hidden="true">
+        <svg viewBox="0 0 20 20" set:html={ICONS[industry.slug] ?? ''} />
+      </div>
+    </article>
+  ))}
+
+  <div class="eco-others">
+    <span class="eco-others-label">{othersLabel}</span>
+    <ul class="eco-others-list">
+      {others.map((o) => (
+        <li>
+          <span class="eco-dot" aria-hidden="true"></span>
+          {o}
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<script>
+  function initEcoSpine() {
+    document.querySelectorAll<HTMLElement>('[data-eco]').forEach((root) => {
+      const spine = root.querySelector<HTMLElement>('[data-eco-spine]');
+      if (!spine) return;
+
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              spine.classList.add('is-visible');
+              obs.disconnect();
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(root);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initEcoSpine);
+</script>
+
+<style>
+  .eco {
+    position: relative;
+  }
+
+  /* La "espina" — traza una vez, al entrar la sección al viewport (una sola
+     vez, sin scrub: la lección de este proyecto es que MorphSVG/scrub no
+     tolera bien los saltos de progreso; acá ademas ni siquiera hace falta,
+     un solo trazo al entrar ya da el efecto). */
+  .eco-spine {
+    position: absolute;
+    left: 1.5rem;
+    top: 1rem;
+    bottom: 1rem;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--dot-moss) 10%, var(--dot-moss) 90%, transparent);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 1.2s var(--ease-expo);
+    z-index: 1;
+  }
+  .eco-spine.is-visible {
+    transform: scaleY(1);
+  }
+
+  .eco-row {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    align-items: center;
+    gap: var(--space-md);
+    padding-block: var(--space-lg);
+    transition: background-color var(--transition-smooth);
+  }
+  .eco-row:not(:last-of-type) {
+    border-bottom: 1px solid var(--border);
+  }
+  .eco-row:hover {
+    background: color-mix(in srgb, var(--dot-forest) 30%, transparent);
+  }
+
+  .eco-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    align-self: stretch;
+  }
+  .eco-node {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--dot-dark);
+    border: 2px solid var(--dot-moss);
+    transition: background-color var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+  }
+  .eco-row:hover .eco-node {
+    background: var(--dot-micelio);
+    border-color: var(--dot-micelio);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--dot-micelio) 55%, transparent);
+  }
+  .eco-num {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--dot-moss);
+    opacity: 0.55;
+    transition: opacity var(--transition-smooth);
+  }
+  .eco-row:hover .eco-num {
+    -webkit-text-stroke-color: var(--dot-micelio);
+    opacity: 0.9;
+  }
+
+  .eco-body {
+    min-width: 0;
+  }
+  .eco-name {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  .eco-headline {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    max-width: 30ch;
+    transition: color var(--transition-smooth);
+  }
+  .eco-row:hover .eco-headline {
+    color: var(--accent);
+  }
+  .eco-desc {
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+
+  .eco-orb {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--accent) 30%, transparent),
+      color-mix(in srgb, var(--accent) 6%, transparent) 62%,
+      transparent 78%
+    );
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    color: var(--accent);
+    transition: transform var(--transition-smooth), border-color var(--transition-smooth);
+  }
+  .eco-orb svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .eco-row:hover .eco-orb {
+    transform: scale(1.12) rotate(-6deg);
+    border-color: var(--accent);
+  }
+
+  .eco-others {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-md);
+  }
+  .eco-others-label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .eco-others-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .eco-others-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    transform-origin: left center;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+  .eco-others-list li:hover {
+    transform: scale(1.15);
+    color: var(--dot-micelio);
+  }
+  .eco-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--dot-micelio) 60%, transparent);
+    animation: eco-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes eco-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .eco-spine {
+      display: none;
+    }
+    .eco-row {
+      grid-template-columns: auto 1fr;
+    }
+    .eco-marker {
+      flex-direction: row;
+    }
+    .eco-orb {
+      display: none;
+    }
+  }
+</style>

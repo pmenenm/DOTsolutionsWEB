@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import ProcessTimeline from '../components/sections/ProcessTimeline.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.servicios;
+---
+
+<Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/servicios">
+  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/background_2.jpg" />
+
+  <section class="section">
+    <div class="container">
+      <FeatureGrid items={s.pillars} cols={3} />
+    </div>
+  </section>
+
+  <section class="section theme-light">
+    <div class="container">
+      <SectionHeading eyebrow={s.services.eyebrow} title={s.services.title} />
+      <div class="section-body">
+        <FeatureGrid items={s.services.items} cols={3} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={s.method.eyebrow} title={s.method.title} />
+      <div class="section-body narrow">
+        <ProcessTimeline steps={s.method.steps} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-light">
+    <div class="container">
+      <SectionHeading eyebrow={s.why.eyebrow} title={s.why.title} />
+      <div class="section-body">
+        <FeatureGrid items={s.why.items} cols={4} />
+      </div>
+    </div>
+  </section>
+
+  <ClientLogos title={t.common.clientsTitle} />
+
+  <div class="container">
+    <CTASection
+      title={t.common.ctaTitle}
+      body={t.common.ctaBody}
+      button={t.common.ctaButton}
+      href={getRelativeLocaleUrl(lang, 'contacto')}
+    />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .section-body.narrow {
+    max-width: var(--content-max);
+  }
+</style>

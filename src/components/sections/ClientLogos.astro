@@ -1,0 +1,96 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const CLIENT_FILES = [
+  '100-f-utbol', 'agronutrition', 'agrosystems', 'allnutrition', 'asics', 'beauty-plus',
+  'bridgestone', 'bubba', 'calvin-klein', 'dbs-beauty-store', 'dulce-luna', 'eljapones',
+  'ert', 'explora', 'family-shop', 'flores', 'frutexsa', 'groupe-seb', 'havanna', 'italmod',
+  'la-mar', 'la-sanguchera-1', 'la-verita', 'lacoste', 'levis', 'lippi', 'lo-saldes',
+  'lounge', 'margo-gourmet', 'osaka', 'pacel', 'panchita', 'porvenir', 'sendero', 'superzoo',
+  'taglermaq', 'tanta', 'tarragona', 'terra', 'tommy-hilfiger', 'trail', 'varsovienne', 'wrangler',
+];
+
+const logos = CLIENT_FILES.map((file) => ({
+  src: `/clients/${file}.png`,
+  alt: file.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+}));
+
+// Duplicamos la lista para el loop de marquee sin costuras.
+const track = [...logos, ...logos];
+---
+
+<section class="client-logos" data-reveal>
+  <p class="title">{title}</p>
+  <div class="marquee-wrap">
+    <div class="marquee">
+      <div class="marquee-track">
+        {track.map((logo) => (
+          <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .client-logos {
+    padding-block: var(--space-lg);
+  }
+  .title {
+    text-align: center;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--dot-micelio);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-md);
+  }
+
+  .marquee-wrap {
+    position: relative;
+  }
+
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    width: max-content;
+    animation: scroll-left 50s linear infinite;
+  }
+
+  .marquee-track img {
+    height: 2rem;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(1) opacity(0.55);
+    transition: filter var(--transition-fast);
+  }
+  .marquee-track img:hover {
+    filter: brightness(0) invert(1);
+  }
+
+  @keyframes scroll-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

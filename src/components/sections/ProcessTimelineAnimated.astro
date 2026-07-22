@@ -1,0 +1,138 @@
+---
+interface Step {
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<div class="process-timeline" id="process-timeline">
+  <div class="timeline-track" aria-hidden="true">
+    <div class="timeline-fill"></div>
+  </div>
+  <ol class="timeline-steps">
+    {steps.map((step, i) => (
+      <li class="timeline-step" style={`transition-delay: ${(0.25 + i * 0.3).toFixed(2)}s`}>
+        <span class="step-marker">{String(i + 1).padStart(2, '0')}</span>
+        <div class="step-copy">
+          <h3>{step.title}</h3>
+          <p>{step.desc}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<script>
+  function initTimeline() {
+    const timelines = document.querySelectorAll<HTMLElement>('.process-timeline');
+    if (!timelines.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    timelines.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('is-visible');
+      } else {
+        observer.observe(el);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTimeline);
+</script>
+
+<style>
+  .process-timeline {
+    position: relative;
+    max-width: var(--content-max);
+  }
+
+  .timeline-track {
+    position: absolute;
+    left: 0.9rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-fill {
+    width: 100%;
+    height: 0%;
+    background: var(--dot-micelio);
+    transition: height 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .process-timeline.is-visible .timeline-fill {
+    height: 100%;
+  }
+
+  .timeline-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .timeline-step {
+    position: relative;
+    display: flex;
+    gap: var(--space-md);
+    padding-left: 2.75rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  }
+  .process-timeline.is-visible .timeline-step {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .step-marker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: var(--dot-dark);
+    border: 2px solid var(--dot-micelio);
+    color: var(--dot-micelio);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .step-copy h3 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--text-xl);
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+  }
+  .step-copy p {
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+</style>
