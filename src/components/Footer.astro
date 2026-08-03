@@ -2,6 +2,7 @@
 // src/components/Footer.astro
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -23,7 +24,7 @@ const companyLinks = [
   <div class="container footer-grid">
     <div class="footer-brand">
       <a href={getRelativeLocaleUrl(lang, '')} class="logo">
-        <img src="/logoweb.png" alt="DOT Solutions" class="logo-image" />
+        <img src={withBase('/logoweb.png')} alt="DOT Solutions" class="logo-image" />
       </a>
       <p class="blurb">{t.footer.about}</p>
       <p class="motto">{t.footer.motto}</p>

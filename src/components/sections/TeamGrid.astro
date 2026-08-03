@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../../utils/paths';
+
 interface Member {
   name: string;
   role: string;
@@ -37,7 +39,7 @@ function initials(name: string) {
     <figure class="member" data-reveal>
       <div class="photo">
         {TEAM_FILES[i] ? (
-          <img src={`/team/${TEAM_FILES[i]}`} alt={member.name} loading="lazy" />
+          <img src={withBase(`/team/${TEAM_FILES[i]}`)} alt={member.name} loading="lazy" />
         ) : (
           <span class="fallback">{initials(member.name)}</span>
         )}

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ContactHero from '../components/sections/ContactHero.astro';
 import ContactForm from '../components/sections/ContactForm.astro';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -33,7 +34,7 @@ const c = t.contacto;
   <section class="section direct-section">
     <aside class="direct-card" data-reveal>
       <div class="direct-photo-wrap">
-        <img src="/office/office-santiago.jpg" alt="" class="direct-photo" loading="lazy" />
+        <img src={withBase('/office/office-santiago.jpg')} alt="" class="direct-photo" loading="lazy" />
         <div class="direct-photo-fade" aria-hidden="true"></div>
       </div>
       <div class="direct-body">

@@ -8,6 +8,8 @@
 // opaca siguiente (paint order normal, sin necesidad de overflow:hidden);
 // si termina después, el fondo --dot-dark de respaldo (mismo tono que la
 // zona superior de la foto) cubre la cola sin costura visible.
+import { withBase } from '../../utils/paths';
+
 interface Props {
   image?: string;
 }
@@ -17,7 +19,7 @@ const { image = '/images/hero2.jpg' } = Astro.props;
 
 <div class="hero-reveal">
   <div class="hero-reveal-bg" aria-hidden="true">
-    <img class="hero-reveal-img" src={image} alt="" />
+    <img class="hero-reveal-img" src={withBase(image)} alt="" />
     <div class="hero-reveal-overlay"></div>
   </div>
   <div class="hero-reveal-content">

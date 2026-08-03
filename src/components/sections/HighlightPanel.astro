@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../../utils/paths';
+
 interface Props {
   eyebrow: string;
   title: string;
@@ -11,7 +13,7 @@ const { eyebrow, title, body, points, image } = Astro.props;
 ---
 
 <div class="panel" data-reveal>
-  {image && <img src={image} alt="" class="panel-image" loading="lazy" />}
+  {image && <img src={withBase(image)} alt="" class="panel-image" loading="lazy" />}
   <div class="panel-body">
     <p class="eyebrow">
       <span class="dot"></span>

@@ -4,6 +4,8 @@
 // por ramificaciones SVG a cada tarjeta de producto. Al hacer scroll, las
 // líneas se "dibujan" (stroke-dashoffset) desde el núcleo hacia las tarjetas,
 // con un leve stagger entre ellas para que se sienta orgánico, no mecánico.
+import { withBase } from '../../utils/paths';
+
 interface Product {
   name: string;
   category: string;
@@ -53,7 +55,7 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
     </svg>
 
     <div class="mycelium-core" data-mycelium-core aria-hidden="true">
-      <img src="/logoweb.png" alt="" class="core-logo" />
+      <img src={withBase('/logoweb.png')} alt="" class="core-logo" />
     </div>
 
     <div class="mycelium-grid" data-mycelium-grid>
@@ -65,7 +67,7 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
           data-index={i}
         >
           <div class="card-logo">
-            <img src={p.logo} alt="" loading="lazy" />
+            <img src={withBase(p.logo)} alt="" loading="lazy" />
           </div>
           <p class="card-category">{p.category}</p>
           <h3 class="card-name">{p.name}</h3>

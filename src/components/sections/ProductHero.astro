@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../../utils/paths';
+
 interface Props {
   line1: string;
   line2: string;
@@ -46,7 +48,7 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
 
     <div class="product-hero-visual" aria-hidden="true">
       <div class="visual-panel">
-        <img src={logo} alt="" />
+        <img src={withBase(logo)} alt="" />
       </div>
     </div>
   </div>

@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../../utils/paths';
+
 interface Props {
   title?: string;
   /** Versión reducida para embeber en espacios chicos (ej. junto al
@@ -18,7 +20,7 @@ const CLIENT_FILES = [
 ];
 
 const logos = CLIENT_FILES.map((file) => ({
-  src: `/clients/${file}.png`,
+  src: withBase(`/clients/${file}.png`),
   alt: file.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
 }));
 

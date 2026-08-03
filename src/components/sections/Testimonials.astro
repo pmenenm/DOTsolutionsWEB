@@ -5,6 +5,8 @@
 // pausado en hover; flechas manuales reinician el temporizador. Posicionado
 // vía JS (translateX/scale/opacity/filter inline) + transition CSS — sin
 // dependencias nuevas (el proyecto no usa React/Framer Motion).
+import { withBase } from '../../utils/paths';
+
 interface Testimonial {
   quote: string;
   name: string;
@@ -35,7 +37,7 @@ const PHOTOS: Record<string, string> = {
       <article class="cf-card" data-cf-card data-cf-index={i}>
         <p class="cf-quote">“{item.quote}”</p>
         <div class="cf-author">
-          {PHOTOS[item.name] && <img src={PHOTOS[item.name]} alt={item.name} loading="lazy" />}
+          {PHOTOS[item.name] && <img src={withBase(PHOTOS[item.name])} alt={item.name} loading="lazy" />}
           <div>
             <p class="cf-name">{item.name}</p>
             <p class="cf-role">{item.role} · {item.company}</p>

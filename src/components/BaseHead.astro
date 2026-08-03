@@ -2,6 +2,7 @@
 // src/components/BaseHead.astro
 import '../styles/theme.css';
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { withBase } from '../utils/paths';
 
 interface Props {
   title: string;
@@ -30,7 +31,7 @@ const GOOGLE_FONTS_URL =
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/icono.svg" />
+<link rel="icon" type="image/svg+xml" href={withBase('/icono.svg')} />
 <meta name="generator" content={Astro.generator} />
 
 <link rel="canonical" href={canonicalUrl} />
@@ -46,14 +47,14 @@ const GOOGLE_FONTS_URL =
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image" content={new URL(withBase(image), Astro.url)} />
 <meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
 
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={canonicalUrl} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:image" content={new URL(withBase(image), Astro.url)} />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

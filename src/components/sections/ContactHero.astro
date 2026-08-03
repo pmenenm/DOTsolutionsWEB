@@ -6,6 +6,7 @@
 // llenado de datos. Foto de fondo a cobertura completa con overlay oscuro.
 import StatBar from './StatBar.astro';
 import ClientLogos from './ClientLogos.astro';
+import { withBase } from '../../utils/paths';
 
 interface Stat {
   value: number;
@@ -28,7 +29,7 @@ const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/ima
 ---
 
 <section class="contact-hero">
-  <img class="bg" src={image} alt="" />
+  <img class="bg" src={withBase(image)} alt="" />
   <div class="overlay" aria-hidden="true"></div>
 
   <div class="container contact-hero-grid">

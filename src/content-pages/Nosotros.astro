@@ -10,6 +10,7 @@ import ClientLogos from '../components/sections/ClientLogos.astro';
 import CTASection from '../components/sections/CTASection.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -31,7 +32,7 @@ const about = t.about;
   <section class="section">
     <div class="container">
       <figure class="office-photo" data-reveal>
-        <img src="/office/office-team.jpg" alt={about.office.alt} loading="lazy" />
+        <img src={withBase('/office/office-team.jpg')} alt={about.office.alt} loading="lazy" />
         <figcaption>{about.office.caption}</figcaption>
       </figure>
     </div>
@@ -78,7 +79,7 @@ const about = t.about;
           <p class="office-label">{about.presence.officeLabel}</p>
           <p class="office-address">{about.presence.office}</p>
         </div>
-        <img class="presence-photo" src="/office/office-santiago.jpg" alt={about.presence.photoAlt} loading="lazy" data-reveal />
+        <img class="presence-photo" src={withBase('/office/office-santiago.jpg')} alt={about.presence.photoAlt} loading="lazy" data-reveal />
       </div>
     </div>
   </section>

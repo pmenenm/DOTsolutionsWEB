@@ -5,11 +5,15 @@ import cloudflare from '@astrojs/cloudflare';
 
 import react from '@astrojs/react';
 
+// BUILD_TARGET=gh-pages activa un build estático para el preview en GitHub
+// Pages (sin adapter de Cloudflare, con el base path del repo). El build de
+// producción normal (sin esta variable) no cambia en nada.
+const isGhPages = process.env.BUILD_TARGET === 'gh-pages';
+
 export default defineConfig({
-  site: 'https://dotsolutions.io',
-  adapter: cloudflare({
-    imageService: 'compile',
-  }),
+  site: isGhPages ? 'https://pmenenm.github.io/DOTsolutionsWEB/' : 'https://dotsolutions.io',
+  base: isGhPages ? '/DOTsolutionsWEB' : '/',
+  ...(isGhPages ? { output: 'static' } : { adapter: cloudflare({ imageService: 'compile' }) }),
 
   i18n: {
     defaultLocale: 'es',

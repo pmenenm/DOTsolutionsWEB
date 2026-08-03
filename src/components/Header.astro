@@ -2,6 +2,7 @@
 // src/components/Header.astro
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -40,7 +41,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
   <div class="container navbar-inner">
     <nav class="nav-left" aria-label="Principal">
       <a href={sapHref} class="sap-link" aria-label={t.nav.sap}>
-        <img src="/logos/sap.png" alt={t.nav.sap} class="sap-logo" />
+        <img src={withBase('/logos/sap.png')} alt={t.nav.sap} class="sap-logo" />
       </a>
 
       <div class="mega" id="mega-services">
@@ -64,7 +65,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     </nav>
 
     <a href={homeHref} class="logo" aria-label="DOT Solutions">
-      <img src="/logoweb.png" alt="DOT Solutions" class="logo-image" />
+      <img src={withBase('/logoweb.png')} alt="DOT Solutions" class="logo-image" />
     </a>
 
     <div class="nav-right">
@@ -118,7 +119,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
         {sapItem && (
           <a href={resolveHref(sapItem.href)} class="mega-top-sap" role="menuitem">
             <span class="mega-logo">
-              <img src={sapItem.logo} alt={sapItem.title} loading="lazy" />
+              <img src={withBase(sapItem.logo)} alt={sapItem.title} loading="lazy" />
             </span>
             <span class="mega-top-sap-copy">
               <span class="mega-title">{sapItem.title}</span>
@@ -141,7 +142,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
             rel={isExternal(item.href) ? 'noopener noreferrer' : undefined}
           >
             <span class="mega-logo">
-              <img src={item.logo} alt={item.title} loading="lazy" />
+              <img src={withBase(item.logo)} alt={item.title} loading="lazy" />
             </span>
             <span class="mega-title">{item.title}</span>
             <span class="mega-desc">{item.desc}</span>
@@ -161,7 +162,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
 
   <nav class="nav-mobile" id="nav-mobile" aria-label="Móvil">
     <a href={sapHref} class="sap-link-mobile">
-      <img src="/logos/sap.png" alt={t.nav.sap} class="sap-logo-mobile" />
+      <img src={withBase('/logos/sap.png')} alt={t.nav.sap} class="sap-logo-mobile" />
     </a>
     <a href={servicesHref}>{t.nav.services}</a>
     <a href={aboutHref}>{t.nav.about}</a>
@@ -174,7 +175,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
             target={isExternal(item.href) ? '_blank' : undefined}
             rel={isExternal(item.href) ? 'noopener noreferrer' : undefined}
           >
-            <img src={item.logo} alt="" loading="lazy" />
+            <img src={withBase(item.logo)} alt="" loading="lazy" />
             {item.title}
           </a>
         </li>

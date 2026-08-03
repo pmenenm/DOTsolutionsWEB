@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../../utils/paths';
+
 interface Props {
   eyebrow: string;
   title: string;
@@ -10,7 +12,7 @@ const { eyebrow, title, subtitle, image = '/images/background_1.jpg' } = Astro.p
 ---
 
 <section class="page-hero">
-  <img class="bg" src={image} alt="" loading="eager" />
+  <img class="bg" src={withBase(image)} alt="" loading="eager" />
   <div class="overlay"></div>
   <div class="container content">
     <p class="eyebrow" data-reveal>

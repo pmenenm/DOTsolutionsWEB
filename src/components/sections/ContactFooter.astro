@@ -8,6 +8,7 @@
 // de la referencia).
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../../i18n/utils';
+import { withBase } from '../../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -46,7 +47,7 @@ const companyLinks = [
     <p class="contact-footer__subtitle" data-cf-item>{t.common.ctaBody}</p>
 
     <div class="contact-footer__row">
-      <img src="/animacion1.svg" alt="" class="contact-footer__animation" data-cf-item />
+      <img src={withBase('/animacion1.svg')} alt="" class="contact-footer__animation" data-cf-item />
       <a href={contactHref} class="contact-footer__cta" data-cf-item data-cf-magnetic>
         {t.common.ctaButtonShort}
         <span class="arrow" aria-hidden="true">→</span>
@@ -58,7 +59,7 @@ const companyLinks = [
     <div class="contact-footer__footer-grid">
       <div class="contact-footer__brand">
         <a href={getRelativeLocaleUrl(lang, '')} class="contact-footer__logo-link">
-          <img src="/logoweb.png" alt="DOT Solutions" class="contact-footer__logo" />
+          <img src={withBase('/logoweb.png')} alt="DOT Solutions" class="contact-footer__logo" />
         </a>
         <p class="contact-footer__blurb">{t.footer.about}</p>
         <p class="contact-footer__motto">{t.footer.motto}</p>
