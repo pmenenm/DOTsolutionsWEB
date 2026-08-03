@@ -186,6 +186,20 @@ html {
   color: var(--accent-hover);
 }
 
+/* Tarjeta de vidrio — usada cuando una sección flota sobre el fondo fijo
+   compartido (ver PageBackground.astro en Home). Excepción explícita al
+   principio de "superficies planas": acá el vidrio ES el mecanismo de
+   lectura sobre una imagen de fondo constante. Usa --bg-primary (no los
+   --dot-* directo) para heredar automáticamente el tinte correcto si la
+   sección está envuelta en .theme-light. */
+.glass-panel {
+  background: color-mix(in srgb, var(--bg-primary) 62%, transparent);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+  border-radius: var(--radius-lg);
+}
+
 /* Márgenes responsive obligatorios del sistema (§05): 24 / 72 / 160 */
 @media (min-width: 768px) {
   :root { --container-pad: 4.5rem; } /* 72px tablet */

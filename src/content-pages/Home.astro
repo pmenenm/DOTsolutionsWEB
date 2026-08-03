@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HeroReveal from '../components/sections/HeroReveal.astro';
 import Hero from '../components/sections/Hero.astro';
 import ClientLogos from '../components/sections/ClientLogos.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
@@ -20,45 +21,50 @@ const t = useTranslations(lang);
 ---
 
 <Layout title={t.meta.title} description={t.meta.description} lang={lang} path="/" hideFooter={true}>
-  <Hero
-    eyebrow={t.home.hero.eyebrow}
-    title1={t.home.hero.title1}
-    title2={t.home.hero.title2}
-    title3={t.home.hero.title3}
-    subtitle={t.home.hero.subtitle}
-    cta={t.home.hero.cta}
-    ctaHref={getRelativeLocaleUrl(lang, 'contacto')}
-    ctaSecondary={t.home.hero.ctaSecondary}
-    ctaSecondaryHref={getRelativeLocaleUrl(lang, 'servicios')}
-    capabilities={t.home.hero.capabilities}
-  />
+  <HeroReveal>
+    <Hero
+      eyebrow={t.home.hero.eyebrow}
+      title1={t.home.hero.title1}
+      title2={t.home.hero.title2}
+      title3={t.home.hero.title3}
+      subtitle={t.home.hero.subtitle}
+      cta={t.home.hero.cta}
+      ctaHref={getRelativeLocaleUrl(lang, 'contacto')}
+      ctaSecondary={t.home.hero.ctaSecondary}
+      ctaSecondaryHref={getRelativeLocaleUrl(lang, 'servicios')}
+      capabilities={t.home.hero.capabilities}
+    />
 
-  <ClientLogos title={t.common.clientsTitle} />
+    <ClientLogos title={t.common.clientsTitle} />
 
-  <section class="section">
-    <div class="container">
-      <SectionHeading
-        eyebrow={t.home.industries.eyebrow}
-        title={t.home.industries.title}
-        subtitle={t.home.industries.subtitle}
-      />
-      <div class="section-body">
-        <IndustriesTeaser
-          featured={t.home.industries.featured}
-          othersLabel={t.home.industries.othersLabel}
-          others={t.home.industries.others}
+    <section class="section">
+      <div class="container glass-panel section-panel heading-panel">
+        <SectionHeading
+          eyebrow={t.home.industries.eyebrow}
+          title={t.home.industries.title}
+          subtitle={t.home.industries.subtitle}
+          align="center"
         />
       </div>
-    </div>
-  </section>
+      <div class="container industries-panel">
+        <div class="section-body">
+          <IndustriesTeaser
+            featured={t.home.industries.featured}
+            othersLabel={t.home.industries.othersLabel}
+            others={t.home.industries.others}
+          />
+        </div>
+      </div>
+    </section>
 
-  <ServicesShowcase
-    eyebrow={t.home.servicesTeaser.eyebrow}
-    titleHighlight={t.home.servicesTeaser.titleHighlight}
-    titleRest={t.home.servicesTeaser.titleRest}
-    subtitle={t.home.servicesTeaser.subtitle}
-    items={t.home.servicesTeaser.items}
-  />
+    <ServicesShowcase
+      eyebrow={t.home.servicesTeaser.eyebrow}
+      titleHighlight={t.home.servicesTeaser.titleHighlight}
+      titleRest={t.home.servicesTeaser.titleRest}
+      subtitle={t.home.servicesTeaser.subtitle}
+      products={t.home.servicesTeaser.products.map((p) => ({ ...p, href: getRelativeLocaleUrl(lang, p.href) }))}
+    />
+  </HeroReveal>
 
   <section class="section theme-light">
     <div class="container">
@@ -91,6 +97,17 @@ const t = useTranslations(lang);
 <style>
   .section {
     padding-block: var(--space-lg);
+    padding-inline: var(--container-pad);
+  }
+  .section-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+  }
+  .industries-panel {
+    padding-inline: 0;
+    margin-top: var(--space-lg);
+  }
+  .industries-panel .section-body {
+    margin-top: 0;
   }
   .section-body {
     margin-top: var(--space-lg);

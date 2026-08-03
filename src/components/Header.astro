@@ -30,10 +30,10 @@ const PRESENCE_FLAGS = ['🇨🇱', '🇵🇪', '🇨🇴', '🇲🇽', '🇵�
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 const resolveHref = (href: string) => (isExternal(href) ? href : getRelativeLocaleUrl(lang, href));
 
-// SAP Business One va en la cuadrícula junto a los demás productos — mismo
-// tamaño de logo, misma tarjeta. Mobile One queda fuera de esta cuadrícula
-// del mega menú (se mantiene en el listado del menú móvil, más abajo).
-const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'Mobile One');
+// SAP Business One se destaca aparte, junto al título del ecosistema — no
+// va en la cuadrícula de productos (los otros 8 sí, incluyendo Mobile One).
+const sapItem = t.nav.solutionsMenu.items.find((item) => item.title === 'SAP Business One');
+const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP Business One');
 ---
 
 <header class="navbar" id="navbar">
@@ -114,6 +114,19 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'Mob
           <h3 class="mega-top-title">{t.nav.solutionsMenu.ecosystemTitle}</h3>
           <p class="mega-top-tagline">{t.nav.solutionsMenu.ecosystemTagline}</p>
         </div>
+
+        {sapItem && (
+          <a href={resolveHref(sapItem.href)} class="mega-top-sap" role="menuitem">
+            <span class="mega-logo">
+              <img src={sapItem.logo} alt={sapItem.title} loading="lazy" />
+            </span>
+            <span class="mega-top-sap-copy">
+              <span class="mega-title">{sapItem.title}</span>
+              <span class="mega-desc">{sapItem.desc}</span>
+            </span>
+            <span class="mega-more">{t.nav.solutionsMenu.moreLabel} →</span>
+          </a>
+        )}
       </div>
 
       <hr class="mega-divider" />
@@ -430,7 +443,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'Mob
     left: 0;
     right: 0;
     width: 100%;
-    background-color: color-mix(in srgb, var(--dot-light) 96%, transparent);
+    background-color: var(--dot-light);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
     opacity: 0;
@@ -448,8 +461,45 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'Mob
     padding-block: var(--space-lg);
   }
 
-  /* Sección superior: solo el copy del ecosistema — SAP ahora vive en la
-     cuadrícula junto a los demás productos, no destacado aparte. */
+  /* Sección superior: el copy del ecosistema a la izquierda y SAP Business
+     One destacado a la derecha, ocupando todo el margen disponible del
+     título/tagline — no va en la cuadrícula junto a los demás productos. */
+  .mega-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+  .mega-top-copy {
+    flex-shrink: 0;
+  }
+  .mega-top-sap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex: 1;
+    margin-left: auto;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+  .mega-top-sap:hover {
+    border-color: var(--dot-micelio);
+    background: color-mix(in srgb, var(--dot-micelio) 6%, transparent);
+  }
+  .mega-top-sap-copy {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .mega-top-sap .mega-desc {
+    -webkit-line-clamp: 1;
+  }
+  .mega-top-sap .mega-more {
+    margin-top: 0;
+    flex-shrink: 0;
+  }
   .mega-top-title {
     font-family: var(--font-body);
     font-weight: 600;

@@ -123,13 +123,18 @@ const ICONS: Record<string, string> = {
     align-items: center;
     gap: var(--space-md);
     padding-block: var(--space-lg);
+    /* Extiende la caja hasta el borde real de la página a la derecha (compensa
+       el gutter de .section con margen negativo) — el padding extra evita que
+       el contenido se corra, así el fondo del hover llega a ras de página. */
+    margin-right: calc(-1 * var(--container-pad));
+    padding-right: var(--container-pad);
     transition: background-color var(--transition-smooth);
   }
   .eco-row:not(:last-of-type) {
     border-bottom: 1px solid var(--border);
   }
   .eco-row:hover {
-    background: color-mix(in srgb, var(--dot-forest) 30%, transparent);
+    background: color-mix(in srgb, var(--dot-dark) 60%, transparent);
   }
 
   .eco-marker {

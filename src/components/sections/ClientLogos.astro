@@ -1,9 +1,12 @@
 ---
 interface Props {
-  title: string;
+  title?: string;
+  /** Versión reducida para embeber en espacios chicos (ej. junto al
+      formulario de /contacto) — sin .container, logos más pequeños. */
+  compact?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, compact = false } = Astro.props;
 
 const CLIENT_FILES = [
   '100-f-utbol', 'agronutrition', 'agrosystems', 'allnutrition', 'asics', 'beauty-plus',
@@ -23,14 +26,16 @@ const logos = CLIENT_FILES.map((file) => ({
 const track = [...logos, ...logos];
 ---
 
-<section class="client-logos" data-reveal>
-  <p class="title">{title}</p>
-  <div class="marquee-wrap">
-    <div class="marquee">
-      <div class="marquee-track">
-        {track.map((logo) => (
-          <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
-        ))}
+<section class:list={['client-logos', { compact }]} data-reveal>
+  <div class={compact ? 'compact-wrap' : 'container'}>
+    {title && <p class="title">{title}</p>}
+    <div class="marquee-wrap">
+      <div class="marquee">
+        <div class="marquee-track">
+          {track.map((logo) => (
+            <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
+          ))}
+        </div>
       </div>
     </div>
   </div>
@@ -40,14 +45,35 @@ const track = [...logos, ...logos];
   .client-logos {
     padding-block: var(--space-lg);
   }
+  .client-logos.compact {
+    padding-block: 0;
+  }
+  .compact-wrap {
+    width: 100%;
+  }
+  .client-logos.compact .marquee-track {
+    gap: var(--space-md);
+    animation-duration: 34s;
+  }
+  .client-logos.compact .marquee-track img {
+    height: 1.35rem;
+  }
   .title {
-    text-align: center;
+    width: fit-content;
+    margin-inline: auto;
+    margin-bottom: var(--space-md);
+    padding: 0.5rem 1.25rem;
+    background: color-mix(in srgb, var(--dot-dark) 45%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    border-radius: var(--radius-full);
     font-size: var(--text-sm);
     font-weight: 500;
     color: var(--dot-micelio);
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: var(--space-md);
   }
 
   .marquee-wrap {
@@ -72,11 +98,14 @@ const track = [...logos, ...logos];
     height: 2rem;
     width: auto;
     object-fit: contain;
-    filter: grayscale(1) opacity(0.55);
-    transition: filter var(--transition-fast);
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+    transition: filter var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
   }
   .marquee-track img:hover {
-    filter: brightness(0) invert(1);
+    filter: brightness(0);
+    opacity: 1;
+    transform: scale(1.1);
   }
 
   @keyframes scroll-left {

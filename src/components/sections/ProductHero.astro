@@ -8,9 +8,12 @@ interface Props {
   cta: string;
   ctaHref: string;
   logo: string;
+  ctaSecondary?: string;
+  ctaSecondaryHref?: string;
 }
 
-const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo } = Astro.props;
+const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo, ctaSecondary, ctaSecondaryHref } = Astro.props;
+const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
 ---
 
 <section class="product-hero">
@@ -25,7 +28,20 @@ const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo } = Astro.p
       </h1>
       <p class="subtitle">{subtitle}</p>
       <p class="paragraph">{paragraph}</p>
-      <a href={ctaHref} class="cta">{cta}</a>
+      <div class="product-hero-actions">
+        <a href={ctaHref} class="cta">{cta}</a>
+        {ctaSecondary && ctaSecondaryHref && (
+          <a
+            href={ctaSecondaryHref}
+            class="cta-secondary"
+            target={isExternalSecondary ? '_blank' : undefined}
+            rel={isExternalSecondary ? 'noopener noreferrer' : undefined}
+          >
+            {ctaSecondary}
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
     </div>
 
     <div class="product-hero-visual" aria-hidden="true">
@@ -141,9 +157,16 @@ const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo } = Astro.p
     max-width: 48ch;
   }
 
+  .product-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
   .cta {
     display: inline-flex;
-    margin-top: var(--space-lg);
     background: var(--accent);
     color: var(--on-accent);
     text-decoration: none;
@@ -155,6 +178,29 @@ const { line1, line2, line3, subtitle, paragraph, cta, ctaHref, logo } = Astro.p
   .cta:hover {
     background: var(--accent-hover);
     transform: scale(1.03);
+  }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 1rem 2.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+  .cta-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .cta-secondary .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .cta-secondary:hover .arrow {
+    transform: translateX(3px);
   }
 
   .product-hero-visual {

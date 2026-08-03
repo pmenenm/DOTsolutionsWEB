@@ -1,0 +1,170 @@
+---
+// src/components/sections/ContactHero.astro
+// Hero de /contacto a dos columnas: copy (eyebrow+título+subtítulo+prueba
+// social) a la izquierda, formulario (via slot) a la derecha — para que
+// todo se vea junto de entrada y genere confianza antes de pedir el
+// llenado de datos. Foto de fondo a cobertura completa con overlay oscuro.
+import StatBar from './StatBar.astro';
+import ClientLogos from './ClientLogos.astro';
+
+interface Stat {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  clientsTitle: string;
+  statsTitle: string;
+  stats: Stat[];
+  image?: string;
+}
+
+const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/images/contacto.png' } = Astro.props;
+---
+
+<section class="contact-hero">
+  <img class="bg" src={image} alt="" />
+  <div class="overlay" aria-hidden="true"></div>
+
+  <div class="container contact-hero-grid">
+    <div class="contact-hero-copy">
+      <p class="eyebrow" data-reveal>
+        <span class="dot"></span>
+        {eyebrow}
+      </p>
+      <h1 class="mask"><span class="mask-inner">{title}</span></h1>
+      <p class="subtitle" data-reveal>{subtitle}</p>
+
+      <div class="hero-trust" data-reveal>
+        <p class="hero-trust-label">{clientsTitle}</p>
+        <ClientLogos compact />
+        <p class="hero-trust-label hero-trust-label--stats">{statsTitle}</p>
+        <StatBar stats={stats} compact />
+      </div>
+    </div>
+
+    <div class="contact-hero-form" data-reveal>
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-hero {
+    position: relative;
+    padding-block: calc(var(--space-hero) * 0.55) var(--space-lg);
+    overflow: hidden;
+    background: var(--dot-dark);
+  }
+
+  .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dot-dark) 55%, transparent) 0%,
+      color-mix(in srgb, var(--dot-dark) 78%, transparent) 70%,
+      var(--dot-dark) 100%
+    );
+  }
+
+  .contact-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+
+  /* Hard-Edge Mask Reveal — mismo mecanismo que Hero/ProductHero, sin JS. */
+  .mask {
+    display: block;
+    overflow: hidden;
+    margin-bottom: -0.1em;
+  }
+  .mask-inner {
+    display: block;
+    padding-bottom: 0.1em;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.625rem, 3vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    max-width: 18ch;
+    transform: translateY(100%);
+    animation: contact-hero-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+  @keyframes contact-hero-reveal {
+    to {
+      transform: translateY(0%);
+    }
+  }
+
+  .subtitle {
+    margin-top: var(--space-sm);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-primary);
+    max-width: 42ch;
+  }
+
+  /* Prueba social compacta — logos y resultados conviven bajo el copy,
+     con jerarquía discreta (divisores, no headings grandes) para no
+     competirle protagonismo al título ni al formulario. */
+  .hero-trust {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    max-width: 42ch;
+  }
+  .hero-trust-label {
+    margin-bottom: var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+  }
+  .hero-trust-label--stats {
+    margin-top: var(--space-md);
+  }
+
+  @media (min-width: 900px) {
+    .contact-hero-grid {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+</style>

@@ -66,7 +66,7 @@
           "category": "Gastronomy",
           "desc": "Optimize purchasing, inventory and production with full control.",
           "logo": "/logos/isotipos/smartorderiso.svg",
-          "href": "https://smart-order.io/"
+          "href": "smart-order"
         },
         {
           "title": "BiPyxis",
@@ -85,14 +85,38 @@
       ]
     },
     "countries": [
-      { "name": "Chile", "flag": "🇨🇱" },
-      { "name": "Peru", "flag": "🇵🇪" },
-      { "name": "Colombia", "flag": "🇨🇴" },
-      { "name": "Mexico", "flag": "🇲🇽" },
-      { "name": "Panama", "flag": "🇵🇦" },
-      { "name": "Argentina", "flag": "🇦🇷" },
-      { "name": "Uruguay", "flag": "🇺🇾" },
-      { "name": "Paraguay", "flag": "🇵🇾" }
+      {
+        "name": "Chile",
+        "flag": "🇨🇱"
+      },
+      {
+        "name": "Peru",
+        "flag": "🇵🇪"
+      },
+      {
+        "name": "Colombia",
+        "flag": "🇨🇴"
+      },
+      {
+        "name": "Mexico",
+        "flag": "🇲🇽"
+      },
+      {
+        "name": "Panama",
+        "flag": "🇵🇦"
+      },
+      {
+        "name": "Argentina",
+        "flag": "🇦🇷"
+      },
+      {
+        "name": "Uruguay",
+        "flag": "🇺🇾"
+      },
+      {
+        "name": "Paraguay",
+        "flag": "🇵🇾"
+      }
     ]
   },
   "common": {
@@ -103,10 +127,30 @@
     "clientsTitle": "+300 companies already run on DOT",
     "statsTitle": "A track record that backs us up",
     "stats": [
-      { "value": 300, "prefix": "+", "suffix": "", "label": "Active, satisfied clients" },
-      { "value": 16, "prefix": "+", "suffix": "", "label": "Years of retail experience" },
-      { "value": 75, "prefix": "+", "suffix": "", "label": "Specialized professionals" },
-      { "value": 14, "prefix": "+", "suffix": "", "label": "Years of SAP experience" }
+      {
+        "value": 300,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Active, satisfied clients"
+      },
+      {
+        "value": 16,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Years of retail experience"
+      },
+      {
+        "value": 75,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Specialized professionals"
+      },
+      {
+        "value": 14,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Years of SAP experience"
+      }
     ],
     "learnMore": "Learn more",
     "explore": "Explore"
@@ -147,24 +191,60 @@
       "eyebrow": "How we work",
       "title": "A partner, not a vendor",
       "items": [
-        { "title": "Certified experts", "desc": "Certified specialists in every functional area, with years implementing SAP." },
-        { "title": "Tailored solutions", "desc": "Built around your operation's real needs, not generic templates." },
-        { "title": "End-to-end support", "desc": "Design, implementation and support from start to finish, day to day." },
-        { "title": "Measurable results", "desc": "Efficiency, control and profitability you can actually verify." }
+        {
+          "title": "Certified experts",
+          "desc": "Certified specialists in every functional area, with years implementing SAP."
+        },
+        {
+          "title": "Tailored solutions",
+          "desc": "Built around your operation's real needs, not generic templates."
+        },
+        {
+          "title": "End-to-end support",
+          "desc": "Design, implementation and support from start to finish, day to day."
+        },
+        {
+          "title": "Measurable results",
+          "desc": "Efficiency, control and profitability you can actually verify."
+        }
       ]
     },
     "team": {
       "eyebrow": "Our team",
       "title": "The people behind DOT",
       "members": [
-        { "name": "Héctor Vera", "role": "Chief Executive Officer" },
-        { "name": "Felipe Machuca", "role": "Chief Operating Officer" },
-        { "name": "Manuel Villavicencio", "role": "Chief Commercial Officer" },
-        { "name": "Benjamin Belfus", "role": "Chief Growth Officer" },
-        { "name": "Cristian Huerta", "role": "Retail Manager" },
-        { "name": "Juan Vásquez", "role": "SAP Manager" },
-        { "name": "David Miranda", "role": "Development Manager" },
-        { "name": "Luis Felipe", "role": "Infrastructure Manager" }
+        {
+          "name": "Héctor Vera",
+          "role": "Chief Executive Officer"
+        },
+        {
+          "name": "Felipe Machuca",
+          "role": "Chief Operating Officer"
+        },
+        {
+          "name": "Manuel Villavicencio",
+          "role": "Chief Commercial Officer"
+        },
+        {
+          "name": "Benjamin Belfus",
+          "role": "Chief Growth Officer"
+        },
+        {
+          "name": "Cristian Huerta",
+          "role": "Retail Manager"
+        },
+        {
+          "name": "Juan Vásquez",
+          "role": "SAP Manager"
+        },
+        {
+          "name": "David Miranda",
+          "role": "Development Manager"
+        },
+        {
+          "name": "Luis Felipe",
+          "role": "Infrastructure Manager"
+        }
       ]
     },
     "presence": {
@@ -196,7 +276,12 @@
       "subtitle": "All the software your business needs to operate — from a single provider, with years of experience and the full tech stack, across LATAM.",
       "cta": "Let's talk",
       "ctaSecondary": "See solutions",
-      "capabilities": ["SAP Business One", "Point of sale", "E-commerce", "E-invoicing"]
+      "capabilities": [
+        "SAP Business One",
+        "Point of sale",
+        "E-commerce",
+        "E-invoicing"
+      ]
     },
     "industries": {
       "eyebrow": "Industry ecosystems",
@@ -217,68 +302,127 @@
         }
       ],
       "othersLabel": "We also operate in",
-      "others": ["Hospitality", "Security", "Professional services"]
+      "others": [
+        "Hospitality",
+        "Security",
+        "Professional services"
+      ]
     },
     "servicesTeaser": {
-      "eyebrow": "Our solutions",
+      "eyebrow": "Our ecosystem",
       "titleHighlight": "A product ecosystem",
       "titleRest": ", not standalone tools",
-      "subtitle": "Every solution exists to solve a real problem in your operation — and all of them integrate natively with SAP Business One.",
-      "items": [
+      "subtitle": "Every solution exists to solve a real problem in your operation and all of them integrate natively with SAP Business One.",
+      "demoLabel": "Request a demo of",
+      "products": [
         {
-          "headline": "Run your e-commerce and stores as if they were one.",
-          "products": [
-            {
-              "name": "RetailPro Prism",
-              "logo": "/logos/retailpro.png",
-              "desc": "Unifies in-store, e-commerce and mobile selling on a single SAP core: stock, customers and finance always in sync."
-            },
-            {
-              "name": "TCPOS",
-              "logo": "/logos/tcpos.png",
-              "desc": "Adds an agile point of sale that speeds up every transaction and improves the floor experience."
-            }
-          ]
+          "name": "SAP Business One",
+          "category": "Enterprise ERP Core",
+          "logo": "/logos/logos%20dot/sapgold.png",
+          "desc": "The ERP that integrates finance, sales, purchasing, inventory and strategic analytics on a single platform. Our entire ecosystem connects natively to SAP to guarantee full control of your business.",
+          "bullets": [
+            "Native integration with every DOT Solutions module",
+            "Certified SAP Gold Partner across LATAM",
+            "Implementation, specialized technical support and custom development"
+          ],
+          "highlight": true,
+          "href": "sap-business-one"
         },
         {
-          "headline": "Organize, measure and make your business more profitable with simple, powerful tools.",
-          "products": [
-            {
-              "name": "Smart Order",
-              "logo": "/logos/smart-order.svg",
-              "desc": "Optimizes purchasing, inventory and production with full control over your food-service operation."
-            },
-            {
-              "name": "BiPyxis",
-              "logo": "/logos/bipyxis.png",
-              "desc": "Turns your financial data into strategic decisions, with real visibility into which area is actually making or losing you money."
-            }
-          ]
+          "name": "TCPOS",
+          "category": "Point of sale",
+          "logo": "/logos/logos%20dot/tcpos.svg",
+          "desc": "Agile point of sale that connects kitchen, bar and register in real time, with native integration to SAP Business One.",
+          "bullets": [
+            "Real-time coordination between kitchen, bar and register",
+            "Order, payment and inventory management in a single system",
+            "Native integration with SAP Business One"
+          ],
+          "href": "tc-pos"
         },
         {
-          "headline": "Build loyalty and bring your customers back.",
-          "products": [
-            {
-              "name": "Loyalty",
-              "logo": "/logos/loyalty.png",
-              "desc": "Turns every visit into a chance to build loyalty, with actionable data on your customers' real behavior."
-            },
-            {
-              "name": "Facturación Electrónica",
-              "logo": "/logos/dte.svg",
-              "desc": "Automates issuing and stamping your DTEs with the SII, with no friction or compliance risk."
-            }
-          ]
+          "name": "RetailPro Prism",
+          "category": "Omnichannel retail",
+          "logo": "/logos/logos%20dot/retail.png",
+          "desc": "Unifies in-store, e-commerce and mobile selling on a single SAP core: stock, customers and finance always in sync.",
+          "bullets": [
+            "Centralized POS, back office and inventory",
+            "+159k points of sale installed worldwide",
+            "Scales from a single store to franchises and e-commerce"
+          ],
+          "href": "retail-pro-prism"
         },
         {
-          "headline": "Cloud infrastructure for businesses that need real performance.",
-          "products": [
-            {
-              "name": "Hostdot",
-              "logo": "/logos/hostdot.svg",
-              "desc": "Premium hosting, VPS servers and expert support built for modern businesses. Backed by NVMe SSD technology, LiteSpeed and top-tier security."
-            }
-          ]
+          "name": "Facturación Electrónica",
+          "category": "DTE",
+          "logo": "/logos/logos%20dot/dte.png",
+          "desc": "Automates issuing and stamping your DTEs with the SII, with no friction or compliance risk.",
+          "bullets": [
+            "Automatic issuing and stamping with the SII",
+            "Keeps working even without an internet connection",
+            "Documents backed up for 6 years"
+          ],
+          "href": "dte-facturacion-electronica"
+        },
+        {
+          "name": "BiPyxis",
+          "category": "Business Intelligence",
+          "logo": "/logos/logos%20dot/bipyxis.png",
+          "desc": "Turns your financial data into strategic decisions, with real visibility into which area is actually making or losing you money.",
+          "bullets": [
+            "Dynamic reports and charts in seconds",
+            "One system, multiple companies",
+            "Direct integration with SAP Business One"
+          ],
+          "href": "bipyxis"
+        },
+        {
+          "name": "Loyalty",
+          "category": "Loyalty",
+          "logo": "/logos/logos%20dot/loyalty.png",
+          "desc": "Turns every visit into a chance to build loyalty, with actionable data on your customers' real behavior.",
+          "bullets": [
+            "Geolocation, points and native payments",
+            "Deployed 4x faster than building it in-house",
+            "Real-time sync with SAP Business One"
+          ],
+          "href": "loyalty"
+        },
+        {
+          "name": "Smart Order",
+          "category": "Gastronomy",
+          "logo": "/logos/logos%20dot/smartorder.png",
+          "desc": "Optimizes purchasing, inventory and production with full control over your food-service operation.",
+          "bullets": [
+            "Real-time purchasing and inventory optimization",
+            "Full control over production",
+            "Built for high-volume food-service operations"
+          ],
+          "href": "smart-order"
+        },
+        {
+          "name": "Mobile One",
+          "category": "Mobile selling",
+          "logo": "/logos/logos%20dot/mobineone.png",
+          "desc": "Sell, charge and issue documents right next to the customer, without depending on the register, with native integration to SAP Business One.",
+          "bullets": [
+            "Mobile selling wherever your customer is",
+            "Charging and document issuing in the same flow",
+            "Native sync with SAP Business One"
+          ],
+          "href": "mobile-one"
+        },
+        {
+          "name": "Hostdot",
+          "category": "Cloud infrastructure",
+          "logo": "/logos/logos%20dot/hostdot.png",
+          "desc": "Premium hosting, VPS servers and expert support built for modern businesses. Backed by NVMe SSD technology, LiteSpeed and top-tier security.",
+          "bullets": [
+            "NVMe SSD + LiteSpeed, under 50ms response time",
+            "99.9% guaranteed uptime",
+            "Live technical support, 24/7"
+          ],
+          "href": "hostdot"
         }
       ]
     },
@@ -292,21 +436,30 @@
           "name": "Héctor Pincheira",
           "role": "Chief Information Officer (CIO)",
           "company": "Frutexsa",
-          "products": ["SAP Business One"]
+          "products": [
+            "SAP Business One"
+          ]
         },
         {
           "quote": "Finance, sales and inventory processes have improved significantly, streamlining daily operations.",
           "name": "Francisco Zegers",
           "role": "Production & Logistics Manager",
           "company": "Lo Saldes",
-          "products": ["TCPos", "SAP Business One"]
+          "products": [
+            "TCPos",
+            "SAP Business One"
+          ]
         },
         {
           "quote": "DOT Solutions supports us day to day, delivering a robust, efficient and reliable checkout across our physical stores.",
           "name": "Felipe Mansilla",
           "role": "IT Manager",
           "company": "DBS Beauty Store",
-          "products": ["RetailPro", "Mobile One", "Custom development"]
+          "products": [
+            "RetailPro",
+            "Mobile One",
+            "Custom development"
+          ]
         }
       ]
     }
@@ -320,40 +473,91 @@
       "subtitle": "Our expert team supports you through every phase of the IT lifecycle to maximize the value of your solutions."
     },
     "pillars": [
-      { "title": "Frictionless implementation", "desc": "Projects on time, on budget and with measurable results." },
-      { "title": "Support that ensures continuity", "desc": "Critical incidents resolved and operations running without interruption." },
-      { "title": "Strategic consulting with impact", "desc": "End-to-end technology solutions for your business processes." }
+      {
+        "title": "Frictionless implementation",
+        "desc": "Projects on time, on budget and with measurable results."
+      },
+      {
+        "title": "Support that ensures continuity",
+        "desc": "Critical incidents resolved and operations running without interruption."
+      },
+      {
+        "title": "Strategic consulting with impact",
+        "desc": "End-to-end technology solutions for your business processes."
+      }
     ],
     "services": {
       "eyebrow": "What we do",
       "title": "Support across the entire IT lifecycle",
       "items": [
-        { "title": "Implementation", "desc": "ASAP methodology and a team of consultants per functional area ensure projects on time, on budget and with measurable results." },
-        { "title": "Support", "desc": "Remote or on-site plans to resolve critical incidents, ensure operational continuity and optimize system usage." },
-        { "title": "Consulting", "desc": "We identify current and future needs across your business processes and propose comprehensive technology solutions." },
-        { "title": "Training", "desc": "Tailored training for your team, designed to transfer practical knowledge and drive adoption." },
-        { "title": "Development & integration", "desc": "System integrations and complementary development that streamline processes and align technology with your strategy." }
+        {
+          "title": "Implementation",
+          "desc": "ASAP methodology and a team of consultants per functional area ensure projects on time, on budget and with measurable results."
+        },
+        {
+          "title": "Support",
+          "desc": "Remote or on-site plans to resolve critical incidents, ensure operational continuity and optimize system usage."
+        },
+        {
+          "title": "Consulting",
+          "desc": "We identify current and future needs across your business processes and propose comprehensive technology solutions."
+        },
+        {
+          "title": "Training",
+          "desc": "Tailored training for your team, designed to transfer practical knowledge and drive adoption."
+        },
+        {
+          "title": "Development & integration",
+          "desc": "System integrations and complementary development that streamline processes and align technology with your strategy."
+        }
       ]
     },
     "method": {
       "eyebrow": "Methodology",
       "title": "A proven path, from diagnosis to evolution",
       "steps": [
-        { "title": "Initial diagnosis", "desc": "Mapping the processes and needs of your operation." },
-        { "title": "Planning & implementation", "desc": "Execution with the ASAP methodology, led by specialists in each area." },
-        { "title": "Training & adoption", "desc": "Hands-on training so your team truly uses the platform." },
-        { "title": "Continuous support", "desc": "Ongoing guidance and system evolution alongside your operation." },
-        { "title": "Development for new challenges", "desc": "Additional integrations and development as the business grows." }
+        {
+          "title": "Initial diagnosis",
+          "desc": "Mapping the processes and needs of your operation."
+        },
+        {
+          "title": "Planning & implementation",
+          "desc": "Execution with the ASAP methodology, led by specialists in each area."
+        },
+        {
+          "title": "Training & adoption",
+          "desc": "Hands-on training so your team truly uses the platform."
+        },
+        {
+          "title": "Continuous support",
+          "desc": "Ongoing guidance and system evolution alongside your operation."
+        },
+        {
+          "title": "Development for new challenges",
+          "desc": "Additional integrations and development as the business grows."
+        }
       ]
     },
     "why": {
       "eyebrow": "Why DOT",
       "title": "A partner, not a vendor",
       "items": [
-        { "title": "Certified experts", "desc": "Certified specialists in every functional area." },
-        { "title": "Tailored solutions", "desc": "Adapted to the real needs of your operation." },
-        { "title": "End-to-end support", "desc": "Design, implementation and support from start to finish." },
-        { "title": "Measurable results", "desc": "Efficiency, control and profitability you can verify." }
+        {
+          "title": "Certified experts",
+          "desc": "Certified specialists in every functional area."
+        },
+        {
+          "title": "Tailored solutions",
+          "desc": "Adapted to the real needs of your operation."
+        },
+        {
+          "title": "End-to-end support",
+          "desc": "Design, implementation and support from start to finish."
+        },
+        {
+          "title": "Measurable results",
+          "desc": "Efficiency, control and profitability you can verify."
+        }
       ]
     }
   },
@@ -372,9 +576,29 @@
       "phone": "Phone",
       "company": "Company",
       "industry": "Industry",
-      "industryOptions": ["Retail", "Gastronomy", "Agriculture", "Hospitality", "Mining", "Industrial", "Services", "Other"],
+      "industryOptions": [
+        "Retail",
+        "Gastronomy",
+        "Agriculture",
+        "Hospitality",
+        "Mining",
+        "Industrial",
+        "Services",
+        "Other"
+      ],
       "solution": "Solution of interest",
-      "solutionOptions": ["SAP Business One", "RetailPro", "Prism", "TCPOS", "Infrastructure", "DTE", "Smart Order", "DOT Loyalty", "BiPyxis", "Other"],
+      "solutionOptions": [
+        "SAP Business One",
+        "RetailPro",
+        "Prism",
+        "TCPOS",
+        "Infrastructure",
+        "DTE",
+        "Smart Order",
+        "DOT Loyalty",
+        "BiPyxis",
+        "Other"
+      ],
       "challenge": "What is your business challenge?",
       "challengePlaceholder": "Tell us about your company and the challenge you want to solve…",
       "submit": "Send message",
@@ -455,10 +679,766 @@
     "authority": {
       "title": "Integration with experience and agility. Specialized consulting and effective implementation.",
       "stats": [
-        { "value": 12, "prefix": "+", "suffix": "", "label": "Years of SAP experience.", "sub": "Personalized implementation with ASAP methodology." },
-        { "value": 300, "prefix": "+", "suffix": "", "label": "Active clients.", "sub": "Progressive rollout without interrupting your operation." },
-        { "value": 50, "prefix": "+", "suffix": "", "label": "SAP professionals.", "sub": "Ongoing technical support and hands-on training." },
-        { "value": 5, "prefix": "+", "suffix": "", "label": "Countries.", "sub": "Transformed and empowered across Latin America." }
+        {
+          "value": 12,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "Personalized implementation with ASAP methodology."
+        },
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active clients.",
+          "sub": "Progressive rollout without interrupting your operation."
+        },
+        {
+          "value": 50,
+          "prefix": "+",
+          "suffix": "",
+          "label": "SAP professionals.",
+          "sub": "Ongoing technical support and hands-on training."
+        },
+        {
+          "value": 5,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Countries.",
+          "sub": "Transformed and empowered across Latin America."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "retailPro": {
+    "metaTitle": "RetailPro Prism",
+    "metaDescription": "RetailPro Prism, the omnichannel retail management system from Retail Pro (A Nayax Company), implemented by DOT Solutions alongside SAP Business One. Manage stores, e-commerce and franchises from a single platform.",
+    "hero": {
+      "line1": "Store management",
+      "line2": "that's efficient, scalable",
+      "line3": "and omnichannel",
+      "subtitle": "A robust system that streamlines sales, inventory and analytics, letting you manage physical stores, kiosks and e-commerce from a single platform.",
+      "paragraph": "RetailPro Prism centralizes POS, back office and inventory, and integrates natively with SAP Business One. It scales with your business, from a single store to a franchise network, without losing control or visibility.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From fragmented management to omnichannel control",
+      "items": [
+        {
+          "title": "Are you managing stores, kiosks and e-commerce as separate systems?",
+          "desc": "RetailPro Prism centralizes POS, back office and inventory in a single platform, so your physical and digital operation works as one."
+        },
+        {
+          "title": "Does your inventory fail to reflect what's happening in real time?",
+          "desc": "Sales and stock update instantly across every channel, so you never sell something you no longer have."
+        },
+        {
+          "title": "Does every new store or franchise mean reconfiguring everything from scratch?",
+          "desc": "Scale across formats: stores, franchises and digital channels, with centralized support and a consistent experience across devices."
+        },
+        {
+          "title": "Are you deciding with outdated reports instead of live data?",
+          "desc": "Custom analytics and reports show you which product, store or channel is truly profitable, today."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "RetailPro Prism is the modular extension of Retail Pro (A Nayax Company) that adapts your operational flow with remote updates and a consistent experience on any device: Windows, iOS, Android, POS or desktop.",
+      "title": "An integration process built for your business",
+      "steps": [
+        {
+          "title": "Diagnosis",
+          "desc": "We map your current sales, inventory and service processes across every channel."
+        },
+        {
+          "title": "Integration architecture",
+          "desc": "We design how RetailPro Prism connects to SAP Business One and the rest of your stack."
+        },
+        {
+          "title": "Setup and go-live",
+          "desc": "We customize modules, branding and sales flow, train your team, and go live."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Real-time inventory and sales control, across every channel.",
+        "Scales across formats: stores, franchises and e-commerce, without friction.",
+        "Customizable interface: categories, sales flow and branding to your spec.",
+        "Multi-currency, multi-language management with local regulatory compliance."
+      ]
+    },
+    "authority": {
+      "title": "A system trusted by thousands of retailers worldwide.",
+      "stats": [
+        {
+          "value": 159,
+          "prefix": "+",
+          "suffix": "k",
+          "label": "Points of sale installed.",
+          "sub": "Running on Retail Pro as their management system."
+        },
+        {
+          "value": 130,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Countries.",
+          "sub": "Recognize Retail Pro as an omnichannel leader."
+        },
+        {
+          "value": 54,
+          "prefix": "+",
+          "suffix": "k",
+          "label": "Stores managed.",
+          "sub": "Efficiently, with Retail Pro."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Implementing with DOT Solutions across LATAM."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "tcpos": {
+    "metaTitle": "TCPOS",
+    "metaDescription": "TCPOS, the agile point of sale implemented by DOT Solutions alongside SAP Business One. Coordinates kitchen, bar and register in real time, with precise inventory control.",
+    "hero": {
+      "line1": "Control and efficiency",
+      "line2": "at every point of",
+      "line3": "sale",
+      "subtitle": "Optimize order, payment and inventory management with a system built to coordinate your team better.",
+      "paragraph": "Less time managing, more time operating: TCPOS connects kitchen, bar and register in real time, with native integration to SAP Business One.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From bottlenecks to a synchronized workflow",
+      "items": [
+        {
+          "title": "Is your team losing time due to poor coordination?",
+          "desc": "Organize and distribute tasks clearly, avoiding bottlenecks and dead time."
+        },
+        {
+          "title": "Do orders and payments become a bottleneck during rush hours?",
+          "desc": "Process orders and payments faster, improving turnover and internal workflow."
+        },
+        {
+          "title": "Do kitchen, bar and register fail to communicate in real time?",
+          "desc": "Kitchen monitors and internal alerts connect your team directly, reducing errors."
+        },
+        {
+          "title": "Does your inventory not reflect what you actually sold?",
+          "desc": "Automatic stock updates with every transaction, avoiding inventory shortfalls."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "TCPOS centralizes and coordinates every stage of service in a single system, from order-taking to inventory control, built for restaurants, hospitals, cafés and high-volume dining halls.",
+      "title": "How TCPOS optimizes your operation",
+      "steps": [
+        {
+          "title": "Visual table and order control",
+          "desc": "Visualize and manage the status of every service in real time."
+        },
+        {
+          "title": "Real-time inventory module",
+          "desc": "Updates stock with every sale and generates suggested orders."
+        },
+        {
+          "title": "SAP Business One integration",
+          "desc": "Native compatibility with your ERP for unified operational control."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Full control of orders, payments and inventory in one place.",
+        "Kitchen, bar and register synchronized in real time.",
+        "Less time managing, more time operating.",
+        "Built for restaurants, hospitals, cafés and high-volume dining halls."
+      ]
+    },
+    "authority": {
+      "title": "DOT Solutions' experience, at every point of sale.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "loyalty": {
+    "metaTitle": "Loyalty",
+    "metaDescription": "Loyalty Engine, DOT Solutions' customizable loyalty app with geolocation, points and native payments, synced in real time with SAP Business One.",
+    "hero": {
+      "line1": "Turn every visit",
+      "line2": "into an experience,",
+      "line3": "into loyalty",
+      "subtitle": "A customizable loyalty app that combines geolocation, points accumulation and native payments.",
+      "paragraph": "Built for retail and hospitality ecosystems that want to own the customer journey, with a robust backend and a 100% white-label frontend, synced in real time with SAP Business One.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From punch cards to a real data layer",
+      "items": [
+        {
+          "title": "Is your loyalty program still just a punch card?",
+          "desc": "According to Gartner, loyalty is no longer a points program, it's a layer of data and convenience. Loyalty activates that layer for your business."
+        },
+        {
+          "title": "Does building your own loyalty app feel slow and expensive?",
+          "desc": "We don't build from scratch: we activate a dedicated instance of a proven engine, 4 times faster than a traditional build."
+        },
+        {
+          "title": "Do you run several brands or locations whose points don't connect?",
+          "desc": "Multi-tenant: unify points and data across different brands or stores under a single loyalty program."
+        },
+        {
+          "title": "Do redemptions fail to show up in your ERP?",
+          "desc": "Two-way sync with SAP Business One: every redeemed point and every sale reflects in real time, with no manual work."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "Loyalty Engine combines a high-availability backend (geofencing, points, payments) with a frontend that's 100% customizable to your brand.",
+      "title": "An engine, not a build from scratch",
+      "steps": [
+        {
+          "title": "Geofencing & Proximity",
+          "desc": "Proximity notifications that draw customers to the physical point of sale."
+        },
+        {
+          "title": "Transactional Engine",
+          "desc": "Points accumulation on in-store and digital purchases, integrated with POS and delivery."
+        },
+        {
+          "title": "Wallet & Payments",
+          "desc": "Service payments and point redemption, native within the same app."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Up to +5% increase in customer retention rate.",
+        "Up to 95% potential increase in profit margin.",
+        "Deployed 4 times faster than a traditional build.",
+        "100% white-label frontend, tailored to your business."
+      ]
+    },
+    "authority": {
+      "title": "The real ROI of loyalty.",
+      "stats": [
+        {
+          "value": 5,
+          "prefix": "+",
+          "suffix": "%",
+          "label": "Customer retention.",
+          "sub": "Measured increase in retention rate."
+        },
+        {
+          "value": 95,
+          "prefix": "",
+          "suffix": "%",
+          "label": "Margin increase.",
+          "sub": "Potential improvement in profit margin."
+        },
+        {
+          "value": 4,
+          "prefix": "",
+          "suffix": "x",
+          "label": "Faster deployment.",
+          "sub": "Compared to a traditional build from scratch."
+        },
+        {
+          "value": 60,
+          "prefix": "",
+          "suffix": "%",
+          "label": "Of software will use proximity data.",
+          "sub": "Projected adoption of geolocation by 2026."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "hostdot": {
+    "metaTitle": "Hostdot",
+    "metaDescription": "Hostdot, DOT Solutions' high-performance cloud infrastructure: NVMe SSD, LiteSpeed and 24/7 support for restaurants and businesses with critical operations across LATAM.",
+    "hero": {
+      "line1": "High-performance",
+      "line2": "cloud infrastructure for",
+      "line3": "demanding businesses",
+      "subtitle": "The digital engine behind LATAM's most demanding restaurants and businesses.",
+      "paragraph": "Premium hosting, VPS servers and expert support on NVMe SSD and LiteSpeed. Maximum speed and security, with a live team behind your operation, 24/7.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From generic hosting to infrastructure that holds up your operation",
+      "items": [
+        {
+          "title": "Does your site or system go down at the worst possible moment?",
+          "desc": "High-speed NVMe SSD and LiteSpeed + LSCache keep your operation up, with 99.9% guaranteed uptime."
+        },
+        {
+          "title": "Are you sharing resources with who-knows-what other site?",
+          "desc": "Dedicated RAM and CPU, with resource isolation and a proactive firewall: your operation doesn't depend on your neighbor."
+        },
+        {
+          "title": "Does nobody answer when something breaks in the middle of the night?",
+          "desc": "Live 24/7 technical support, not a ticket that gets answered the next day."
+        },
+        {
+          "title": "Did security end up as a \"someday\" idea?",
+          "desc": "SSL included and Imunify360 active from day one, with no extra configuration."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "Hostdot isn't generic shared hosting: it's the infrastructure already trusted by restaurants and businesses with critical operations across LATAM, built on cPanel, LiteSpeed and CloudLinux.",
+      "title": "Infrastructure built not to fail",
+      "steps": [
+        {
+          "title": "Diagnosis",
+          "desc": "We review your real load: traffic, database and demand spikes."
+        },
+        {
+          "title": "Plan selection",
+          "desc": "Premium Web Hosting, VPS or Reseller (WHM), based on the size of your operation."
+        },
+        {
+          "title": "Migration and go-live",
+          "desc": "We migrate your site or system with no downtime, with SSL and Imunify360 active from day one."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Average response time under 50ms, with NVMe SSD and LiteSpeed + LSCache.",
+        "99.9% guaranteed uptime, 100% for enterprise clients.",
+        "Live technical support, 24/7, every day of the year.",
+        "Plans starting at $30,000/year, with SSL and Imunify360 included."
+      ]
+    },
+    "authority": {
+      "title": "The infrastructure behind LATAM's most demanding brands.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Infrastructure for critical operations across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Live technical support, 24/7."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "Infrastructure that backs SAP operations."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "bipyxis": {
+    "metaTitle": "BiPyxis",
+    "metaDescription": "BiPyxis, DOT Solutions' Business Intelligence SaaS platform with native integration to SAP Business One: dynamic reports and real-time financial visibility.",
+    "hero": {
+      "line1": "Turn your financial",
+      "line2": "data into intelligent",
+      "line3": "decisions",
+      "subtitle": "A Business Intelligence platform for businesses that want agility and precision in their analysis.",
+      "paragraph": "Centralize and analyze your company's financial information, with native integration to SAP Business One and real-time visibility, with no dependency on technical teams.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From delayed reports to real-time decisions",
+      "items": [
+        {
+          "title": "Do you depend on a technical team to access your own data?",
+          "desc": "Access key information instantly, with no dependency on technical teams."
+        },
+        {
+          "title": "Do your reports arrive after the month has already closed?",
+          "desc": "Full real-time visibility: dynamic sales, cost and expense reports and charts in seconds."
+        },
+        {
+          "title": "Do you run several companies, each living in its own system?",
+          "desc": "Manage multiple companies from a single platform, streamlining control over every operation."
+        },
+        {
+          "title": "Does your BI not talk to your ERP?",
+          "desc": "Direct connection to SAP Business One, and adaptable to other ERPs, to centralize your entire operation."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "BiPyxis is a Business Intelligence SaaS platform designed to centralize and analyze your company's financial information.",
+      "title": "Features that make decision-making easier",
+      "steps": [
+        {
+          "title": "Sales viewer",
+          "desc": "Relevant sales reports and charts in seconds."
+        },
+        {
+          "title": "Dynamic reports",
+          "desc": "Sales, cost and expense analysis with interactive charts."
+        },
+        {
+          "title": "User and permission management",
+          "desc": "Configurable access for managers, analysts and authorized staff."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Full real-time visibility, with no dependency on technical teams.",
+        "One system, multiple companies: centralized control.",
+        "Export reports to PDF or Excel to share easily.",
+        "Scalable, secure platform, integrated with SAP Business One."
+      ]
+    },
+    "authority": {
+      "title": "Financial data backed by DOT's real experience.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "dte": {
+    "metaTitle": "Electronic Invoicing DTE",
+    "metaDescription": "DOT Solutions' DTE electronic invoicing: automatic issuing and stamping with the SII, native integration to SAP Business One, and documents backed up for 6 years.",
+    "hero": {
+      "line1": "Electronic invoicing",
+      "line2": "DTE, natively integrated",
+      "line3": "with SAP Business One",
+      "subtitle": "Generate, manage and distribute your electronic tax documents in compliance with SII regulations.",
+      "paragraph": "Automate issuing and stamping your DTEs with the SII, with no friction or compliance risk, with automatic validations before issuing and documents backed up for 6 years.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From manual invoicing to automatic compliance",
+      "items": [
+        {
+          "title": "Does your invoicing fail to scale with your growing operation?",
+          "desc": "The platform automatically adapts to your document volume and company size."
+        },
+        {
+          "title": "Does an internet outage stop your invoicing?",
+          "desc": "Keeps working even without a connection: generates and validates documents, and syncs as soon as the connection is back."
+        },
+        {
+          "title": "Worried about documents rejected by the SII?",
+          "desc": "Automatic checks on every DTE before issuing, avoiding errors and invalid documents."
+        },
+        {
+          "title": "Need backup if the SII requests old documents?",
+          "desc": "Keeps your documents for 6 years with reliable cloud backup."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "Our DTE platform issues tax documents under current SII regulations, with automatic validations and digital distribution to customers and the SII, with native integration to SAP Business One.",
+      "title": "How each DTE is managed",
+      "steps": [
+        {
+          "title": "Electronic signature",
+          "desc": "Request an Advanced Electronic Signature (FIEL) from the SII."
+        },
+        {
+          "title": "Authorization",
+          "desc": "Invoice authorization via a security device and barcode."
+        },
+        {
+          "title": "Issuing and distribution",
+          "desc": "Printing and distributing the DTE to your customer and the SII."
+        },
+        {
+          "title": "Tracking",
+          "desc": "Full tracking from issuing through to commercial acceptance."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Automatic validations before issuing, avoiding documents rejected by the SII.",
+        "Operational continuity even without an internet connection.",
+        "Secure backup of your documents for 6 years in the cloud.",
+        "Native integration with SAP Business One and other ERPs."
+      ]
+    },
+    "authority": {
+      "title": "Regulatory compliance backed by real experience.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "smartOrder": {
+    "metaTitle": "Smart Order",
+    "metaDescription": "Smart Order, DOT Solutions' SaaS platform for restaurants and chains: centralized purchasing, inventory and production, with native integration to SAP Business One.",
+    "hero": {
+      "line1": "Control your purchasing,",
+      "line2": "inventory and production",
+      "line3": "in one place",
+      "subtitle": "The SaaS platform built for restaurants and chains that need order, visibility and efficiency.",
+      "paragraph": "Centralize and automate purchasing, inventory, production and analytics, with native integration to SAP Business One and an AI that predicts supplies and detects anomalies.",
+      "cta": "Talk to an expert",
+      "ctaSecondary": "Visit smart-order.io",
+      "ctaSecondaryHref": "https://smart-order.io/"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From manual operations to centralized control",
+      "items": [
+        {
+          "title": "Do inventory shortfalls catch you by surprise?",
+          "desc": "Smart alerts and an inventory status score reduce shortfalls by up to 30%."
+        },
+        {
+          "title": "Do you lack real visibility into your stock?",
+          "desc": "Full real-time visibility of inventory and stock, across every warehouse and location."
+        },
+        {
+          "title": "Do purchasing and approvals depend on manual processes?",
+          "desc": "Automate the full cycle, order placed, in transit and received, with end-to-end traceability."
+        },
+        {
+          "title": "Does your production fail to reflect your recipes' real yield?",
+          "desc": "Manage recipes, sub-recipes and yield control, from the recipe book to final inventory."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "Smart Order simplifies the critical processes of your food-service operation, from the order to your supplier through to production in the kitchen.",
+      "title": "Critical processes, simplified",
+      "steps": [
+        {
+          "title": "Order to supplier",
+          "desc": "Automated from the location all the way to the supplier."
+        },
+        {
+          "title": "Stock transfer",
+          "desc": "Secure internal movements with digital approval."
+        },
+        {
+          "title": "Kitchen production",
+          "desc": "From the recipe book to final inventory, with yield control."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Up to -30% in losses thanks to smart alerts.",
+        "Full traceability in purchasing and production.",
+        "Artificial intelligence that predicts supplies and answers queries via chatbot.",
+        "Native integration with SAP Business One and other ERPs."
+      ]
+    },
+    "authority": {
+      "title": "The platform behind restaurants and chains that run without surprises.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "mobileOne": {
+    "metaTitle": "Mobile One",
+    "metaDescription": "Mobile One, DOT Solutions' mobile selling: sell, charge and issue documents right next to the customer, without depending on the register, with native SAP Business One integration.",
+    "hero": {
+      "line1": "Sell and charge",
+      "line2": "right next to your customer,",
+      "line3": "no register required",
+      "subtitle": "Mobile selling that goes where your customer is.",
+      "paragraph": "Sell, charge and issue documents right next to the customer, without depending on the register, with native integration to SAP Business One.",
+      "cta": "Talk to an expert"
+    },
+    "benefits": {
+      "title": "Benefits that impact your day-to-day operation.",
+      "items": [
+        "Sell and charge from anywhere in your store, no register lines.",
+        "Issue tax documents instantly, right next to the customer.",
+        "Native integration with SAP Business One."
+      ]
+    },
+    "authority": {
+      "title": "DOT Solutions' experience, now on the go.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
       ],
       "cta": "Talk to an expert"
     }

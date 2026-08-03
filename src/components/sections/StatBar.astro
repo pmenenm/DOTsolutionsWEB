@@ -8,12 +8,17 @@ interface Stat {
 
 interface Props {
   stats: Stat[];
+  /** Versión reducida para embeber en espacios chicos (ej. junto al
+      formulario de /contacto) — números más chicos, siempre 2 columnas. */
+  compact?: boolean;
 }
 
-const { stats } = Astro.props;
+const { stats, compact = false } = Astro.props;
 ---
 
-<div class="stat-bar" data-reveal>
+{/* compact siempre vive dentro de un contenedor que ya tiene su propio
+    data-reveal (ver ContactHero.astro) — evita el doble fade anidado. */}
+<div class:list={['stat-bar', { compact }]} data-reveal={compact ? undefined : true}>
   {stats.map((stat) => (
     <div class="stat">
       <p class="value">
@@ -107,12 +112,30 @@ const { stats } = Astro.props;
   .label {
     margin-top: var(--space-xs);
     font-size: var(--text-sm);
-    color: var(--text-secondary);
+    color: var(--dot-light);
   }
 
   @media (min-width: 768px) {
     .stat-bar {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stat-bar.compact {
+    gap: var(--space-sm);
+  }
+  .stat-bar.compact .stat {
+    text-align: left;
+  }
+  .stat-bar.compact .value {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+  .stat-bar.compact .label {
+    font-size: var(--text-xs);
+  }
+  @media (min-width: 768px) {
+    .stat-bar.compact {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 </style>

@@ -1,0 +1,58 @@
+---
+// Página más simple que el resto de los productos a propósito: todavía no
+// tenemos capturas ni material fuente de Mobile One (solo la descripción
+// corta que ya existía en el mega menú) — se completará cuando llegue más
+// información, sin inventar dolores/pasos de proceso que no tenemos.
+import Layout from '../layouts/Layout.astro';
+import ProductHero from '../components/sections/ProductHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import BenefitsList from '../components/sections/BenefitsList.astro';
+import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.mobileOne;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+---
+
+<Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/mobile-one">
+  <ProductHero
+    line1={s.hero.line1}
+    line2={s.hero.line2}
+    line3={s.hero.line3}
+    subtitle={s.hero.subtitle}
+    paragraph={s.hero.paragraph}
+    cta={s.hero.cta}
+    ctaHref={contactHref}
+    logo="/logos/isotipos/mobileoneiso.svg"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title={s.benefits.title} />
+      <div class="section-body narrow">
+        <BenefitsList items={s.benefits.items} />
+      </div>
+    </div>
+  </section>
+
+  <AuthorityCTA title={s.authority.title} stats={s.authority.stats} cta={s.authority.cta} ctaHref={contactHref} />
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .section-body.narrow {
+    max-width: var(--content-max);
+  }
+</style>

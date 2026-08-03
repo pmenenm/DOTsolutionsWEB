@@ -1,0 +1,64 @@
+---
+// hero2 es una foto vertical muy alta (macro de tronco con musgo). Se muestra
+// a su proporción real —width:100%, height:auto, SIN object-fit— para no
+// recortarla nunca: el largo total lo define el contenido que envuelve
+// (<slot />, ver Home.astro), y a medida que el usuario baja recorre la
+// imagen completa de arriba (madera) a abajo (musgo). Si el contenido
+// termina antes que la imagen, el resto queda oculto detrás de la sección
+// opaca siguiente (paint order normal, sin necesidad de overflow:hidden);
+// si termina después, el fondo --dot-dark de respaldo (mismo tono que la
+// zona superior de la foto) cubre la cola sin costura visible.
+interface Props {
+  image?: string;
+}
+
+const { image = '/images/hero2.jpg' } = Astro.props;
+---
+
+<div class="hero-reveal">
+  <div class="hero-reveal-bg" aria-hidden="true">
+    <img class="hero-reveal-img" src={image} alt="" />
+    <div class="hero-reveal-overlay"></div>
+  </div>
+  <div class="hero-reveal-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .hero-reveal {
+    position: relative;
+    background: var(--dot-dark);
+  }
+
+  .hero-reveal-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+  }
+
+  .hero-reveal-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-reveal-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dot-dark) 45%, transparent) 0%,
+      color-mix(in srgb, var(--dot-dark) 18%, transparent) 30%,
+      color-mix(in srgb, var(--dot-dark) 18%, transparent) 70%,
+      color-mix(in srgb, var(--dot-dark) 75%, transparent) 100%
+    );
+  }
+
+  .hero-reveal-content {
+    position: relative;
+    z-index: 1;
+  }
+</style>
