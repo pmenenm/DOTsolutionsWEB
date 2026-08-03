@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#mobileone3_2);
+      }
+
+      .cls-2 {
+        fill: url(#Degradado_sin_nombre_515);
+      }
+    </style>
+    <linearGradient id="mobileone3_2" data-name="mobileone3 2" x1="145.16" y1="36.42" x2="77.97" y2="151.11" gradientUnits="userSpaceOnUse">
+      <stop offset=".11" stop-color="#1b8cfa"/>
+      <stop offset=".14" stop-color="#187cfa"/>
+      <stop offset=".22" stop-color="#1056fb"/>
+      <stop offset=".3" stop-color="#0a37fd"/>
+      <stop offset=".39" stop-color="#051efd"/>
+      <stop offset=".48" stop-color="#020dfe"/>
+      <stop offset=".58" stop-color="#0003fe"/>
+      <stop offset=".7" stop-color="blue"/>
+      <stop offset=".74" stop-color="#0000f8"/>
+      <stop offset=".8" stop-color="#0100e4"/>
+      <stop offset=".88" stop-color="#0300c4"/>
+      <stop offset=".96" stop-color="#050098"/>
+      <stop offset="1" stop-color="#070080"/>
+    </linearGradient>
+    <linearGradient id="Degradado_sin_nombre_515" data-name="Degradado sin nombre 515" x1="93.68" y1="5.95" x2="26.5" y2="120.64" gradientUnits="userSpaceOnUse">
+      <stop offset=".14" stop-color="#1b8cfa"/>
+      <stop offset=".14" stop-color="#1a88fa"/>
+      <stop offset=".19" stop-color="#1363fb"/>
+      <stop offset=".24" stop-color="#0d44fc"/>
+      <stop offset=".29" stop-color="#082bfd"/>
+      <stop offset=".35" stop-color="#0418fe"/>
+      <stop offset=".42" stop-color="#020afe"/>
+      <stop offset=".51" stop-color="#0002fe"/>
+      <stop offset=".67" stop-color="blue"/>
+      <stop offset=".76" stop-color="#0200cd"/>
+      <stop offset=".86" stop-color="#0500a3"/>
+      <stop offset=".93" stop-color="#060089"/>
+      <stop offset=".98" stop-color="#070080"/>
+    </linearGradient>
+  </defs>
+  <ellipse class="cls-1" cx="104.96" cy="105.04" rx="13.65" ry="13.68"/>
+  <path class="cls-2" d="M118.65,67.19l-41.07-21.62.3,48.11-27.66-14.31-13.52-6.99.11,46.35-27.44-13.17-.08-55.7h0c0-.34.01-.67.04-.99,0-.05,0-.11.01-.16l.02-.23c.17-1.65.64-3.29,1.44-4.86,3.45-6.72,11.68-9.37,18.39-5.91l20.98,10.8-.04-25.54c0-7.56,6.11-13.68,13.65-13.68,2.55,0,4.94.7,6.99,1.92l47.93,25.42-.05,30.56Z"/>
+</svg>
