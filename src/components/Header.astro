@@ -554,9 +554,6 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     transform: translateY(-3px);
   }
 
-  /* Logos de partners en escala de grises por defecto — recuperan color y
-     opacidad completa en reposo, y pasan a escala de grises al hacer hover
-     sobre su propia tarjeta. */
   /* Contenedor a tamaño fijo (el más grande de todos los logos) para las 8
      tarjetas por igual — así el título/descripción siempre arrancan a la
      misma altura, sin importar que cada <img> tenga su propio tamaño
@@ -575,14 +572,6 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
-    filter: grayscale(0);
-    opacity: 1;
-    transition: filter var(--transition-fast), opacity var(--transition-fast);
-  }
-  .mega-card:hover .mega-logo img,
-  .mega-top-sap:hover .mega-logo img {
-    filter: grayscale(1);
-    opacity: 0.65;
   }
   /* Smart Order y BiPyxis se ven visiblemente más chicos que el resto a la
      misma altura fija — 30% más grandes para emparejar el peso visual. */
