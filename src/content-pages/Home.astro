@@ -66,7 +66,7 @@ const t = useTranslations(lang);
     />
   </HeroReveal>
 
-  <section class="section theme-light">
+  <section class="section theme-light stats-section">
     <div class="container">
       <SectionHeading title={t.common.statsTitle} align="center" />
       <div class="section-body">
@@ -111,5 +111,9 @@ const t = useTranslations(lang);
   }
   .section-body {
     margin-top: var(--space-lg);
+  }
+
+  .stats-section :global(.title) {
+    color: var(--dot-gray);
   }
 </style>

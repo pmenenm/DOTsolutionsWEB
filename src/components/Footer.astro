@@ -18,6 +18,11 @@ const companyLinks = [
   { href: getRelativeLocaleUrl(lang, 'servicios'), label: t.nav.services },
   { href: getRelativeLocaleUrl(lang, 'contacto'), label: t.nav.contact },
 ];
+
+const servicesLinks = t.nav.solutionsMenu.items.map((item) => ({
+  href: getRelativeLocaleUrl(lang, item.href),
+  label: item.title,
+}));
 ---
 
 <footer class="site-footer">
@@ -34,6 +39,15 @@ const companyLinks = [
       <h3>{t.footer.company}</h3>
       <ul>
         {companyLinks.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>{t.nav.services}</h3>
+      <ul>
+        {servicesLinks.map((l) => (
           <li><a href={l.href}>{l.label}</a></li>
         ))}
       </ul>
@@ -163,7 +177,7 @@ const companyLinks = [
 
   @media (min-width: 768px) {
     .footer-grid {
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
     }
   }
 </style>

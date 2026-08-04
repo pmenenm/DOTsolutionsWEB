@@ -25,6 +25,11 @@ const companyLinks = [
   { href: getRelativeLocaleUrl(lang, 'servicios'), label: t.nav.services },
   { href: contactHref, label: t.nav.contact },
 ];
+
+const servicesLinks = t.nav.solutionsMenu.items.map((item) => ({
+  href: getRelativeLocaleUrl(lang, item.href),
+  label: item.title,
+}));
 ---
 
 <section class="contact-footer" data-gsap-section="contact-footer">
@@ -69,6 +74,15 @@ const companyLinks = [
         <h3>{t.footer.company}</h3>
         <ul>
           {companyLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="contact-footer__col">
+        <h3>{t.nav.services}</h3>
+        <ul>
+          {servicesLinks.map((link) => (
             <li><a href={link.href}>{link.label}</a></li>
           ))}
         </ul>
@@ -210,7 +224,7 @@ const companyLinks = [
     font-size: clamp(1.75rem, 4.9vw, 3.85rem);
     line-height: 1.05;
     letter-spacing: -0.03em;
-    color: var(--dot-light);
+    color: var(--text-primary);
     max-width: 20ch;
   }
 
@@ -219,7 +233,7 @@ const companyLinks = [
     font-weight: 400;
     font-size: clamp(0.77rem, 1.26vw, 0.98rem);
     line-height: 1.5;
-    color: var(--dot-sage);
+    color: var(--text-secondary);
     max-width: 36rem;
   }
 
@@ -257,7 +271,7 @@ const companyLinks = [
     font-family: var(--font-body);
     font-weight: 500;
     font-size: var(--text-base);
-    color: var(--dot-light);
+    color: var(--text-primary);
     text-decoration: none;
     background-color: transparent;
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
@@ -307,14 +321,14 @@ const companyLinks = [
     width: auto;
   }
   .contact-footer__blurb {
-    color: var(--dot-sage);
+    color: var(--text-secondary);
     font-size: var(--text-sm);
     line-height: 1.6;
     max-width: 32rem;
     margin-bottom: var(--space-xs);
   }
   .contact-footer__motto {
-    color: var(--dot-light);
+    color: var(--text-primary);
     font-size: var(--text-sm);
     font-weight: 500;
     transition: color var(--transition-fast), font-size var(--transition-fast);
@@ -327,7 +341,7 @@ const companyLinks = [
   .contact-footer__col h3 {
     font-size: var(--text-sm);
     font-weight: 500;
-    color: var(--dot-light);
+    color: var(--text-primary);
     margin-bottom: var(--space-xs);
   }
   .contact-footer__col ul {
@@ -339,7 +353,7 @@ const companyLinks = [
     gap: 0.5rem;
   }
   .contact-footer__col a {
-    color: var(--dot-sage);
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: var(--text-sm);
     transition: color var(--transition-fast);
@@ -348,7 +362,7 @@ const companyLinks = [
     color: var(--dot-micelio);
   }
   .contact-footer__address {
-    color: var(--dot-sage);
+    color: var(--text-secondary);
     font-size: var(--text-sm);
   }
 
@@ -368,13 +382,13 @@ const companyLinks = [
     padding-top: var(--space-sm);
     padding-inline: var(--container-pad);
     border-top: 1px solid var(--dot-gray);
-    color: var(--dot-sage);
+    color: var(--text-secondary);
     font-size: var(--text-xs);
   }
 
   @media (min-width: 768px) {
     .contact-footer__footer-grid {
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
     }
   }
 </style>

@@ -397,7 +397,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
   .sap-logo {
     height: 1.4rem;
     width: auto;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     transition: opacity var(--transition-fast);
   }
   .sap-link:hover .sap-logo {
@@ -532,15 +532,31 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     gap: var(--space-lg) var(--space-md);
   }
 
+  /* Al hover, cada tarjeta revela un recuadro duro (sin curvas, radio 0) —
+     invisible en reposo (border transparente + padding compensado con
+     margin negativo, así el layout en reposo no se mueve ni un píxel) para
+     no perder la limpieza actual, pero con algo claro pasando al pasar el
+     mouse: geometría dura apareciendo, coherente con la identidad
+     eco-brutalista de la marca. */
   .mega-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-decoration: none;
+    padding: 1rem;
+    margin: -1rem;
+    border: 1px solid transparent;
+    transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  }
+  .mega-card:hover {
+    border-color: var(--dot-micelio);
+    background: color-mix(in srgb, var(--dot-micelio) 6%, transparent);
+    transform: translateY(-3px);
   }
 
   /* Logos de partners en escala de grises por defecto — recuperan color y
-     opacidad completa solo al hacer hover sobre su propia tarjeta. */
+     opacidad completa en reposo, y pasan a escala de grises al hacer hover
+     sobre su propia tarjeta. */
   /* Contenedor a tamaño fijo (el más grande de todos los logos) para las 8
      tarjetas por igual — así el título/descripción siempre arrancan a la
      misma altura, sin importar que cada <img> tenga su propio tamaño
@@ -559,6 +575,14 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
+    filter: grayscale(0);
+    opacity: 1;
+    transition: filter var(--transition-fast), opacity var(--transition-fast);
+  }
+  .mega-card:hover .mega-logo img,
+  .mega-top-sap:hover .mega-logo img {
+    filter: grayscale(1);
+    opacity: 0.65;
   }
   /* Smart Order y BiPyxis se ven visiblemente más chicos que el resto a la
      misma altura fija — 30% más grandes para emparejar el peso visual. */
@@ -768,7 +792,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     display: block;
     height: 2px;
     background: var(--dot-light);
-    border-radius: 1px;
+    border-radius: var(--radius-sm);
   }
 
   .nav-mobile {
@@ -797,7 +821,7 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
   .sap-logo-mobile {
     height: 1.5rem;
     width: auto;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
   }
   .mobile-solutions {
     list-style: none;
