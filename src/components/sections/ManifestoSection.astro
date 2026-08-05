@@ -1,0 +1,72 @@
+---
+// src/components/sections/ManifestoSection.astro
+// Envoltorio full-width oscuro para FocusTextHero (isla React) — "lente de
+// enfoque" que sigue el cursor: la capa borrosa se ve siempre, y solo el
+// círculo bajo el mouse revela el texto nítido con las palabras clave en
+// Verde Micelio. client:visible para no cargar el bundle de React hasta
+// que la sección entra en viewport.
+import FocusTextHero from '../react/FocusTextHero.tsx';
+
+interface Props {
+  text: string;
+  highlight?: string[];
+  cta?: string;
+  ctaHref?: string;
+}
+
+const { text, highlight = [], cta, ctaHref } = Astro.props;
+---
+
+<section class="manifesto">
+  <div class="container">
+    <FocusTextHero client:visible text={text} highlightWords={highlight} />
+    {cta && ctaHref && (
+      <a href={ctaHref} class="manifesto-cta">
+        {cta}
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    background: var(--dot-dark);
+    padding-block: var(--space-hero);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .manifesto :global(.ftx-hero) {
+    text-align: center;
+  }
+  .manifesto :global(.ftx-layer) {
+    max-width: 22ch;
+    margin-inline: auto;
+  }
+
+  .manifesto-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-lg);
+    padding: 1.1rem 2.5rem;
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-lg);
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .manifesto-cta:hover {
+    background: color-mix(in srgb, var(--dot-micelio) 85%, var(--dot-light) 15%);
+    transform: scale(1.03);
+  }
+  .manifesto-cta .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .manifesto-cta:hover .arrow {
+    transform: translateX(3px);
+  }
+</style>

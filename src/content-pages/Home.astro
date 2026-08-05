@@ -6,6 +6,7 @@ import ClientLogos from '../components/sections/ClientLogos.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
 import IndustriesTeaser from '../components/sections/IndustriesTeaser.astro';
 import ServicesShowcase from '../components/sections/ServicesShowcase.astro';
+import ManifestoSection from '../components/sections/ManifestoSection.astro';
 import StatBar from '../components/sections/StatBar.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import ContactFooter from '../components/sections/ContactFooter.astro';
@@ -90,6 +91,13 @@ const t = useTranslations(lang);
       </div>
     </div>
   </section>
+
+  <ManifestoSection
+    text={t.home.manifesto.text}
+    highlight={t.home.manifesto.highlight}
+    cta={t.home.closingManifesto.cta}
+    ctaHref={getRelativeLocaleUrl(lang, 'contacto')}
+  />
 
   <ContactFooter lang={lang} />
 </Layout>

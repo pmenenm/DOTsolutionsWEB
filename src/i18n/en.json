@@ -462,6 +462,15 @@
           ]
         }
       ]
+    },
+    "manifesto": {
+      "text": "We turn operational chaos into absolute control.",
+      "highlight": ["absolute", "control."]
+    },
+    "closingManifesto": {
+      "text": "Make your company run without friction.",
+      "highlight": ["without", "friction."],
+      "cta": "Talk to an expert"
     }
   },
   "servicios": {
@@ -1387,7 +1396,8 @@
       "line3": "demanding businesses",
       "subtitle": "The digital engine behind LATAM's most demanding restaurants and businesses.",
       "paragraph": "Premium hosting, VPS servers and expert support on NVMe SSD and LiteSpeed. Maximum speed and security, with a live team behind your operation, 24/7.",
-      "cta": "Talk to an expert"
+      "cta": "Talk to an expert",
+      "ctaSecondary": "Visit Hostdot"
     },
     "bento": {
       "eyebrow": "The diagnosis",

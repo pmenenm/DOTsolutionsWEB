@@ -1,0 +1,54 @@
+.ftx-hero {
+  position: relative;
+  isolation: isolate;
+  --x: 50%;
+  --y: 50%;
+}
+
+.ftx-layer {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--dot-light);
+}
+
+/* Capa inferior: el mismo texto, desenfocado, siempre visible — le da
+   volumen al bloque incluso donde el lente no está encima. */
+.ftx-layer--blur {
+  filter: blur(12px);
+  opacity: 0.55;
+}
+
+/* Capa superior: nítida, pero recortada por una máscara radial centrada en
+   el cursor (--x/--y). Solo el círculo bajo el mouse queda "enfocado";
+   fuera de él, mask-image la vuelve transparente y se ve la capa borrosa
+   de abajo. */
+.ftx-layer--sharp {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(circle var(--ftx-radius) at var(--x) var(--y), black 20%, transparent 80%);
+  mask-image: radial-gradient(circle var(--ftx-radius) at var(--x) var(--y), black 20%, transparent 80%);
+  pointer-events: none;
+  will-change: -webkit-mask-image, mask-image;
+}
+
+.ftx-highlight {
+  color: var(--dot-micelio);
+}
+
+/* Sin cursor real (touch) o con reduced-motion: el lente no tiene sentido
+   interactivo — mostramos el texto nítido completo en vez de un lente
+   estático a mitad de pantalla. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .ftx-layer--blur {
+    display: none;
+  }
+  .ftx-layer--sharp {
+    position: static;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

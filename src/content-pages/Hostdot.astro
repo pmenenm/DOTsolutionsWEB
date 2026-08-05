@@ -28,6 +28,8 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     paragraph={s.hero.paragraph}
     cta={s.hero.cta}
     ctaHref={contactHref}
+    ctaSecondary={s.hero.ctaSecondary}
+    ctaSecondaryHref="https://hosting.dotsolutions.app/index.php"
     logo="/logos/isotipos/hostdotiso.svg"
   />
 
@@ -40,11 +42,13 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     </div>
   </section>
 
-  <section class="section theme-light">
+  <section class="section">
     <div class="container">
-      <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
-      <div class="section-body narrow">
-        <ProcessTimelineAnimated steps={s.process.steps} />
+      <div class="glass-panel process-panel">
+        <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
+        <div class="section-body narrow">
+          <ProcessTimelineAnimated steps={s.process.steps} />
+        </div>
       </div>
     </div>
   </section>
@@ -70,5 +74,49 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
   }
   .section-body.narrow {
     max-width: var(--content-max);
+  }
+  .process-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  /* Las 3 líneas del hero ("Infraestructura cloud" / "de alto rendimiento
+     para" / "negocios exigentes") son más largas que el resto de los
+     productos — el max-width por defecto del h1 (14ch en desktop) las
+     quebraba a más de 3 líneas. Ancho ajustado solo para esta página. */
+  :global(.product-hero-grid:not(.no-visual) .product-hero-copy h1) {
+    max-width: 26ch !important;
+  }
+
+  /* Los textos de esta página se sentían "burdos" (todo grande) — bajamos
+     un escalón el tamaño de cada bloque compartido (título de sección,
+     cards del diagnóstico, beneficios, subtítulo/párrafo del hero, stats
+     finales), solo en Hostdot. */
+  :global(.product-hero-copy .subtitle) {
+    font-size: var(--text-sm) !important;
+  }
+  :global(.product-hero-copy .paragraph) {
+    font-size: var(--text-xs) !important;
+  }
+  :global(.heading .title) {
+    font-size: clamp(1.5rem, 3.2vw, 2.25rem) !important;
+  }
+  :global(.bento-card h3) {
+    font-size: clamp(1.0625rem, 1.7vw, 1.3rem) !important;
+  }
+  :global(.bento-card p) {
+    font-size: var(--text-sm) !important;
+  }
+  :global(.benefit-card p) {
+    font-size: var(--text-sm) !important;
+  }
+  :global(.authority .value) {
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem) !important;
+  }
+  :global(.authority .label) {
+    font-size: var(--text-sm) !important;
+  }
+  :global(.authority .sub) {
+    font-size: var(--text-xs) !important;
   }
 </style>

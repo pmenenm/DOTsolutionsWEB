@@ -31,7 +31,7 @@ const { eyebrow, title, items } = Astro.props;
 <style>
   .industries-strip {
     text-align: center;
-    max-width: var(--content-max);
+    max-width: 56rem;
     margin-inline: auto;
   }
   .eyebrow {
@@ -65,20 +65,21 @@ const { eyebrow, title, items } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--space-sm) var(--space-md);
+    gap: 0.6rem;
     list-style: none;
     padding: 0;
   }
   .tags li {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.25rem;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
     border: 1px solid color-mix(in srgb, var(--dot-light) 18%, transparent);
     border-radius: var(--radius-full);
     font-size: var(--text-sm);
     font-weight: 500;
     color: var(--text-primary);
+    white-space: nowrap;
     transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
   }
   .tags li:hover {

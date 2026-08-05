@@ -93,7 +93,7 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
   }
 
   .hero-ctas {
-    margin-top: calc(-1 * var(--space-md));
+    margin-top: var(--space-md);
     margin-bottom: var(--space-lg);
   }
   .cta-primary {
@@ -124,6 +124,17 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     font-size: var(--text-lg);
     color: var(--dot-micelio);
     margin-bottom: var(--space-sm);
+  }
+
+  /* Los textos de BenefitsList vienen grandes por diseño para la sección de
+     "Beneficios" de las páginas de producto — acá, con 2 columnas de 4
+     casillas cada una, ese tamaño se siente sobredimensionado. */
+  .choose-grid :global(.benefit-card p) {
+    font-size: var(--text-sm) !important;
+  }
+  .choose-grid :global(.benefit-check) {
+    width: 1.4rem;
+    height: 1.4rem;
   }
 
   @media (min-width: 900px) {

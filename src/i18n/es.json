@@ -462,6 +462,15 @@
           ]
         }
       ]
+    },
+    "manifesto": {
+      "text": "Transformamos el caos operativo en control absoluto.",
+      "highlight": ["control", "absoluto."]
+    },
+    "closingManifesto": {
+      "text": "Haz que tu empresa opere sin fricción.",
+      "highlight": ["sin", "fricción."],
+      "cta": "Hablar con un experto"
     }
   },
   "servicios": {
@@ -1387,7 +1396,8 @@
       "line3": "negocios exigentes",
       "subtitle": "El motor digital detrás de los restaurantes y empresas más exigentes de LATAM.",
       "paragraph": "Hosting premium, servidores VPS y soporte experto sobre SSD NVMe y LiteSpeed. Máxima velocidad, seguridad y un equipo en vivo 24/7 detrás de tu operación.",
-      "cta": "Hablar con un experto"
+      "cta": "Hablar con un experto",
+      "ctaSecondary": "Visitar Hostdot"
     },
     "bento": {
       "eyebrow": "El diagnóstico",
