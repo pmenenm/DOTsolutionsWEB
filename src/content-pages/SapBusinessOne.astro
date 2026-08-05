@@ -3,11 +3,18 @@ import Layout from '../layouts/Layout.astro';
 import ProductHero from '../components/sections/ProductHero.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
 import PainBento from '../components/sections/PainBento.astro';
+import ProductModulesGrid from '../components/sections/ProductModulesGrid.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
 import ProcessTimelineAnimated from '../components/sections/ProcessTimelineAnimated.astro';
 import BenefitsList from '../components/sections/BenefitsList.astro';
+import ProductAddonsCTA from '../components/sections/ProductAddonsCTA.astro';
+import ProductIndustriesStrip from '../components/sections/ProductIndustriesStrip.astro';
+import ProductUpsellBanner from '../components/sections/ProductUpsellBanner.astro';
 import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
+import StatBar from '../components/sections/StatBar.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -17,6 +24,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const s = t.sap;
 const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+const addonsHref = getRelativeLocaleUrl(lang, 'sap-business-one/addons');
+const s4hanaHref = getRelativeLocaleUrl(lang, 'sap-s4hana');
+const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
 ---
 
 <Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/sap-business-one">
@@ -32,6 +42,12 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     backgroundImage="/images/backgroundsap2.jpg"
   />
 
+  <section class="section hero-stats-section">
+    <div class="container">
+      <StatBar stats={s.heroStats} />
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <div class="diagnostic-heading">
@@ -45,6 +61,16 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 
   <section class="section">
     <div class="container">
+      <ProductModulesGrid eyebrow={s.platform.eyebrow} title={s.platform.title} modules={s.platform.modules} />
+    </div>
+  </section>
+
+  <section class="section logos-section">
+    <ClientLogos title={t.common.clientsTitle} />
+  </section>
+
+  <section class="section">
+    <div class="container">
       <div class="glass-panel process-panel">
         <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
         <div class="section-body narrow">
@@ -54,12 +80,47 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
+  <section class="section benefits-section">
+    <img class="benefits-bg" src={withBase('/images/background_3.jpg')} alt="" aria-hidden="true" />
+    <div class="benefits-bg-overlay" aria-hidden="true"></div>
+    <div class="container benefits-content">
       <SectionHeading title={s.benefits.title} />
       <div class="section-body narrow">
         <BenefitsList items={s.benefits.items} />
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ProductAddonsCTA
+        eyebrow={s.addons.eyebrow}
+        title={s.addons.title}
+        desc={s.addons.desc}
+        stats={s.addons.stats}
+        cta={s.addons.cta}
+        ctaHref={addonsHref}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ProductIndustriesStrip eyebrow={s.industries.eyebrow} title={s.industries.title} items={s.industries.items} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ProductUpsellBanner
+        eyebrow={s.upsell.eyebrow}
+        title={s.upsell.title}
+        desc={s.upsell.desc}
+        cta={s.upsell.cta}
+        ctaHref={s4hanaHref}
+        ctaSecondary={s.upsell.ctaSecondary}
+        ctaSecondaryHref={compareHref}
+      />
     </div>
   </section>
 
@@ -82,10 +143,56 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     border: none;
   }
 
+  /* Stats del hero — pegados justo bajo el hero, sin separación grande,
+     como extensión directa de la prueba social inicial. */
+  .hero-stats-section {
+    padding-block: 0 var(--space-lg);
+  }
+
+  .logos-section {
+    padding-block: var(--space-md) var(--space-lg);
+  }
+
+  /* Background fotográfico en Beneficios — overlay oscuro para que el texto
+     blanco con acentos verdes (BenefitsList) siga legible encima. */
+  .benefits-section {
+    position: relative;
+    overflow: hidden;
+  }
+  .benefits-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  /* Se funde con las secciones vecinas: opaca (dot-dark) en los bordes
+     superior/inferior, y solo un tinte suave para legibilidad en el medio
+     donde la foto queda a la vista. */
+  .benefits-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      var(--dot-dark) 0%,
+      color-mix(in srgb, var(--dot-dark) 45%, transparent) 20%,
+      color-mix(in srgb, var(--dot-dark) 45%, transparent) 80%,
+      var(--dot-dark) 100%
+    );
+  }
+  .benefits-content {
+    position: relative;
+    z-index: 2;
+  }
+
   /* Título "El diagnóstico" — más grande, más peso, y un degradé animado
      en loop lento que recorre blanco -> verde micelio -> blanco. */
   .diagnostic-heading :global(.title) {
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    max-width: 26ch;
+    margin-inline: auto;
+    font-size: clamp(2.5rem, 5.2vw, 3.75rem);
     font-weight: 600;
     background: linear-gradient(
       90deg,

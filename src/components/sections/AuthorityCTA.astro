@@ -113,16 +113,13 @@ const { title, stats, cta, ctaHref } = Astro.props;
 </script>
 
 <style>
-  /* Rompe el dark mode a propósito: bloque luminoso en Bruma Digital (el
-     tono más claro de la paleta, "blanco") con texto en Negro Abisal, para
-     dar impacto de cierre. */
   .authority {
     position: relative;
     /* z-index explícito para que la curva que sobresale hacia arriba
        siempre pinte encima de la sección anterior, sin depender de la
        resolución implícita del navegador entre positioned y static. */
     z-index: var(--z-above);
-    background: var(--dot-light);
+    background: var(--dot-dark);
     padding-block: var(--space-hero);
     text-align: center;
   }
@@ -153,7 +150,7 @@ const { title, stats, cta, ctaHref } = Astro.props;
     font-size: clamp(1.75rem, 4vw, 3rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
-    color: var(--dot-dark);
+    color: var(--text-primary);
     max-width: 32ch;
     margin-inline: auto;
   }
@@ -172,17 +169,17 @@ const { title, stats, cta, ctaHref } = Astro.props;
 
   .value {
     font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 500;
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
     line-height: 1;
-    color: var(--dot-dark);
+    color: var(--dot-micelio);
   }
 
   .label {
     margin-top: 0.5rem;
     font-size: var(--text-base);
     font-weight: 600;
-    color: var(--dot-dark);
+    color: var(--text-primary);
   }
 
   .sub {
@@ -190,14 +187,14 @@ const { title, stats, cta, ctaHref } = Astro.props;
     font-size: var(--text-sm);
     font-weight: 300;
     line-height: 1.4;
-    color: var(--dot-gray);
+    color: var(--text-secondary);
   }
 
   .cta-monumental {
     display: inline-flex;
     margin-top: var(--space-hero);
-    background: var(--dot-dark);
-    color: var(--dot-light);
+    background: var(--dot-light);
+    color: var(--dot-dark);
     text-decoration: none;
     font-size: var(--text-lg);
     font-weight: 600;
@@ -206,7 +203,7 @@ const { title, stats, cta, ctaHref } = Astro.props;
     transition: background var(--transition-fast), transform var(--transition-fast);
   }
   .cta-monumental:hover {
-    background: color-mix(in srgb, var(--dot-dark) 85%, var(--dot-micelio) 15%);
+    background: var(--dot-micelio);
     transform: scale(1.03);
   }
 

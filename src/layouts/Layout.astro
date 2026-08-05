@@ -82,8 +82,14 @@ const { title, description, lang, path, image, hideFooter = false } = Astro.prop
         // midió las posiciones de start/end de cada trigger — eso deja los
         // triggers (ej. los curve swipes con scrub) calculados contra un
         // layout viejo, causando saltos o que el efecto corte antes/después
-        // de lo esperado. Recalculamos apenas las fuentes terminan de cargar.
-        document.fonts?.ready.then(() => ScrollTrigger.refresh());
+        // de lo esperado. Recalculamos apenas las fuentes terminan de cargar,
+        // y volvemos a fijar scroll 0 por si el "scroll anchoring" del
+        // navegador reajustó la posición durante ese reflow.
+        document.fonts?.ready.then(() => {
+          ScrollTrigger.refresh();
+          window.scrollTo(0, 0);
+          lenis?.scrollTo(0, { immediate: true });
+        });
 
         rafCallback = (time: number) => {
           lenis!.raf(time * 1000);

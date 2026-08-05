@@ -1,0 +1,108 @@
+---
+// src/components/sections/ProductIndustriesStrip.astro
+// Franja "Preparado para tu vertical" — tags con punto pulsante, mismo
+// lenguaje que el bloque .eco-others de IndustriesTeaser en Home.
+interface Props {
+  eyebrow: string;
+  title: string;
+  items: string[];
+}
+
+const { eyebrow, title, items } = Astro.props;
+---
+
+<div class="industries-strip" data-reveal>
+  <p class="eyebrow">
+    <span class="dot"></span>
+    {eyebrow}
+  </p>
+  <h2 class="title">{title}</h2>
+
+  <ul class="tags">
+    {items.map((item) => (
+      <li>
+        <span class="tag-dot" aria-hidden="true"></span>
+        {item}
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .industries-strip {
+    text-align: center;
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-xs);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .tags {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm) var(--space-md);
+    list-style: none;
+    padding: 0;
+  }
+  .tags li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 18%, transparent);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  }
+  .tags li:hover {
+    border-color: var(--dot-micelio);
+    color: var(--dot-micelio);
+    transform: translateY(-2px);
+  }
+  .tag-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--dot-micelio) 60%, transparent);
+    animation: industries-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes industries-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+  }
+</style>

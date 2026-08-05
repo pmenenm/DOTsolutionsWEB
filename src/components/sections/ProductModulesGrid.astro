@@ -1,0 +1,206 @@
+---
+// src/components/sections/ProductModulesGrid.astro
+// Grilla de módulos de la plataforma — mismo lenguaje visual que PainBento
+// (solo borde, acento por card, brillo diagonal al hover, ícono suelto sin
+// contenedor) para que la sección se sienta parte de la misma familia
+// aunque el contenido narrativo sea distinto (catálogo de módulos, no
+// puntos de dolor).
+interface Module {
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  modules: Module[];
+}
+
+const { eyebrow, title, modules } = Astro.props;
+
+const ICONS = [
+  // Finanzas — gráfico de barras
+  '<path d="M4 20V11M10 20V4M16 20v-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 20h20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  // Ventas y CRM — apretón de manos / conexión
+  '<circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M15 14.5c2.4.4 4.5 2.3 4.5 5.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="16" cy="7" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+  // Compras e inventario — caja/paquete
+  '<path d="M3 8l9-4.5L21 8v8l-9 4.5L3 16V8Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8l9 4.5L21 8M12 12.5V21" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  // Analítica — dashboard con pie
+  '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 3.5V12l6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  // Movilidad — teléfono
+  '<rect x="7" y="2.5" width="10" height="19" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 18.5h3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  // Business Intelligence — bombilla
+  '<path d="M9 18h6M10 21h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 2.5a6.5 6.5 0 0 0-3.5 12c.5.35.8.9.8 1.5v.5h5.4V16c0-.6.3-1.15.8-1.5a6.5 6.5 0 0 0-3.5-12Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  // Escalabilidad internacional — globo
+  '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 12h18M12 3c2.4 2.4 3.6 5.7 3.6 9s-1.2 6.6-3.6 9c-2.4-2.4-3.6-5.7-3.6-9s1.2-6.6 3.6-9Z" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+];
+
+const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'var(--dot-forest)'];
+---
+
+<div class="modules">
+  <div class="modules-heading" data-reveal>
+    <p class="eyebrow">
+      <span class="dot"></span>
+      {eyebrow}
+    </p>
+    <h2 class="title">{title}</h2>
+  </div>
+
+  <div class="modules-grid" id="modules-grid">
+    {modules.map((mod, i) => (
+      <article class="module-card" style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}; transition-delay: ${(i * 0.08).toFixed(2)}s`}>
+        <div class="module-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" set:html={ICONS[i % ICONS.length]} />
+        </div>
+        <h3>{mod.title}</h3>
+        <p>{mod.desc}</p>
+      </article>
+    ))}
+  </div>
+</div>
+
+<script>
+  function initModulesGrid() {
+    const grids = document.querySelectorAll<HTMLElement>('#modules-grid');
+    if (!grids.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    grids.forEach((grid) => {
+      const rect = grid.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        grid.classList.add('is-visible');
+      } else {
+        observer.observe(grid);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initModulesGrid);
+</script>
+
+<style>
+  .modules-heading {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    text-align: center;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-xs);
+    justify-content: center;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .modules-grid {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .module-card {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-md);
+    border: 1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-out), transform 0.4s var(--ease-out), border-color 0.3s var(--ease-out);
+  }
+  .modules-grid.is-visible .module-card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .module-card:hover {
+    border-color: color-mix(in srgb, var(--card-accent) 75%, transparent);
+    transform: translateY(-4px);
+  }
+  .module-card::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -60%;
+    width: 35%;
+    height: 140%;
+    background: linear-gradient(115deg, transparent, color-mix(in srgb, var(--card-accent) 22%, transparent), transparent);
+    transform: skewX(-15deg);
+    transition: left 0.7s var(--ease-out);
+    pointer-events: none;
+  }
+  .module-card:hover::after {
+    left: 130%;
+  }
+
+  .module-icon {
+    display: flex;
+    margin-bottom: var(--space-sm);
+    color: var(--card-accent);
+    transition: color 0.4s var(--ease-out);
+  }
+  .module-icon svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .module-card:hover .module-icon {
+    color: color-mix(in srgb, var(--card-accent) 80%, var(--dot-light) 20%);
+  }
+
+  .module-card h3 {
+    position: relative;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    line-height: 1.3;
+    color: var(--dot-micelio);
+    margin-bottom: 0.5rem;
+  }
+  .module-card p {
+    position: relative;
+    font-size: var(--text-sm);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 700px) {
+    .modules-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .modules-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

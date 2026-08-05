@@ -2,6 +2,7 @@
 interface Item {
   title: string;
   desc: string;
+  icon?: string;
 }
 
 interface Props {
@@ -9,12 +10,26 @@ interface Props {
 }
 
 const { items } = Astro.props;
+
+// Estos 4 puntos siguen casi siempre la misma narrativa (caos operativo ->
+// datos desconectados -> decisiones a ciegas -> carga manual), así que un
+// ícono por posición es una base coherente para cualquier página de
+// producto; `item.icon` permite pisarlo con uno específico si el contenido
+// de una página en particular lo necesita.
+const DEFAULT_ICONS = [
+  '<path d="M12 3 21 7.5 12 12 3 7.5 12 3Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12 12 16.5 21 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16.5 12 21 21 16.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  '<path d="M20 12a8 8 0 0 1-8 8 8 8 0 0 1-6.32-3.09" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M4 12a8 8 0 0 1 8-8 8 8 0 0 1 6.32 3.09" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20v-5h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  '<path d="M4 21V10M10 21V4M16 21v-7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 21h20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  '<circle cx="12" cy="12" r="2.75" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 3v3M12 18v3M4.2 4.2l2.2 2.2M17.6 17.6l2.2 2.2M3 12h3M18 12h3M4.2 19.8l2.2-2.2M17.6 6.4l2.2-2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+];
 ---
 
 <div class="bento" id="pain-bento">
   {items.map((item, i) => (
     <article class="bento-card" style={`transition-delay: ${(i * 0.12).toFixed(2)}s`}>
-      <span class="bento-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <div class="bento-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" set:html={item.icon ?? DEFAULT_ICONS[i % DEFAULT_ICONS.length]} />
+      </div>
       <h3>{item.title}</h3>
       <p>{item.desc}</p>
     </article>
@@ -131,23 +146,23 @@ const { items } = Astro.props;
     left: 130%;
   }
 
-  /* Número decorativo grande — da escala editorial y refuerza que son 4
-     puntos distintos, sin competir con el texto (opacidad muy baja, se
-     enciende apenas al hover). */
-  .bento-number {
+  /* Ícono coherente con el contenido de cada card, en vez del número
+     decorativo — suelto, sin contenedor, solo el trazo con el color de
+     acento de la card. */
+  .bento-icon {
     position: absolute;
     top: 0.5rem;
     right: 1rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    line-height: 1;
-    color: color-mix(in srgb, var(--card-accent) 45%, transparent);
+    display: flex;
+    color: var(--card-accent);
     transition: color 0.4s var(--ease-out);
-    pointer-events: none;
   }
-  .bento-card:hover .bento-number {
-    color: color-mix(in srgb, var(--card-accent) 75%, transparent);
+  .bento-icon svg {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .bento-card:hover .bento-icon {
+    color: color-mix(in srgb, var(--card-accent) 80%, var(--dot-light) 20%);
   }
 
   .bento-card h3 {
@@ -171,6 +186,15 @@ const { items } = Astro.props;
     max-width: 42ch;
   }
 
+  .bento-card:nth-child(2) h3,
+  .bento-card:nth-child(3) h3 {
+    font-size: clamp(1.375rem, 2.3vw, 1.75rem);
+  }
+  .bento-card:nth-child(2) p,
+  .bento-card:nth-child(3) p {
+    font-size: clamp(1.0625rem, 1.4vw, 1.125rem);
+  }
+
   @media (min-width: 900px) {
     .bento {
       grid-template-columns: repeat(3, 1fr);
@@ -188,18 +212,23 @@ const { items } = Astro.props;
     .bento-card:nth-child(4) {
       grid-column: span 2;
     }
-    /* Las cards anchas (span 2) llevan más peso tipográfico — refuerza con
-       tamaño la jerarquía que ya da el layout. */
+    /* Las cards anchas (span 2) llevan más peso tipográfico — el texto debe
+       ocupar todo el espacio disponible de la card, no quedar angosto. */
+    .bento-card:nth-child(1),
+    .bento-card:nth-child(4) {
+      padding: var(--space-lg);
+    }
     .bento-card:nth-child(1) h3,
     .bento-card:nth-child(4) h3 {
-      font-size: clamp(1.75rem, 3vw, 2.25rem);
-      max-width: 28ch;
+      font-size: clamp(2.25rem, 4.2vw, 3.25rem);
+      max-width: none;
+      margin-bottom: 1.25rem;
     }
     .bento-card:nth-child(1) p,
     .bento-card:nth-child(4) p {
-      font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
       line-height: 1.6;
-      max-width: 52ch;
+      max-width: none;
     }
   }
 </style>

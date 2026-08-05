@@ -108,10 +108,9 @@ const servicesLinks = t.nav.solutionsMenu.items.map((item) => ({
 
 <script>
   import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
   import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 
-  gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
+  gsap.registerPlugin(MorphSVGPlugin);
 
   function initContactFooter() {
     const section = document.querySelector<HTMLElement>('[data-gsap-section="contact-footer"]');
@@ -136,18 +135,28 @@ const servicesLinks = t.nav.solutionsMenu.items.map((item) => ({
       gsap.set(items, { opacity: 0, y: 50 });
       gsap.set(swipePath, { morphSVG: SWIPE_FULL });
 
-      // Reveal en cascada — sin pin, sin scrub (MorphSVG dentro de un timeline
-      // scrubbeado no tolera bien saltos de progreso). toggleActions explícito:
-      // por defecto ScrollTrigger es "play none none none" (nunca revierte) —
-      // "reverse" en el 4to slot (onLeaveBack) deshace todo al subir por
-      // encima del punto de disparo, y deja el timeline listo para
-      // reproducirse de nuevo la próxima vez que se baje.
-      gsap.timeline({
-        scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none reverse' },
-      })
+      // Reveal en cascada, disparado por IntersectionObserver en vez de
+      // ScrollTrigger: esta es la ÚLTIMA sección de la página, el punto más
+      // frágil para que el cálculo de posición de ScrollTrigger (ligado a
+      // Lenis) se desincronice contra el alto real del documento — si el
+      // trigger nunca cruza su "start", la cortina queda pegada en
+      // SWIPE_FULL para siempre. Un observer solo necesita ver el elemento
+      // entrar al viewport, sin depender de scrollY absoluto.
+      const tl = gsap.timeline({ paused: true })
         .to(swipePath, { morphSVG: SWIPE_WAVE, duration: 0.45, ease: 'power2.in' })
         .to(swipePath, { morphSVG: SWIPE_FLAT, duration: 0.45, ease: 'power2.out' })
         .to(items, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.2 }, '-=0.15');
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) tl.play();
+            else tl.reverse();
+          });
+        },
+        { threshold: 0, rootMargin: '0px 0px -20% 0px' }
+      );
+      observer.observe(section);
     }
 
     // Botón magnético — desktop (pointer: fine) únicamente

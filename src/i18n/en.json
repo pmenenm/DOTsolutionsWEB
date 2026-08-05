@@ -710,6 +710,384 @@
         }
       ],
       "cta": "Talk to an expert"
+    },
+    "heroStats": [
+      { "value": 75, "prefix": "+", "suffix": "", "label": "Certified SAP Business One professionals." },
+      { "value": 14, "prefix": "+", "suffix": "", "label": "Years implementing SAP Business One." },
+      { "value": 83, "prefix": "+", "suffix": "k", "label": "Companies run SAP Business One as their core ERP." },
+      { "value": 300, "prefix": "+", "suffix": "", "label": "Clients transformed across Latin America." }
+    ],
+    "platform": {
+      "eyebrow": "The platform",
+      "title": "Your whole business, in modules that talk to each other",
+      "modules": [
+        { "title": "Finance & accounting", "desc": "Consolidate balances, cash flow and bank reconciliation in real time." },
+        { "title": "Sales & CRM", "desc": "Full sales cycle, campaigns and integrated support." },
+        { "title": "Purchasing & inventory", "desc": "Control purchasing, warehouses and stock." },
+        { "title": "Analytics & reporting", "desc": "Customizable dashboards and reports." },
+        { "title": "Mobility", "desc": "Optimized app for mobile and remote web access." },
+        { "title": "Business Intelligence", "desc": "Real-time data for agile decisions." },
+        { "title": "International scalability", "desc": "Multi-language and multi-currency support." }
+      ]
+    },
+    "addons": {
+      "eyebrow": "Go further",
+      "title": "Extend SAP Business One with 20+ add-ons and connectors",
+      "desc": "Complementary solutions add modules and connect SAP Business One with the apps you already use, automating every process end to end.",
+      "stats": [
+        { "value": 6, "suffix": "", "label": "Vertical solutions" },
+        { "value": 6, "suffix": "", "label": "Our own add-ons" },
+        { "value": 4, "suffix": "", "label": "Automations" },
+        { "value": 7, "suffix": "", "label": "Integrations" }
+      ],
+      "cta": "Explore add-ons & connectors"
+    },
+    "industries": {
+      "eyebrow": "Built for your vertical",
+      "title": "A different implementation for every industry",
+      "items": ["Retail", "Trade", "Mining", "Food & Beverage", "Agriculture", "Healthcare"]
+    },
+    "upsell": {
+      "eyebrow": "The next level",
+      "title": "Is your company growing beyond Business One?",
+      "desc": "When scale and complexity justify it, SAP S/4HANA is the natural next step. We help you evaluate the right ERP for your moment, without rushing the leap.",
+      "cta": "Discover SAP S/4HANA",
+      "ctaSecondary": "Compare Business One vs S/4HANA"
+    }
+  },
+  "s4hana": {
+    "metaTitle": "SAP S/4HANA",
+    "metaDescription": "SAP S/4HANA, SAP's intelligent ERP for large-scale operations. We assess, design and implement S/4HANA for companies that outgrow standard ERP scale.",
+    "hero": {
+      "eyebrow": "SAP S/4HANA · Intelligent ERP",
+      "title": "The intelligent ERP for large-scale operations",
+      "subtitle": "SAP S/4HANA is SAP's next-generation ERP suite, built on the in-memory HANA database to process, analyze and decide in real time across your company's most critical processes.",
+      "cta": "Evaluate an S/4HANA project",
+      "ctaSecondary": "Compare with Business One"
+    },
+    "whatIs": {
+      "title": "The technology foundation for the intelligent enterprise",
+      "body": "Unlike a traditional ERP, S/4HANA unifies transactions and analytics on a single in-memory data source. The result: faster closes, continuous planning and an operation that reacts in the moment, not at month's end.",
+      "features": [
+        "SAP HANA in-memory database: queries and reports in seconds.",
+        "Simplified data model on the Universal Journal in finance.",
+        "Embedded analytics in every process, no parallel systems.",
+        "Modern, role-based user experience with SAP Fiori."
+      ]
+    },
+    "capabilities": {
+      "eyebrow": "Capabilities",
+      "title": "Mission-critical processes, end to end",
+      "intro": "Deep functional coverage for the complex operations of a large organization.",
+      "items": [
+        { "title": "Real-time finance", "desc": "Accounting, treasury and control with accelerated close on the Universal Journal and embedded analytics." },
+        { "title": "Supply chain", "desc": "Planning, inventory and logistics with end-to-end visibility and real-time response." },
+        { "title": "Advanced manufacturing", "desc": "Production planning, live MRP and plant management for industrial operations." },
+        { "title": "Procurement & sourcing", "desc": "Sourcing, contracts and supplier management integrated with the financial flow." },
+        { "title": "Sales & service", "desc": "Full commercial cycle, pricing and after-sales connected to inventory and finance." },
+        { "title": "Embedded AI & analytics", "desc": "Predictive scenarios, assistants and intelligent automation inside every process." }
+      ]
+    },
+    "whenToConsider": {
+      "title": "Built for the complexity of the large enterprise",
+      "body": "S/4HANA is the right choice when volume, regulatory complexity or international scale clearly outgrow what a standard ERP can sustain.",
+      "items": [
+        "High transaction volumes and multiple companies or countries.",
+        "Advanced manufacturing or logistics processes that demand real time.",
+        "Continuous analytics and planning at a corporate level.",
+        "Data and AI strategy as a competitive advantage."
+      ]
+    },
+    "process": {
+      "eyebrow": "How we approach it",
+      "title": "A clear path to S/4HANA",
+      "intro": "We assess, design and implement in phases, without slowing down your current operation.",
+      "steps": [
+        { "title": "Assessment", "desc": "We evaluate your operation, processes and business case to size the project precisely." },
+        { "title": "Roadmap", "desc": "We define scope, architecture and deployment model — cloud, on-premise or hybrid — aligned to your strategy." },
+        { "title": "Implementation & evolution", "desc": "Phased execution and ongoing support to adopt the ERP without stopping the operation." }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Business One or S/4HANA?",
+      "title": "Most companies find their best ERP in SAP Business One",
+      "desc": "Business One is our core: the platform we've used to power hundreds of companies across Latin America. S/4HANA comes into play when your scale justifies it. We help you choose with an honest comparison — and evolve from one to the other when the time comes.",
+      "cta": "Compare Business One vs S/4HANA",
+      "ctaSecondary": "SAP Business One"
+    },
+    "finalCta": {
+      "title": "Let's assess if S/4HANA is the right step",
+      "body": "Tell us about your operation and our team will help you size the project, the deployment model and the business case for S/4HANA at your company.",
+      "button": "Evaluate an S/4HANA project"
+    }
+  },
+  "b1VsS4hana": {
+    "metaTitle": "SAP Business One vs SAP S/4HANA",
+    "metaDescription": "An honest comparison between SAP Business One and SAP S/4HANA: which company size each ERP fits, functional differences, and how to choose the right one for your stage.",
+    "hero": {
+      "eyebrow": "SAP ERP comparison",
+      "title": "SAP Business One vs SAP S/4HANA",
+      "subtitle": "Two SAP ERPs for two different stages. The right choice depends on the size, complexity and ambition of your operation, not on which one is \"bigger\".",
+      "cta": "Talk to an expert"
+    },
+    "intro": {
+      "eyebrow": "In one sentence",
+      "title": "The best ERP is the one that fits your scale",
+      "body": "SAP Business One is designed for growing SMBs and mid-sized companies: powerful, quick to implement and with an accessible total cost. SAP S/4HANA is the suite for large corporations with mission-critical processes. Business One is our core, and for most companies, it's exactly what they need."
+    },
+    "table": {
+      "eyebrow": "Head to head",
+      "title": "Point-by-point comparison",
+      "columnB1": "SAP Business One",
+      "columnS4": "SAP S/4HANA",
+      "rows": [
+        { "criterion": "Target company", "b1": "Growing SMBs and mid-sized companies", "s4": "Large enterprises and corporations" },
+        { "criterion": "Typical users", "b1": "From a handful to hundreds", "s4": "From hundreds to thousands" },
+        { "criterion": "Functional scope", "b1": "Full ERP: finance, sales, purchasing and inventory", "s4": "Extended suite with advanced manufacturing and logistics" },
+        { "criterion": "Database", "b1": "SQL Server or SAP HANA", "s4": "SAP HANA in-memory (native)" },
+        { "criterion": "Analytics & AI", "b1": "Built-in Business Intelligence and dashboards", "s4": "Analytics and AI embedded in every process" },
+        { "criterion": "Deployment", "b1": "Cloud or on-premise", "s4": "Cloud, on-premise or hybrid (RISE with SAP)" },
+        { "criterion": "Implementation time", "b1": "Weeks to a few months", "s4": "Months, in phases" },
+        { "criterion": "Investment", "b1": "Accessible for SMBs", "s4": "Corporate-level" },
+        { "criterion": "Ideal when", "b1": "You want full control with fast payback", "s4": "Scale and complexity outgrow a standard ERP" }
+      ]
+    },
+    "choose": {
+      "eyebrow": "How to choose",
+      "title": "Which one is for you?",
+      "b1": {
+        "title": "Choose SAP Business One if…",
+        "items": [
+          "You're a growing SMB or mid-sized company.",
+          "You want to unify finance, sales and inventory without extra complexity.",
+          "You need to implement fast and see results in weeks.",
+          "You want the best balance between power and investment."
+        ]
+      },
+      "s4": {
+        "title": "Consider SAP S/4HANA if…",
+        "items": [
+          "You operate at large scale, with multiple companies or countries.",
+          "You have mission-critical, advanced manufacturing or logistics.",
+          "You need corporate real-time analytics and planning.",
+          "Data and AI strategy is central to your business."
+        ]
+      }
+    },
+    "growth": {
+      "eyebrow": "Not a dead end",
+      "title": "Start where you are today and scale when you need to",
+      "body": "Many companies start with Business One and, when their scale justifies it, evolve to S/4HANA. Since both are SAP platforms, your investment in processes, data and team goes with you along the way.",
+      "items": [
+        "One SAP ecosystem from start to finish.",
+        "A planned migration, not starting from scratch.",
+        "Guidance to decide the right moment."
+      ]
+    },
+    "finalCta": {
+      "title": "Let's decide the right ERP together",
+      "body": "Tell us about your company and we'll guide you, without bias, to the SAP platform that best fits your stage and goals.",
+      "button": "Talk to an expert"
+    }
+  },
+  "addonsPage": {
+    "metaTitle": "Add-ons & connectors for SAP Business One",
+    "metaDescription": "20+ add-ons and connectors for SAP Business One: vertical solutions by industry, horizontal add-ons, automations and integrations with the apps you already use.",
+    "hero": {
+      "eyebrow": "Complements · SAP Business One",
+      "title": "Complementary solutions for SAP Business One",
+      "subtitle": "Go further by adding AddOn modules or integrating solutions that extend SAP Business One's native functionality. Automate and streamline every process, unlocking your company's true potential."
+    },
+    "categories": [
+      {
+        "key": "verticals",
+        "eyebrow": "Vertical solutions",
+        "title": "Designed for your industry",
+        "intro": "Cover the specific needs of industries like transportation, maintenance, manufacturing, agribusiness, retail and distribution.",
+        "items": [
+          {
+            "name": "Credit Card Operator Reconciliation",
+            "shortDesc": "Automates reconciliation of Transbank or Getnet deposits against your card sales.",
+            "fullDesc": "The Credit Card reconciliation add-on is essential for companies operating with Transbank or Getnet. It automates the reconciliation of deposits received against card payments from sales recorded in SAP Business One. The solution imports settlement files, performing an intelligent match between the amounts deposited by the operator and the sales payments received (credit/debit). This lets you automatically post the fees and withholdings applied, ensuring the accounting balance matches the real balance. It eliminates manual reconciliation work, guarantees accuracy and significantly speeds up the financial close.",
+            "compatible": ["Transbank", "Getnet"]
+          },
+          {
+            "name": "Warehouse Management (WMS) — Produmex",
+            "shortDesc": "Storage rules, efficient picking and mobile scanning for your warehouses.",
+            "fullDesc": "Produmex WMS and Produmex Scan offer an advanced solution to optimize warehouse management in SAP Business One. Produmex WMS provides the business intelligence to implement complex storage rules, optimize the use of locations and define high-efficiency picking strategies. Produmex Scan is the mobile component that lets warehouse operators run every product-handling task, from receiving and cycle counting to final dispatch, using mobile scanning devices. This eliminates paper, drastically reduces inventory errors and ensures precise traceability of every item.",
+            "compatible": ["Produmex WMS", "Produmex Scan"]
+          },
+          {
+            "name": "Apparel & Footwear",
+            "shortDesc": "Size and color product matrix for fashion, footwear and apparel.",
+            "fullDesc": "The Apparel & Footwear add-on complements SAP Business One to meet the complex needs of fashion, footwear and apparel companies managing multiple product variants. Its main function is to replace individual item management with an intuitive Product Matrix (styles), allowing quick product creation based on attributes like color and size, greatly simplifying data entry. It makes inventory management easier by letting you view and control stock for every variant combination on a single screen. It also optimizes purchasing, sales and production processes with specialized tools, such as collection planning, season-based procurement and size/color order management."
+          },
+          {
+            "name": "Mobile One",
+            "shortDesc": "Turns every salesperson into a mobile office: catalog, pricing, stock and field sales.",
+            "fullDesc": "Mobile One is an app designed to extend SAP Business One's functionality to your field sales team. Its goal is to turn every salesperson into a mobile office, eliminating paperwork and double data entry. The add-on provides real-time access to critical information from a sales terminal: product catalog, customer-specific price lists and up-to-date inventory levels. Salespeople can create sales receipts or invoices directly at the point of sale, with automatic stock validation, register payment and generate the electronic sales document. All sales data is integrated into SAP Business One instantly and accurately.",
+            "cta": "View product",
+            "ctaHref": "mobile-one"
+          },
+          {
+            "name": "Enterpryze",
+            "shortDesc": "A mobile, cloud suite that brings SAP Business One to every employee, in and out of the office.",
+            "fullDesc": "Enterpryze is a suite of modular, mobile, cloud-based applications designed to extend SAP Business One's functionality to every employee at your company, especially those working outside the office. It acts as a friendly bridge between SAP Business One's complexity and end users, with an intuitive interface for specific tasks. Its goal is to improve productivity in the field and ensure that all operations and data are captured and synced in real time.",
+            "features": [
+              "Mobile sales & CRM — Customer data, live inventory, orders and quotes from any device.",
+              "Field service management — Work orders, technician assignment, time tracking and customer signature.",
+              "Expense & finance management — Capture and approval of travel expenses from the phone's camera.",
+              "Operations & inventory — Mobile cycle-counting and transfer functions."
+            ]
+          },
+          {
+            "name": "Farm4all — Agricultural Management",
+            "shortDesc": "Full traceability and precise costs by product, batch, field block or season.",
+            "fullDesc": "Farm4all is a specialized add-on that integrates the operational and financial management of the agricultural and agribusiness sector directly with SAP Business One. It incorporates the complex logic of crop cycles and field production. Its goal is to ensure full production traceability and precise unit-cost calculation by product, batch, field block or season, with constant monitoring and real-time budget control.",
+            "features": [
+              "Campaigns & field blocks — Planning and budget control by agricultural campaign and land unit.",
+              "Agricultural work orders — Sowing, irrigation, fertilizing and pruning, with labor, machinery and input costs.",
+              "Inventory traceability — From inputs (seeds, agrochemicals) to harvest records.",
+              "Financial integration — Field costs are automatically posted to SAP Business One's accounting."
+            ]
+          }
+        ]
+      },
+      {
+        "key": "addons",
+        "eyebrow": "Our AddOns",
+        "title": "Horizontal, for any industry",
+        "intro": "Solutions that enhance the standard modules (Finance, Inventory, Sales) and apply to virtually any industry.",
+        "items": [
+          {
+            "name": "Electronic Invoicing — Issuance",
+            "shortDesc": "Issue, stamp and send every tax document in compliance with SII regulations.",
+            "fullDesc": "The Electronic Invoicing solution for SAP Business One manages the full tax-document cycle in compliance with Chilean regulations (SII). It automates the issuance, stamping and sending of every Electronic Tax Document (DTE) — invoices, credit notes, debit notes, receipts and dispatch guides — directly from sales documents in SAP Business One."
+          },
+          {
+            "name": "Electronic Invoicing — Automatic Receipt",
+            "shortDesc": "Receives and validates your suppliers' invoices and creates purchase drafts on its own.",
+            "fullDesc": "Streamlines the purchasing cycle by automatically integrating supplier invoices. It receives the XML files, automatically validates them with the SII and efficiently creates purchase document drafts in SAP Business One. This eliminates manual data entry, reduces operational errors and ensures tax traceability and real-time financial control."
+          },
+          {
+            "name": "Fixed Asset Tax Adjustment",
+            "shortDesc": "Automatic monetary correction of fixed assets per SII (CPI) regulations.",
+            "fullDesc": "The Monetary Correction add-on for SAP Business One's Fixed Asset module is essential for accounting compliance under Chilean (SII) regulations. It automatically calculates and adjusts asset values and accumulated depreciation based on official price indexes (like the CPI), generating correction journal entries in bulk and on a periodic basis. It ensures balance sheets reflect the real economic value of assets."
+          },
+          {
+            "name": "Bank Statement Import",
+            "shortDesc": "Imports bank statements and speeds up reconciliation with intelligent matching.",
+            "fullDesc": "Eliminates manual entry of bank account movements in SAP Business One. It enables direct, automated import of bank transactions from multiple formats (CSV, TXT) into the treasury module, and performs intelligent matching of bank movements against recorded payments and deposits. It reduces errors and ensures balances reflect the real daily cash position."
+          },
+          {
+            "name": "Payment File Generation",
+            "shortDesc": "Generates the consolidated payment file in the format your bank requires.",
+            "fullDesc": "Automates the treasury process in SAP Business One by generating a consolidated payment file (suppliers, payroll or services) in the structured, secure format your bank requires. It takes transactions from the treasury module and generates a flat file ready for direct upload to the bank portal. It eliminates manual entry for each payment and speeds up the treasury cycle."
+          },
+          {
+            "name": "Daily Exchange Rate Update",
+            "shortDesc": "Automatically updates official exchange rates from the Central Bank.",
+            "fullDesc": "A service for managing SAP Business One's daily exchange rates across currencies. It automates the reliable daily load of official values directly from the Central Bank. It connects, downloads the day's rate and updates the Exchange Rate table. It eliminates manual entry errors and ensures every foreign-currency transaction and report reflects accurate values."
+          }
+        ]
+      },
+      {
+        "key": "automations",
+        "eyebrow": "Automations",
+        "title": "Make SAP fit your process",
+        "intro": "Tools that customize, automate and connect SAP Business One so it fits your company's processes, not the other way around.",
+        "items": [
+          {
+            "name": "Boyum Usability Package (B1UP)",
+            "shortDesc": "The most popular add-on to customize and automate SAP Business One with no development.",
+            "fullDesc": "Boyum Usability Package (B1UP) is the most popular and versatile add-on to customize, automate and improve the user experience in SAP Business One. It provides a toolset that lets you adapt SAP Business One without development, so it fits your company's specific processes.",
+            "features": [
+              "Screen customization — Redesign any form: required fields, hide tabs or change the layout.",
+              "Automation & function buttons — Buttons that run a sequence of actions or business logic in one click.",
+              "Rules & validations — Advanced business rules and data validations to ensure information quality.",
+              "Productivity tools — Bulk data updates and utilities for day-to-day data handling."
+            ]
+          },
+          {
+            "name": "Intercompany",
+            "shortDesc": "Automatically replicates master data and transactions between your subsidiaries or companies.",
+            "fullDesc": "An ideal solution for companies with multiple subsidiaries or companies running separate SAP Business One databases. It automates the replication of master data and transactions between them: when Company A issues a sales invoice, it automatically creates the vendor invoice in Company B. It eliminates double entry, speeds up internal settlement and makes financial consolidation and cross-entity inventory management easier."
+          },
+          {
+            "name": "MyWave.ai",
+            "shortDesc": "Artificial intelligence and advanced analytics on top of your SAP Business One data.",
+            "fullDesc": "myWave.ai is an Artificial Intelligence and Advanced Analytics platform designed to power decision-making based on SAP Business One data. It enhances SAP Business One with AI-driven processes and smart integration between systems, simplifying complex operations and helping you scale your business.",
+            "features": [
+              "Smart processes — Reduces repetitive tasks, increases efficiency and improves regulatory compliance.",
+              "Customer personalization — Adapts processes based on customer data and improves engagement.",
+              "Natural language — Natural-language commands for SAP Business One processes.",
+              "Real-time decisions — Real-time data to respond quickly to market changes.",
+              "Data security — Encryption and access control to protect your confidential information."
+            ]
+          },
+          {
+            "name": "Processes",
+            "shortDesc": "Billing automations that save your admin team time.",
+            "fullDesc": "Automations over the invoicing flow in SAP Business One to eliminate repetitive tasks.",
+            "features": ["Bulk invoice creation.", "Invoice creation from sales orders."]
+          }
+        ]
+      },
+      {
+        "key": "integrations",
+        "eyebrow": "Integrations · DOT Conector",
+        "title": "Connect SAP with the apps you already use",
+        "intro": "DOT Conector is a powerful, easy-to-use integration platform that connects SAP Business One with a wide range of third-party applications and data sources. It lets non-technical users enable two-way communication between SAP Business One and external systems (e-commerce, marketplaces, WMS, TMS, CRM, payment processors, etc.), eliminating manual tasks and speeding up your order-to-cash cycle.",
+        "items": [
+          {
+            "name": "Rindegastos",
+            "shortDesc": "Automates the reporting and management of travel expenses.",
+            "fullDesc": "The Rindegastos integration with SAP Business One automates expense reporting and management. It centralizes receipt digitization by employees. Once validated and approved in Rindegastos, they're automatically transferred to SAP Business One, creating the corresponding accounting documents (journal entries or vendor invoices), respecting cost centers and accounts. It eliminates manual entry and speeds up the payment process.",
+            "compatible": ["Rindegastos"]
+          },
+          {
+            "name": "Payroll",
+            "shortDesc": "Accounting close of the payroll process, integrated into SAP Business One.",
+            "fullDesc": "The integration of payroll platforms with SAP Business One automates the accounting close of the payroll process. Once payroll is processed, it generates and transfers a consolidated journal entry to SAP Business One, detailing expenses, provisions and accounts payable per your chart of accounts. It eliminates double entry and speeds up the monthly close.",
+            "compatible": ["Buk", "Talana", "Rex+"]
+          },
+          {
+            "name": "TMS · Transportation Management",
+            "shortDesc": "Route optimization and delivery tracking connected to your orders.",
+            "fullDesc": "The TMS integration with SAP Business One automates distribution management. Orders and sales generated in SAP Business One are automatically transferred to the TMS for route optimization, vehicle assignment and logistics planning. The TMS provides real-time tracking and returns delivery status and digital proof of delivery to SAP Business One.",
+            "compatible": ["DispatchTrack", "Drivin", "SimpliRoute"]
+          },
+          {
+            "name": "Multivende",
+            "shortDesc": "Unifies your e-commerce and marketplaces with real-time order and stock sync.",
+            "fullDesc": "The Multivende integration with SAP Business One unifies the management of your e-commerce and marketplaces. Its value lies in two-way, real-time synchronization. Orders from every online channel are instantly transferred to SAP Business One as customer orders. Updated stock and prices are replicated in real time to Multivende and every channel, eliminating the risk of overselling.",
+            "compatible": ["Mercado Libre", "Ripley", "Paris", "Falabella"]
+          },
+          {
+            "name": "E-commerce",
+            "shortDesc": "A unified sales channel with Shopify, Magento or VTEX.",
+            "fullDesc": "The integration of leading e-commerce platforms with SAP Business One creates a unified sales channel with real-time two-way synchronization. Orders from the online store are automatically transferred to SAP Business One as customer orders. Stock and prices are replicated to the e-commerce platform, eliminating overselling and automating the order lifecycle.",
+            "compatible": ["Shopify", "Magento", "VTEX"]
+          },
+          {
+            "name": "POS Terminals",
+            "shortDesc": "Error-free in-store sales cycle: the charge reaches the terminal straight from the receipt.",
+            "fullDesc": "The POS terminal integration with SAP Business One creates a highly efficient in-store sales cycle. When the receipt or invoice is generated, the system automatically sends the amount to charge to the POS terminal, eliminating keying errors. After the transaction is approved, the confirmation and payment type are recorded immediately, making later bank reconciliation easier.",
+            "compatible": ["Transbank", "Getnet", "Mercado Pago"]
+          },
+          {
+            "name": "ComercioNet · B2B Orders (EDI)",
+            "shortDesc": "Automatically receives B2B purchase orders from major retail chains.",
+            "fullDesc": "The integration of B2B orders from major clients via ComercioNet with SAP Business One works as an EDI (Electronic Data Interchange) connector. It automates receiving the purchase order the retailer enters in their own system: the document is pulled from ComercioNet and transferred to SAP Business One, creating a customer order ready to process. It eliminates data entry and speeds up B2B order preparation.",
+            "compatible": ["Sodimac", "Tottus", "Jumbo", "Unimarc"]
+          }
+        ]
+      }
+    ],
+    "finalCta": {
+      "title": "Let's talk about optimizing your operation",
+      "body": "Every business has different challenges. Tell us yours and our team will show you how our solutions can adapt to generate efficiency, control and measurable results for your company.",
+      "button": "Talk to an expert"
     }
   },
   "retailPro": {

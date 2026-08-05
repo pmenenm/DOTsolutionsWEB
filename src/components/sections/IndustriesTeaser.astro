@@ -22,7 +22,7 @@ interface Props {
 const { featured, othersLabel, others } = Astro.props;
 
 const ACCENTS: Record<string, string> = {
-  gastronomia: 'var(--dot-moss)',
+  gastronomia: 'var(--dot-micelio)',
   retail: 'var(--dot-micelio)',
 };
 
@@ -117,15 +117,19 @@ const ICONS: Record<string, string> = {
     border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.7s var(--ease-out), transform 0.3s var(--ease-out), border-color 0.4s var(--ease-out);
+    box-shadow: 0 0 0 0 transparent;
+    transition: opacity 0.7s var(--ease-out), transform 0.3s var(--ease-out), border-color 0.4s var(--ease-out),
+      box-shadow 0.4s var(--ease-out);
   }
   .eco-grid.is-visible .eco-card {
     opacity: 1;
     transform: translateY(0);
   }
   .eco-card:hover {
-    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    border-color: var(--accent);
     transform: translateY(-6px);
+    box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 45%, transparent),
+      inset 0 0 24px color-mix(in srgb, var(--accent) 12%, transparent);
   }
   .eco-card::after {
     content: '';
@@ -175,7 +179,8 @@ const ICONS: Record<string, string> = {
     );
     border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
     color: var(--accent);
-    transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+    box-shadow: 0 0 0 0 transparent;
+    transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
   }
   .eco-orb svg {
     width: 1.75rem;
@@ -184,6 +189,7 @@ const ICONS: Record<string, string> = {
   .eco-card:hover .eco-orb {
     transform: scale(1.12) rotate(-6deg);
     border-color: var(--accent);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 65%, transparent);
   }
 
   .eco-name {

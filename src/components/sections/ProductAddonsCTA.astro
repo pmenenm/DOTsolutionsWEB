@@ -1,0 +1,200 @@
+---
+// src/components/sections/ProductAddonsCTA.astro
+// Banner "Ve más allá" — panel de vidrio oscuro con copy + mini-stats +
+// CTA, mismo lenguaje que ServicesShowcase/IndustriesTeaser en Home
+// (glass-panel, acento micelio, reveal por IntersectionObserver).
+interface Stat {
+  value: number;
+  suffix?: string;
+  label: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  desc: string;
+  stats: Stat[];
+  cta: string;
+  ctaHref: string;
+}
+
+const { eyebrow, title, desc, stats, cta, ctaHref } = Astro.props;
+---
+
+<div class="addons-panel glass-panel" id="addons-panel">
+  <div class="addons-copy">
+    <p class="eyebrow">
+      <span class="dot"></span>
+      {eyebrow}
+    </p>
+    <h2 class="title">{title}</h2>
+    <p class="desc">{desc}</p>
+    <a href={ctaHref} class="cta">
+      {cta}
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <div class="addons-stats">
+    {stats.map((stat, i) => (
+      <div class="stat" style={`transition-delay: ${(i * 0.1).toFixed(2)}s`}>
+        <p class="value">
+          <span class="count" data-target={stat.value}>0</span><span>{stat.suffix}</span>
+        </p>
+        <p class="label">{stat.label}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  function animateCount(el: HTMLElement) {
+    const target = Number(el.dataset.target ?? '0');
+    const counter = { value: 0 };
+    gsap.to(counter, {
+      value: target,
+      duration: 1.4,
+      ease: 'power2.out',
+      onUpdate: () => {
+        el.textContent = Math.round(counter.value).toString();
+      },
+    });
+  }
+
+  function initAddonsPanel() {
+    const panels = document.querySelectorAll<HTMLElement>('#addons-panel');
+    if (!panels.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          entry.target.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    panels.forEach((panel) => {
+      const rect = panel.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        panel.classList.add('is-visible');
+        panel.querySelectorAll<HTMLElement>('.count').forEach(animateCount);
+      } else {
+        observer.observe(panel);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAddonsPanel);
+</script>
+
+<style>
+  .addons-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-xs);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    max-width: 24ch;
+  }
+  .desc {
+    margin-top: var(--space-sm);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 46ch;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-md);
+    color: var(--dot-micelio);
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .cta .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .cta:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .addons-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    padding-top: var(--space-lg);
+    border-top: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+  }
+  .stat {
+    text-align: left;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .addons-panel.is-visible .stat {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .value {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    color: var(--dot-micelio);
+    line-height: 1;
+  }
+  .label {
+    margin-top: 0.35rem;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 900px) {
+    .addons-panel {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+    .addons-stats {
+      padding-top: 0;
+      border-top: none;
+      padding-left: var(--space-xl);
+      border-left: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    }
+  }
+</style>

@@ -1,0 +1,135 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import BenefitsList from '../components/sections/BenefitsList.astro';
+import ProductModulesGrid from '../components/sections/ProductModulesGrid.astro';
+import ProcessTimelineAnimated from '../components/sections/ProcessTimelineAnimated.astro';
+import ProductUpsellBanner from '../components/sections/ProductUpsellBanner.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.s4hana;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+const b1Href = getRelativeLocaleUrl(lang, 'sap-business-one');
+const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
+---
+
+<Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/sap-s4hana">
+  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/background_1.jpg" />
+
+  <div class="container hero-ctas">
+    <a href={contactHref} class="cta-primary">{s.hero.cta}</a>
+    <a href={compareHref} class="cta-secondary">{s.hero.ctaSecondary}</a>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title={s.whatIs.title} subtitle={s.whatIs.body} />
+      <div class="section-body narrow">
+        <BenefitsList items={s.whatIs.features} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ProductModulesGrid eyebrow={s.capabilities.eyebrow} title={s.capabilities.title} modules={s.capabilities.items} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title={s.whenToConsider.title} subtitle={s.whenToConsider.body} />
+      <div class="section-body narrow">
+        <BenefitsList items={s.whenToConsider.items} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel process-panel">
+        <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
+        <div class="section-body narrow">
+          <ProcessTimelineAnimated steps={s.process.steps} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ProductUpsellBanner
+        eyebrow={s.compare.eyebrow}
+        title={s.compare.title}
+        desc={s.compare.desc}
+        cta={s.compare.cta}
+        ctaHref={compareHref}
+        ctaSecondary={s.compare.ctaSecondary}
+        ctaSecondaryHref={b1Href}
+      />
+    </div>
+  </section>
+
+  <div class="container">
+    <CTASection title={s.finalCta.title} body={s.finalCta.body} button={s.finalCta.button} href={contactHref} />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .section-body.narrow {
+    max-width: var(--content-max);
+  }
+  .process-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: calc(-1 * var(--space-md));
+    margin-bottom: var(--space-lg);
+  }
+  .cta-primary,
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.85rem 1.75rem;
+    font-size: var(--text-base);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  }
+  .cta-primary {
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+  }
+  .cta-primary:hover {
+    background: color-mix(in srgb, var(--dot-micelio) 85%, var(--dot-light) 15%);
+  }
+  .cta-secondary {
+    border: 1px solid color-mix(in srgb, var(--dot-light) 30%, transparent);
+    color: var(--text-primary);
+  }
+  .cta-secondary:hover {
+    border-color: var(--dot-micelio);
+    color: var(--dot-micelio);
+  }
+</style>

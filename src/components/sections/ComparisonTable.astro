@@ -1,0 +1,99 @@
+---
+// src/components/sections/ComparisonTable.astro
+// Tabla comparativa punto por punto (ej. Business One vs S/4HANA) — fila de
+// criterio + 2 columnas de valores, con la columna B1 acentuada en micelio
+// para reforzar que es nuestro core. Envuelta en overflow-x propio para no
+// romper el layout en mobile.
+interface Row {
+  criterion: string;
+  b1: string;
+  s4: string;
+}
+
+interface Props {
+  columnB1: string;
+  columnS4: string;
+  rows: Row[];
+}
+
+const { columnB1, columnS4, rows } = Astro.props;
+---
+
+<div class="table-wrap" data-reveal>
+  <table class="comparison">
+    <thead>
+      <tr>
+        <th class="criterion-col"></th>
+        <th class="b1-col">{columnB1}</th>
+        <th class="s4-col">{columnS4}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          <td class="criterion-col">{row.criterion}</td>
+          <td class="b1-col">{row.b1}</td>
+          <td class="s4-col">{row.s4}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 14%, transparent);
+  }
+
+  .comparison {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    font-size: var(--text-sm);
+    vertical-align: top;
+  }
+
+  thead th {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    border-bottom: 1px solid color-mix(in srgb, var(--dot-light) 20%, transparent);
+    padding-top: var(--space-md);
+  }
+  thead .b1-col {
+    color: var(--dot-micelio);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid color-mix(in srgb, var(--dot-light) 8%, transparent);
+  }
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .criterion-col {
+    width: 22%;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .b1-col {
+    width: 39%;
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--dot-micelio) 6%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--dot-micelio) 20%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--dot-micelio) 20%, transparent);
+  }
+  .s4-col {
+    width: 39%;
+    color: var(--text-secondary);
+  }
+</style>

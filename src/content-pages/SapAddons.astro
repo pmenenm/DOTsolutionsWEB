@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import AddonsCatalog from '../components/sections/AddonsCatalog.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.addonsPage;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+---
+
+<Layout
+  title={`${s.metaTitle} — DOT Solutions`}
+  description={s.metaDescription}
+  lang={lang}
+  path="/sap-business-one/addons"
+>
+  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/background_3.jpg" />
+
+  <nav class="container quick-nav" aria-label="Categorías">
+    {s.categories.map((cat) => (
+      <a href={`#${cat.key}`}>{cat.eyebrow}</a>
+    ))}
+  </nav>
+
+  {s.categories.map((cat) => (
+    <section class="section" id={cat.key}>
+      <div class="container">
+        <AddonsCatalog eyebrow={cat.eyebrow} title={cat.title} intro={cat.intro} items={cat.items} lang={lang} />
+      </div>
+    </section>
+  ))}
+
+  <div class="container">
+    <CTASection title={s.finalCta.title} body={s.finalCta.body} button={s.finalCta.button} href={contactHref} />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+
+  .quick-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: calc(-1 * var(--space-md));
+    margin-bottom: var(--space-lg);
+  }
+  .quick-nav a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 20%, transparent);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+  .quick-nav a:hover {
+    border-color: var(--dot-micelio);
+    color: var(--dot-micelio);
+  }
+</style>

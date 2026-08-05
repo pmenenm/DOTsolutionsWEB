@@ -1,0 +1,134 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import ComparisonTable from '../components/sections/ComparisonTable.astro';
+import BenefitsList from '../components/sections/BenefitsList.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.b1VsS4hana;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+---
+
+<Layout
+  title={`${s.metaTitle} — DOT Solutions`}
+  description={s.metaDescription}
+  lang={lang}
+  path="/business-one-vs-s4hana"
+>
+  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/background_2.jpg" />
+
+  <div class="container hero-ctas">
+    <a href={contactHref} class="cta-primary">{s.hero.cta}</a>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={s.intro.eyebrow} title={s.intro.title} subtitle={s.intro.body} align="center" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={s.table.eyebrow} title={s.table.title} />
+      <div class="section-body">
+        <ComparisonTable columnB1={s.table.columnB1} columnS4={s.table.columnS4} rows={s.table.rows} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={s.choose.eyebrow} title={s.choose.title} />
+      <div class="choose-grid">
+        <div>
+          <h3 class="choose-heading">{s.choose.b1.title}</h3>
+          <BenefitsList items={s.choose.b1.items} />
+        </div>
+        <div>
+          <h3 class="choose-heading">{s.choose.s4.title}</h3>
+          <BenefitsList items={s.choose.s4.items} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel growth-panel">
+        <SectionHeading eyebrow={s.growth.eyebrow} title={s.growth.title} subtitle={s.growth.body} />
+        <div class="section-body narrow">
+          <BenefitsList items={s.growth.items} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <CTASection title={s.finalCta.title} body={s.finalCta.body} button={s.finalCta.button} href={contactHref} />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .section-body.narrow {
+    max-width: var(--content-max);
+  }
+  .growth-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  .hero-ctas {
+    margin-top: calc(-1 * var(--space-md));
+    margin-bottom: var(--space-lg);
+  }
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.85rem 1.75rem;
+    font-size: var(--text-base);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+    transition: background var(--transition-fast);
+  }
+  .cta-primary:hover {
+    background: color-mix(in srgb, var(--dot-micelio) 85%, var(--dot-light) 15%);
+  }
+
+  .choose-grid {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+  .choose-heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--dot-micelio);
+    margin-bottom: var(--space-sm);
+  }
+
+  @media (min-width: 900px) {
+    .choose-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
