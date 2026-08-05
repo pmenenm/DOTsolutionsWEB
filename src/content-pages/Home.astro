@@ -37,6 +37,14 @@ const t = useTranslations(lang);
 
     <ClientLogos title={t.common.clientsTitle} />
 
+    <ServicesShowcase
+      eyebrow={t.home.servicesTeaser.eyebrow}
+      titleHighlight={t.home.servicesTeaser.titleHighlight}
+      titleRest={t.home.servicesTeaser.titleRest}
+      subtitle={t.home.servicesTeaser.subtitle}
+      products={t.home.servicesTeaser.products.map((p) => ({ ...p, href: getRelativeLocaleUrl(lang, p.href) }))}
+    />
+
     <section class="section">
       <div class="container glass-panel section-panel heading-panel">
         <SectionHeading
@@ -56,14 +64,6 @@ const t = useTranslations(lang);
         </div>
       </div>
     </section>
-
-    <ServicesShowcase
-      eyebrow={t.home.servicesTeaser.eyebrow}
-      titleHighlight={t.home.servicesTeaser.titleHighlight}
-      titleRest={t.home.servicesTeaser.titleRest}
-      subtitle={t.home.servicesTeaser.subtitle}
-      products={t.home.servicesTeaser.products.map((p) => ({ ...p, href: getRelativeLocaleUrl(lang, p.href) }))}
-    />
   </HeroReveal>
 
   <section class="section theme-light stats-section">
@@ -101,6 +101,7 @@ const t = useTranslations(lang);
   }
   .section-panel {
     padding: clamp(2rem, 4vw, 3rem);
+    border: none;
   }
   .industries-panel {
     padding-inline: 0;

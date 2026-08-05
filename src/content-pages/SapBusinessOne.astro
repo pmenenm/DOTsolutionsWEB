@@ -24,27 +24,32 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     line1={s.hero.line1}
     line2={s.hero.line2}
     line3={s.hero.line3}
+    line4={s.hero.line4}
     subtitle={s.hero.subtitle}
     paragraph={s.hero.paragraph}
     cta={s.hero.cta}
     ctaHref={contactHref}
-    logo="/logos/sap.png"
+    backgroundImage="/images/backgroundsap2.jpg"
   />
 
   <section class="section">
     <div class="container">
-      <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} />
+      <div class="diagnostic-heading">
+        <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} align="center" />
+      </div>
       <div class="section-body">
         <PainBento items={s.bento.items} />
       </div>
     </div>
   </section>
 
-  <section class="section theme-light">
+  <section class="section">
     <div class="container">
-      <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
-      <div class="section-body narrow">
-        <ProcessTimelineAnimated steps={s.process.steps} />
+      <div class="glass-panel process-panel">
+        <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
+        <div class="section-body narrow">
+          <ProcessTimelineAnimated steps={s.process.steps} />
+        </div>
       </div>
     </div>
   </section>
@@ -70,5 +75,41 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
   }
   .section-body.narrow {
     max-width: var(--content-max);
+  }
+
+  .process-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  /* Título "El diagnóstico" — más grande, más peso, y un degradé animado
+     en loop lento que recorre blanco -> verde micelio -> blanco. */
+  .diagnostic-heading :global(.title) {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 600;
+    background: linear-gradient(
+      90deg,
+      var(--dot-light) 0%,
+      var(--dot-light) 35%,
+      var(--dot-micelio) 50%,
+      var(--dot-light) 65%,
+      var(--dot-light) 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: diagnostic-gradient-loop 6s linear infinite;
+  }
+  @keyframes diagnostic-gradient-loop {
+    to {
+      background-position: -250% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .diagnostic-heading :global(.title) {
+      animation: none;
+      background-position: 50% 0;
+    }
   }
 </style>

@@ -27,7 +27,7 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
 ---
 
 <section class="mycelium" data-mycelium>
-  <div class="container mycelium-header">
+  <div class="container glass-panel mycelium-header">
     <p class="mycelium-eyebrow">
       <span class="dot"></span>
       {eyebrow}
@@ -184,6 +184,13 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
     text-align: center;
     max-width: 62rem;
     margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem);
+    /* Menos blur que el .glass-panel genérico (20px) — acá alcanza con
+       menos para leerse bien sin perder tanta textura del fondo detrás.
+       Sin borde a propósito: solo el blur separa la card del fondo. */
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: none;
   }
   .mycelium-eyebrow {
     display: inline-flex;

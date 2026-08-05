@@ -113,15 +113,16 @@ const { title, stats, cta, ctaHref } = Astro.props;
 </script>
 
 <style>
-  /* Rompe el dark mode a propósito: bloque luminoso en Salvia Pálido con
-     texto en Negro Abisal, para dar impacto de cierre. */
+  /* Rompe el dark mode a propósito: bloque luminoso en Bruma Digital (el
+     tono más claro de la paleta, "blanco") con texto en Negro Abisal, para
+     dar impacto de cierre. */
   .authority {
     position: relative;
     /* z-index explícito para que la curva que sobresale hacia arriba
        siempre pinte encima de la sección anterior, sin depender de la
        resolución implícita del navegador entre positioned y static. */
     z-index: var(--z-above);
-    background: var(--dot-sage);
+    background: var(--dot-light);
     padding-block: var(--space-hero);
     text-align: center;
   }

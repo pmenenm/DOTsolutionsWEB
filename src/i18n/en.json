@@ -619,9 +619,10 @@
     "metaTitle": "SAP Business One",
     "metaDescription": "Strategic SAP Business One implementation for small and medium businesses. Finance, sales and inventory unified in a single intelligent platform.",
     "hero": {
-      "line1": "Take full control of your company",
-      "line2": "with a Strategic Implementation of",
-      "line3": "SAP Business One",
+      "line1": "Take full control",
+      "line2": "of your company with a",
+      "line3": "Strategic Implementation of",
+      "line4": "SAP Business One",
       "subtitle": "Accessible, easy-to-use business management software, built specifically for small and medium enterprises.",
       "paragraph": "Stop operating blind. We unify finance, sales and inventory in a single intelligent platform. Built for growing companies that demand real data, not estimates.",
       "cta": "Talk to an expert"
@@ -1442,5 +1443,58 @@
       ],
       "cta": "Talk to an expert"
     }
+  },
+  "blog": {
+    "metaTitle": "Insights",
+    "metaDescription": "Ideas, guides and perspectives from DOT Solutions on SAP Business One, retail, hospitality and the technology that keeps your business running.",
+    "eyebrow": "Events & news",
+    "title": "The latest from DOT",
+    "subtitle": "Events, news and guides from our team on ERP, retail and hospitality.",
+    "viewAll": "View all insights",
+    "readMore": "Read more",
+    "backToList": "Back to Insights",
+    "publishedLabel": "Published",
+    "relatedTitle": "Keep exploring",
+    "posts": [
+      {
+        "slug": "sap-business-one-vs-s4hana",
+        "category": "ERP",
+        "date": "2026-06-24",
+        "title": "SAP Business One or S/4HANA: how to know which one your company needs",
+        "excerpt": "Size, complexity and growth define the right ERP. We explain when each one makes sense, without over-investing.",
+        "body": [
+          "Choosing an ERP isn't about picking «the biggest one», but the one that fits how your company operates today and where it wants to go. In practice, the decision between SAP Business One and SAP S/4HANA comes down to three variables: the size and complexity of your operation, transaction volume and growth projection.",
+          "SAP Business One is built for small and mid-sized companies that need to integrate finance, sales, inventory, purchasing and production on a single platform, with a fast implementation and a predictable total cost. It's the core that most retail and hospitality businesses build their operation on.",
+          "SAP S/4HANA comes into play when the organization reaches a scale and complexity, multiple entities, very high transaction volume, processes that demand real-time analytics, that justify an enterprise platform. It isn't «the better version» of Business One: it's a tool for a different problem.",
+          "Our advice is simple: don't over-size. A well-implemented Business One supports years of growth, and migrating to S/4HANA makes sense when the business genuinely calls for it."
+        ]
+      },
+      {
+        "slug": "comercio-unificado-retail",
+        "category": "Retail",
+        "date": "2026-06-10",
+        "title": "Unified commerce: one core for store, e-commerce and mobile sales",
+        "excerpt": "When every channel runs on the same SAP core, stock, customers and finances always reconcile. Here's what unified commerce looks like in practice.",
+        "body": [
+          "Multichannel isn't the same as unified. Many retailers sell in-store, on e-commerce and on marketplaces, but each channel lives in its own system: stock drifts out of sync, the customer is duplicated and financial reconciliation becomes a monthly headache.",
+          "Unified commerce solves this by putting a single core, SAP Business One, beneath every channel. Point of sale, the online store, mobile sales and loyalty all read and write against the same source of truth: one inventory, one customer, one set of books.",
+          "The operational payoff is concrete: reliable stock promises, ship-from-nearest-store, consistent prices and promotions across channels, and a financial close without parallel spreadsheets. The customer experiences one brand, not five disconnected systems.",
+          "You don't have to replace everything at once. The usual path is to consolidate the ERP core and POS first, then add e-commerce, mobile sales and loyalty on top of that base. Every channel you integrate adds value without breaking what already works."
+        ]
+      },
+      {
+        "slug": "dte-facturacion-electronica",
+        "category": "Compliance",
+        "date": "2026-05-27",
+        "title": "Electronic invoicing (DTE) in Chile: what your operation must have solved",
+        "excerpt": "From the tax authority to your customers, without friction. What the electronic tax document rules require and how to automate them inside your ERP.",
+        "body": [
+          "In Chile, issuing electronic tax documents (DTE), invoices, receipts, credit and debit notes, isn't optional: it's how the tax authority (SII) requires companies to operate. The question is no longer «whether» to invoice electronically, but how integrated and reliable that process is inside your operation.",
+          "The risk of solving it with isolated tools is friction: documents issued outside the ERP, folios that fall out of sync, and manual reconciliation between what was sold and what was declared. Every manual step is an opportunity for error before the SII.",
+          "The alternative is for electronic invoicing to live inside the ERP. When the DTE is generated automatically from the sale, at the point of sale or in Business One, the document reaches the customer and the SII with no manual intervention, full traceability and folios that always reconcile.",
+          "For a high-volume retail or hospitality operation, that automation is the difference between a calm tax close and a race against the clock every month. It's also the foundation to scale: more stores and more channels without adding administrative work."
+        ]
+      }
+    ]
   }
 }

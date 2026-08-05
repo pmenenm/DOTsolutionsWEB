@@ -619,9 +619,10 @@
     "metaTitle": "SAP Business One",
     "metaDescription": "Implementación estratégica de SAP Business One para medianas y pequeñas empresas. Finanzas, ventas e inventario unificados en una sola plataforma inteligente.",
     "hero": {
-      "line1": "Toma el control total de tu empresa",
-      "line2": "con una Implementación Estratégica de",
-      "line3": "SAP Business One",
+      "line1": "Toma el control total",
+      "line2": "de tu empresa con una",
+      "line3": "Implementación Estratégica de",
+      "line4": "SAP Business One",
       "subtitle": "Software de gestión empresarial accesible y fácil de usar, pensado específicamente para las medianas y pequeñas empresas.",
       "paragraph": "Deja de operar a ciegas. Unificamos finanzas, ventas e inventario en una sola plataforma inteligente. Diseñado para empresas en crecimiento que exigen datos reales, no estimaciones.",
       "cta": "Hablar con un experto"
@@ -1442,5 +1443,58 @@
       ],
       "cta": "Hablar con un experto"
     }
+  },
+  "blog": {
+    "metaTitle": "Novedades",
+    "metaDescription": "Ideas, guías y perspectivas de DOT Solutions sobre SAP Business One, retail, hospitality y la tecnología que hace operar tu negocio.",
+    "eyebrow": "Eventos y novedades",
+    "title": "Lo último de DOT",
+    "subtitle": "Eventos, novedades y guías de nuestro equipo sobre ERP, retail y hospitality.",
+    "viewAll": "Ver todas las novedades",
+    "readMore": "Leer más",
+    "backToList": "Volver a Novedades",
+    "publishedLabel": "Publicado",
+    "relatedTitle": "Sigue explorando",
+    "posts": [
+      {
+        "slug": "sap-business-one-vs-s4hana",
+        "category": "ERP",
+        "date": "2026-06-24",
+        "title": "SAP Business One o S/4HANA: cómo saber cuál necesita tu empresa",
+        "excerpt": "El tamaño, la complejidad y la proyección de tu operación definen el ERP correcto. Te explicamos cuándo conviene cada uno, sin sobredimensionar la inversión.",
+        "body": [
+          "Elegir un ERP no es elegir «el más grande», sino el que se ajusta a cómo opera tu empresa hoy y a dónde quiere llegar. En la práctica, la decisión entre SAP Business One y SAP S/4HANA se reduce a tres variables: tamaño y complejidad de la operación, volumen de transacciones y proyección de crecimiento.",
+          "SAP Business One está pensado para pequeñas y medianas empresas que necesitan integrar finanzas, ventas, inventario, compras y producción en una sola plataforma, con una implementación ágil y un costo total predecible. Es el núcleo sobre el que la mayoría de los negocios de retail y hospitality construyen su operación.",
+          "SAP S/4HANA entra en juego cuando la organización alcanza una escala y una complejidad, múltiples sociedades, altísimo volumen transaccional, procesos que exigen analítica en tiempo real, que justifican una plataforma corporativa. No es «la versión mejor» de Business One: es una herramienta para un problema distinto.",
+          "Nuestra recomendación es simple: no sobredimensiones. Un Business One bien implementado sostiene años de crecimiento, y la migración a S/4HANA tiene sentido cuando el negocio realmente lo pide."
+        ]
+      },
+      {
+        "slug": "comercio-unificado-retail",
+        "category": "Retail",
+        "date": "2026-06-10",
+        "title": "Comercio unificado: un solo núcleo para tienda, e-commerce y venta móvil",
+        "excerpt": "Cuando todos tus canales operan sobre el mismo núcleo SAP, el stock, los clientes y las finanzas siempre cuadran. Así se ve el comercio unificado en la práctica.",
+        "body": [
+          "Multicanal no es lo mismo que unificado. Muchos retailers venden en tienda, e-commerce y marketplaces, pero cada canal vive en su propio sistema: el stock se descuadra, el cliente se duplica y la conciliación financiera se vuelve un dolor de cabeza a fin de mes.",
+          "El comercio unificado resuelve esto poniendo un solo núcleo, SAP Business One, por debajo de todos los canales. El punto de venta, la tienda online, la venta móvil y la fidelización leen y escriben sobre la misma fuente de verdad: un solo inventario, un solo cliente, una sola contabilidad.",
+          "El resultado operativo es concreto: promesas de stock confiables, despacho desde la tienda más cercana, precios y promociones consistentes en todos los canales, y un cierre financiero sin planillas paralelas. El cliente vive una sola marca, no cinco sistemas desconectados.",
+          "No hace falta reemplazar todo de golpe. La ruta habitual es consolidar primero el núcleo ERP y el punto de venta, y luego ir sumando e-commerce, venta móvil y fidelización sobre esa base. Cada canal que se integra suma sin romper lo que ya funciona."
+        ]
+      },
+      {
+        "slug": "dte-facturacion-electronica",
+        "category": "Cumplimiento",
+        "date": "2026-05-27",
+        "title": "Facturación electrónica (DTE) en Chile: lo que tu operación debe tener resuelto",
+        "excerpt": "Del SII a tus clientes, sin fricción. Qué exige la normativa de documentos tributarios electrónicos y cómo automatizarla dentro de tu ERP.",
+        "body": [
+          "En Chile, la emisión de documentos tributarios electrónicos (DTE), facturas, boletas, notas de crédito y débito, no es opcional: es la forma en que el SII exige que operen las empresas. La pregunta ya no es «si» emitir electrónicamente, sino qué tan integrado y confiable es ese proceso dentro de tu operación.",
+          "El riesgo de resolverlo con herramientas aisladas es la fricción: documentos que se emiten por fuera del ERP, folios que se descuadran y conciliaciones manuales entre lo que se vendió y lo que se declaró. Cada paso manual es una oportunidad de error frente al SII.",
+          "La alternativa es que la facturación electrónica viva dentro del ERP. Cuando el DTE se genera automáticamente a partir de la venta, en el punto de venta o en Business One, el documento llega al cliente y al SII sin intervención manual, con trazabilidad completa y folios siempre cuadrados.",
+          "Para una operación de retail o hospitality con alto volumen, esa automatización es la diferencia entre un cierre tributario tranquilo y una carrera contra el reloj cada mes. Es, además, la base para escalar: más locales y más canales sin sumar trabajo administrativo."
+        ]
+      }
+    ]
   }
 }

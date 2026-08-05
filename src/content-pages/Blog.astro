@@ -1,0 +1,195 @@
+---
+// src/content-pages/Blog.astro
+// Listado de /blog — hero editorial con mask-reveal y una "leyenda" de
+// categorías (cada una con su color de marca), el post más reciente
+// destacado como portada de edición, y el resto en grilla. Sin PageHero
+// genérico a propósito: esta página se apoya en el mismo sistema visual
+// pero con una composición propia, más de revista que de landing.
+import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/sections/BlogCard.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+import { categoryColor } from '../utils/blog';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const b = t.blog;
+
+const posts = [...b.posts].sort((a, b) => (a.date < b.date ? 1 : -1));
+const [featured, ...rest] = posts;
+const categories = [...new Set(posts.map((p) => p.category))];
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+---
+
+<Layout title={`${b.metaTitle} — DOT Solutions`} description={b.metaDescription} lang={lang} path="/blog">
+  <section class="blog-hero">
+    <div class="grid-texture" aria-hidden="true"></div>
+    <div class="container blog-hero-inner">
+      <p class="eyebrow" data-reveal>
+        <span class="dot"></span>
+        {b.eyebrow}
+      </p>
+      <h1 class="mask"><span class="mask-inner">{b.title}</span></h1>
+      <p class="subtitle" data-reveal>{b.subtitle}</p>
+
+      <ul class="category-legend" data-reveal>
+        {categories.map((c) => (
+          <li style={`--legend-color: ${categoryColor(c)}`}>
+            <span class="legend-dot"></span>
+            {c}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="blog-grid">
+        {featured && (
+          <BlogCard
+            post={featured}
+            href={`${getRelativeLocaleUrl(lang, 'blog')}/${featured.slug}`}
+            readMore={b.readMore}
+            lang={lang}
+            featured
+          />
+        )}
+        {rest.map((post) => (
+          <BlogCard
+            post={post}
+            href={`${getRelativeLocaleUrl(lang, 'blog')}/${post.slug}`}
+            readMore={b.readMore}
+            lang={lang}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title={t.common.ctaTitle}
+    body={t.common.ctaBody}
+    button={t.common.ctaButton}
+    href={contactHref}
+  />
+</Layout>
+
+<style>
+  .blog-hero {
+    position: relative;
+    background: var(--dot-dark);
+    padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
+    overflow: hidden;
+  }
+  .grid-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
+  }
+  .blog-hero-inner {
+    position: relative;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+
+  .mask {
+    display: block;
+    overflow: hidden;
+    margin-bottom: -0.1em;
+  }
+  .mask-inner {
+    display: block;
+    padding-bottom: 0.1em;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    max-width: 16ch;
+    transform: translateY(100%);
+    animation: blog-hero-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+  @keyframes blog-hero-reveal {
+    to {
+      transform: translateY(0%);
+    }
+  }
+
+  .subtitle {
+    margin-top: var(--space-sm);
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 48ch;
+  }
+
+  /* Leyenda de categorías — cada punto usa el mismo color que su badge en
+     las cards de abajo, para que se lea de inmediato como un sistema. */
+  .category-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-lg);
+  }
+  .category-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--legend-color);
+    box-shadow: 0 0 12px var(--legend-color);
+  }
+
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 700px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

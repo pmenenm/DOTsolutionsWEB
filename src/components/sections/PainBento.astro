@@ -14,6 +14,7 @@ const { items } = Astro.props;
 <div class="bento" id="pain-bento">
   {items.map((item, i) => (
     <article class="bento-card" style={`transition-delay: ${(i * 0.12).toFixed(2)}s`}>
+      <span class="bento-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
       <h3>{item.title}</h3>
       <p>{item.desc}</p>
     </article>
@@ -56,16 +57,34 @@ const { items } = Astro.props;
     gap: 1rem;
   }
 
+  /* Cada card lleva un color de la paleta distinto como acento de fondo —
+     4 identidades visuales en vez de un gris plano repetido 4 veces. */
+  .bento-card:nth-child(1) {
+    --card-accent: var(--dot-forest);
+  }
+  .bento-card:nth-child(2) {
+    --card-accent: var(--dot-moss);
+  }
+  .bento-card:nth-child(3) {
+    --card-accent: var(--dot-sage);
+  }
+  .bento-card:nth-child(4) {
+    --card-accent: var(--dot-micelio);
+  }
+
+  /* Sin relleno a propósito — solo el borde con el color de la card, para
+     que el brillo diagonal y el anillo de hover se luzcan sobre el fondo
+     de la página en vez de competir con un fill de color. */
   .bento-card {
     position: relative;
-    background: var(--dot-gray);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: none;
+    border: 1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
     padding: var(--space-md);
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out),
-      border-color 0.3s var(--ease-out), background 0.3s var(--ease-out);
+    transition: opacity 0.7s var(--ease-out), transform 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out);
   }
   .bento.is-visible .bento-card {
     opacity: 1;
@@ -73,8 +92,8 @@ const { items } = Astro.props;
   }
 
   .bento-card:hover {
-    border-color: color-mix(in srgb, var(--dot-micelio) 45%, transparent);
-    background: color-mix(in srgb, var(--dot-gray) 85%, var(--dot-micelio) 15%);
+    border-color: color-mix(in srgb, var(--card-accent) 75%, transparent);
+    transform: translateY(-6px);
   }
   .bento-card:hover::before {
     opacity: 1;
@@ -83,26 +102,73 @@ const { items } = Astro.props;
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--dot-micelio) 35%, transparent) inset;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-accent) 45%, transparent) inset;
     opacity: 0;
     transition: opacity 0.3s var(--ease-out);
     pointer-events: none;
   }
 
-  .bento-card h3 {
+  /* Brillo diagonal que cruza la card al hover — el "factor wow" sin
+     depender de JS, solo transición de posición. */
+  .bento-card::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -60%;
+    width: 35%;
+    height: 140%;
+    background: linear-gradient(
+      115deg,
+      transparent,
+      color-mix(in srgb, var(--card-accent) 25%, transparent),
+      transparent
+    );
+    transform: skewX(-15deg);
+    transition: left 0.7s var(--ease-out);
+    pointer-events: none;
+  }
+  .bento-card:hover::after {
+    left: 130%;
+  }
+
+  /* Número decorativo grande — da escala editorial y refuerza que son 4
+     puntos distintos, sin competir con el texto (opacidad muy baja, se
+     enciende apenas al hover). */
+  .bento-number {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
     font-family: var(--font-heading);
-    font-weight: 500;
-    font-size: var(--text-xl);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1;
+    color: color-mix(in srgb, var(--card-accent) 45%, transparent);
+    transition: color 0.4s var(--ease-out);
+    pointer-events: none;
+  }
+  .bento-card:hover .bento-number {
+    color: color-mix(in srgb, var(--card-accent) 75%, transparent);
+  }
+
+  .bento-card h3 {
+    position: relative;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
     line-height: 1.3;
-    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    color: var(--dot-micelio);
     margin-bottom: 0.75rem;
+    max-width: 22ch;
+    padding-right: 3rem;
   }
   .bento-card p {
+    position: relative;
     font-size: var(--text-base);
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--text-secondary);
+    max-width: 42ch;
   }
 
   @media (min-width: 900px) {
@@ -121,6 +187,19 @@ const { items } = Astro.props;
     }
     .bento-card:nth-child(4) {
       grid-column: span 2;
+    }
+    /* Las cards anchas (span 2) llevan más peso tipográfico — refuerza con
+       tamaño la jerarquía que ya da el layout. */
+    .bento-card:nth-child(1) h3,
+    .bento-card:nth-child(4) h3 {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      max-width: 28ch;
+    }
+    .bento-card:nth-child(1) p,
+    .bento-card:nth-child(4) p {
+      font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+      line-height: 1.6;
+      max-width: 52ch;
     }
   }
 </style>

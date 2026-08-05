@@ -1,0 +1,198 @@
+---
+// src/content-pages/BlogPost.astro
+// Detalle de un post — lectura enfocada (columna angosta, sin distracciones)
+// con el color de la categoría como acento puntual (badge, línea bajo el
+// título), y "Sigue explorando" al final con los otros posts reales.
+import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/sections/BlogCard.astro';
+import { withBase } from '../utils/paths';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+import { categoryColor, formatBlogDate } from '../utils/blog';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const t = useTranslations(lang);
+const b = t.blog;
+const post = b.posts.find((p) => p.slug === slug);
+
+if (!post) {
+  throw new Error(`Blog post not found: ${slug}`);
+}
+
+const color = categoryColor(post.category);
+const blogHref = getRelativeLocaleUrl(lang, 'blog');
+const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+---
+
+<Layout title={`${post.title} — DOT Solutions`} description={post.excerpt} lang={lang} path={`/blog/${slug}`}>
+  <article class="post" style={`--post-accent: ${color}`}>
+    <div class="grid-texture" aria-hidden="true"></div>
+
+    <div class="container post-header">
+      <a href={blogHref} class="back-link" data-reveal>
+        <span class="arrow" aria-hidden="true">←</span>
+        {b.backToList}
+      </a>
+      <p class="eyebrow" data-reveal>
+        <span class="dot"></span>
+        {post.category}
+      </p>
+      <h1 data-reveal>{post.title}</h1>
+      <p class="meta" data-reveal>{b.publishedLabel} {formatBlogDate(post.date, lang)}</p>
+    </div>
+
+    <div class="container">
+      <div class="post-cover" data-reveal>
+        <img src={withBase(`/blog/${post.slug}.jpg`)} alt="" />
+      </div>
+    </div>
+
+    <div class="container post-body-wrap">
+      <div class="post-body" data-reveal>
+        {post.body.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section theme-light">
+      <div class="container">
+        <h2 class="related-title">{b.relatedTitle}</h2>
+        <div class="related-grid">
+          {related.map((p) => (
+            <BlogCard post={p} href={`${blogHref}/${p.slug}`} readMore={b.readMore} lang={lang} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .post {
+    position: relative;
+    background: var(--dot-dark);
+    padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
+    overflow: hidden;
+  }
+  .grid-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 60%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 15%, #000 60%, transparent);
+  }
+
+  .post-header {
+    position: relative;
+    max-width: 46rem;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-bottom: var(--space-md);
+    transition: color var(--transition-fast);
+  }
+  .back-link:hover {
+    color: var(--post-accent);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--post-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+  }
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--post-accent);
+  }
+
+  .post-header h1 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .meta {
+    margin-top: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    text-transform: capitalize;
+  }
+
+  .post-cover {
+    position: relative;
+    margin-top: var(--space-lg);
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
+  }
+  .post-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-body-wrap {
+    position: relative;
+  }
+  .post-body {
+    max-width: 46rem;
+    margin-top: var(--space-lg);
+  }
+  .post-body p {
+    font-size: var(--text-base);
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+  .post-body p + p {
+    margin-top: var(--space-sm);
+  }
+
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .related-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  @media (min-width: 700px) {
+    .related-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

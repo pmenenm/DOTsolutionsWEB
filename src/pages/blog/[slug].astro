@@ -1,0 +1,12 @@
+---
+import BlogPost from '../../content-pages/BlogPost.astro';
+import es from '../../i18n/es.json';
+
+export function getStaticPaths() {
+  return es.blog.posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<BlogPost lang="es" slug={slug} />

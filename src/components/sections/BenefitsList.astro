@@ -1,4 +1,9 @@
 ---
+// src/components/sections/BenefitsList.astro
+// Grilla de beneficios — reemplaza la lista con hairlines por fila (mismo
+// lenguaje que PainBento: solo borde, color de acento por item, brillo
+// diagonal al hover) para que cada beneficio se lea como una afirmación
+// con peso, no como una fila más de una lista.
 interface Props {
   items: string[];
 }
@@ -6,19 +11,21 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<ul class="benefits" id="benefits-list">
+<div class="benefits-grid" id="benefits-list">
   {items.map((item, i) => (
-    <li style={`transition-delay: ${(i * 0.1).toFixed(2)}s`}>
-      <span class="marker" aria-hidden="true"></span>
-      <span>{item}</span>
-    </li>
+    <div class="benefit-card" style={`transition-delay: ${(i * 0.1).toFixed(2)}s`}>
+      <svg class="benefit-check" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <p>{item}</p>
+    </div>
   ))}
-</ul>
+</div>
 
 <script>
   function initBenefits() {
-    const lists = document.querySelectorAll<HTMLElement>('.benefits');
-    if (!lists.length) return;
+    const grids = document.querySelectorAll<HTMLElement>('.benefits-grid');
+    if (!grids.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -31,7 +38,7 @@ const { items } = Astro.props;
       { threshold: 0.2 }
     );
 
-    lists.forEach((el) => {
+    grids.forEach((el) => {
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         el.classList.add('is-visible');
@@ -45,42 +52,95 @@ const { items } = Astro.props;
 </script>
 
 <style>
-  .benefits {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
     max-width: var(--content-max);
-    display: flex;
-    flex-direction: column;
   }
-  .benefits li {
+
+  .benefit-card:nth-child(4n + 1) {
+    --card-accent: var(--dot-micelio);
+  }
+  .benefit-card:nth-child(4n + 2) {
+    --card-accent: var(--dot-moss);
+  }
+  .benefit-card:nth-child(4n + 3) {
+    --card-accent: var(--dot-sage);
+  }
+  .benefit-card:nth-child(4n + 4) {
+    --card-accent: var(--dot-forest);
+  }
+
+  .benefit-card {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
-    padding-block: var(--space-sm);
-    border-top: 1px solid var(--border);
-    font-size: var(--text-lg);
-    font-weight: 300;
-    color: var(--text-primary);
-    line-height: 1.5;
+    padding: var(--space-md);
+    border: 1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    transform: translateY(20px) scale(0.96);
+    transition: opacity 0.6s var(--ease-out), transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out);
   }
-  .benefits li:last-child {
-    border-bottom: 1px solid var(--border);
-  }
-  .benefits.is-visible li {
+  .benefits-grid.is-visible .benefit-card {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
-  .marker {
+  .benefit-card:hover {
+    border-color: color-mix(in srgb, var(--card-accent) 75%, transparent);
+    transform: translateY(-4px) scale(1);
+  }
+  .benefit-card::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -60%;
+    width: 35%;
+    height: 140%;
+    background: linear-gradient(
+      115deg,
+      transparent,
+      color-mix(in srgb, var(--card-accent) 25%, transparent),
+      transparent
+    );
+    transform: skewX(-15deg);
+    transition: left 0.7s var(--ease-out);
+    pointer-events: none;
+  }
+  .benefit-card:hover::after {
+    left: 130%;
+  }
+
+  .benefit-check {
     flex-shrink: 0;
-    width: 8px;
-    height: 8px;
-    margin-top: 0.6em;
-    border-radius: 50%;
-    background: var(--dot-micelio);
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0.35rem;
+    box-sizing: border-box;
+    border: 1.5px solid color-mix(in srgb, var(--card-accent) 60%, transparent);
+    color: var(--card-accent);
+    transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out);
+  }
+  .benefit-card:hover .benefit-check {
+    background: var(--card-accent);
+    color: var(--dot-dark);
+  }
+
+  .benefit-card p {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: clamp(1.1rem, 1.8vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-primary);
+  }
+
+  @media (min-width: 700px) {
+    .benefits-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 </style>
