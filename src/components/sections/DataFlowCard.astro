@@ -1,0 +1,222 @@
+---
+// src/components/sections/DataFlowCard.astro
+// Card de alto impacto: "circuito impreso" de datos — rutas SVG ortogonales
+// (segmentos horizontales/verticales con esquinas redondeadas a 90°, estilo
+// autopista/PCB) con orbes bioluminiscentes + estela viajando en loop (SMIL
+// animateMotion), y GSAP ScrollTrigger que fija la card en el centro de la
+// pantalla por un tramo de scroll antes de dejarla seguir su camino normal.
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+
+const { eyebrow, title } = Astro.props;
+
+const VB_W = 1200;
+const VB_H = 600;
+
+// Convierte una lista de waypoints (cada segmento estrictamente horizontal o
+// vertical) en un `d` de SVG con esquinas redondeadas: recorta cada tramo a
+// `radius` antes/después del vértice y une con una curva cuadrática (Q) que
+// usa el propio vértice como punto de control — "fillet" clásico de circuito.
+function roundedOrthogonalPath(points: number[][], radius: number) {
+  let d = `M ${points[0][0]} ${points[0][1]}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const [x0, y0] = points[i - 1];
+    const [x1, y1] = points[i];
+    const [x2, y2] = points[i + 1];
+    const d1x = x1 - x0;
+    const d1y = y1 - y0;
+    const len1 = Math.hypot(d1x, d1y);
+    const d2x = x2 - x1;
+    const d2y = y2 - y1;
+    const len2 = Math.hypot(d2x, d2y);
+    const r = Math.min(radius, len1 / 2, len2 / 2);
+    const beforeX = x1 - (d1x / len1) * r;
+    const beforeY = y1 - (d1y / len1) * r;
+    const afterX = x1 + (d2x / len2) * r;
+    const afterY = y1 + (d2y / len2) * r;
+    d += ` L ${beforeX} ${beforeY} Q ${x1} ${y1} ${afterX} ${afterY}`;
+  }
+  const [lastX, lastY] = points[points.length - 1];
+  d += ` L ${lastX} ${lastY}`;
+  return d;
+}
+
+// Rutas tipo circuito/autopista: entradas y salidas por los cuatro bordes,
+// cruzándose en distintas alturas para generar intersecciones visuales.
+const ROUTES = [
+  [[-20, 90], [260, 90], [260, 26], [640, 26], [640, 150], [1220, 150]],
+  [[-20, 480], [220, 480], [220, 562], [560, 562], [560, 400], [940, 400], [940, 480], [1220, 480]],
+  [[180, 620], [180, 320], [460, 320], [460, 196], [1220, 196]],
+  [[860, -20], [860, 240], [1120, 240], [1120, 340], [1220, 340]],
+  [[-20, 280], [380, 280], [380, 70], [760, 70], [760, 520], [1220, 520]],
+  [[1220, 60], [980, 60], [980, 260], [620, 260], [620, 620]],
+];
+
+const PATHS = ROUTES.map((points, i) => ({
+  index: i,
+  d: roundedOrthogonalPath(points, 40),
+  duration: (5 + (i % 4) * 1.3).toFixed(1),
+  delay: (i * 0.6).toFixed(2),
+}));
+---
+
+<div class="dataflow-wrap">
+  <div class="container">
+    <div class="dataflow-card" data-dataflow-card>
+      <svg class="dataflow-svg" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        {PATHS.map((p) => (
+          <path id={`dataflow-path-${p.index}`} class="dataflow-line" d={p.d} fill="none" />
+        ))}
+        {PATHS.map((p) => (
+          <>
+            <circle class="dataflow-orb dataflow-orb-trail-2" r="2.2" fill="var(--dot-micelio)">
+              <animateMotion dur={`${p.duration}s`} begin={`${(Number(p.delay) + 0.18).toFixed(2)}s`} repeatCount="indefinite" rotate="auto">
+                <mpath href={`#dataflow-path-${p.index}`} />
+              </animateMotion>
+            </circle>
+            <circle class="dataflow-orb dataflow-orb-trail-1" r="3.2" fill="var(--dot-micelio)">
+              <animateMotion dur={`${p.duration}s`} begin={`${(Number(p.delay) + 0.09).toFixed(2)}s`} repeatCount="indefinite" rotate="auto">
+                <mpath href={`#dataflow-path-${p.index}`} />
+              </animateMotion>
+            </circle>
+            <circle class="dataflow-orb" r="4.5" fill="var(--dot-micelio)">
+              <animateMotion dur={`${p.duration}s`} begin={`${p.delay}s`} repeatCount="indefinite" rotate="auto">
+                <mpath href={`#dataflow-path-${p.index}`} />
+              </animateMotion>
+            </circle>
+          </>
+        ))}
+      </svg>
+
+      <div class="dataflow-content">
+        <p class="dataflow-eyebrow">
+          <span class="dot"></span>
+          {eyebrow}
+        </p>
+        <h2 class="dataflow-title">{title}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initDataFlowPins() {
+    const cards = document.querySelectorAll<HTMLElement>('[data-dataflow-card]');
+    if (!cards.length) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const triggers: ScrollTrigger[] = [];
+    cards.forEach((card) => {
+      // Se fija al llegar al centro de pantalla, y suelta sola al terminar
+      // el tramo — sin fade, sigue su camino normal hacia arriba.
+      const trigger = ScrollTrigger.create({
+        trigger: card,
+        start: 'center center',
+        end: '+=150%',
+        pin: true,
+        pinSpacing: true,
+      });
+      triggers.push(trigger);
+    });
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => triggers.forEach((t) => t.kill()),
+      { once: true }
+    );
+  }
+
+  document.addEventListener('astro:page-load', initDataFlowPins);
+</script>
+
+<style>
+  .dataflow-wrap {
+    padding-block: var(--space-lg);
+  }
+
+  .dataflow-card {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 28rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    background: #121212;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 15%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  }
+
+  .dataflow-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .dataflow-line {
+    stroke: var(--dot-light);
+    stroke-opacity: 0.2;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .dataflow-orb {
+    filter: drop-shadow(0 0 6px var(--dot-micelio));
+  }
+  .dataflow-orb-trail-1 {
+    opacity: 0.5;
+  }
+  .dataflow-orb-trail-2 {
+    opacity: 0.22;
+  }
+
+  .dataflow-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 42rem;
+  }
+  .dataflow-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--dot-micelio);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-sm);
+    justify-content: center;
+  }
+  .dataflow-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+  .dataflow-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--dot-light);
+  }
+
+  @media (min-width: 900px) {
+    .dataflow-card {
+      min-height: 32rem;
+    }
+  }
+</style>

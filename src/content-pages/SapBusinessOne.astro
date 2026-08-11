@@ -11,7 +11,6 @@ import ProductAddonsCTA from '../components/sections/ProductAddonsCTA.astro';
 import ProductIndustriesStrip from '../components/sections/ProductIndustriesStrip.astro';
 import ProductUpsellBanner from '../components/sections/ProductUpsellBanner.astro';
 import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
-import StatBar from '../components/sections/StatBar.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
 import { withBase } from '../utils/paths';
@@ -39,14 +38,10 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
     paragraph={s.hero.paragraph}
     cta={s.hero.cta}
     ctaHref={contactHref}
-    backgroundImage="/images/backgroundsap2.jpg"
+    backgroundImage="/images/background_1.jpg"
+    titleLogo="/logos/logos dot/sapone.png"
+    stats={s.heroStats}
   />
-
-  <section class="section hero-stats-section">
-    <div class="container">
-      <StatBar stats={s.heroStats} />
-    </div>
-  </section>
 
   <section class="section">
     <div class="container">
@@ -143,11 +138,91 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
     border: none;
   }
 
-  /* Stats del hero — pegados justo bajo el hero, sin separación grande,
-     como extensión directa de la prueba social inicial. */
-  .hero-stats-section {
-    padding-block: 0 var(--space-lg);
+  :global(.product-hero-copy .subtitle) {
+    color: #6fa8f0 !important;
   }
+
+  :global(.product-hero-stats .value) {
+    color: #6fa8f0 !important;
+  }
+
+  :global(.product-hero-actions .cta) {
+    background: color-mix(in srgb, #6fa8f0 20%, transparent) !important;
+    color: var(--dot-light) !important;
+  }
+  :global(.product-hero-actions .cta:hover) {
+    background: color-mix(in srgb, #6fa8f0 95%, transparent) !important;
+  }
+
+  /* Módulos de "La plataforma" — íconos y borde-al-hover en celeste en vez
+     de la rotación de colores de la paleta que usa ProductModulesGrid por
+     defecto (--card-accent inline por card, pisado acá para toda la
+     grilla). */
+  :global(.module-card) {
+    --card-accent: #6fa8f0 !important;
+  }
+  :global(.module-card::after) {
+    content: none !important;
+  }
+  :global(.bento-card),
+  :global(.module-card),
+  :global(.benefit-card),
+  :global(.upsell) {
+    border-radius: var(--radius-md);
+  }
+
+  /* "El siguiente nivel" — oscura y sólida, sin tinte de color. */
+  :global(.upsell) {
+    background: var(--dot-dark) !important;
+    border-color: color-mix(in srgb, var(--dot-light) 14%, transparent) !important;
+  }
+
+  /* Blur decorativo del "curve swipe" de AuthorityCTA, que asoma sobre la
+     card anterior ("El siguiente nivel") — celeste en vez de verde. */
+  :global(.curve-swipe path) {
+    fill: #6fa8f0 !important;
+  }
+
+  /* Stats finales y CTA "Hablar con un experto" de AuthorityCTA — mismo
+     celeste y mismos efectos (opacidad 20% -> 95% al hover) que el CTA del
+     hero. */
+  :global(.authority .value) {
+    color: #6fa8f0 !important;
+  }
+  :global(.authority .cta-monumental) {
+    background: color-mix(in srgb, #6fa8f0 20%, transparent) !important;
+    color: var(--dot-light) !important;
+  }
+  :global(.authority .cta-monumental:hover) {
+    background: color-mix(in srgb, #6fa8f0 95%, transparent) !important;
+  }
+
+  /* Beneficios — mismo celeste que el resto de la página en ícono y borde,
+     y crecen (card + ícono) al hacer hover, además de iluminarse el borde. */
+  :global(.benefit-card) {
+    --card-accent: #6fa8f0 !important;
+  }
+  :global(.benefit-card:hover) {
+    transform: translateY(-4px) scale(1.03) !important;
+  }
+  :global(.benefit-check) {
+    transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast) !important;
+  }
+  :global(.benefit-card:hover .benefit-check) {
+    transform: scale(1.15) !important;
+  }
+
+  :global(.module-card h3) {
+    display: inline-block;
+    color: var(--dot-light) !important;
+    transform-origin: left center;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+  }
+  :global(.module-card:hover h3) {
+    color: #6fa8f0 !important;
+    transform: scale(1.08);
+  }
+
 
   .logos-section {
     padding-block: var(--space-md) var(--space-lg);

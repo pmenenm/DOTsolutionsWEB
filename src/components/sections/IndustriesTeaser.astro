@@ -1,77 +1,94 @@
 ---
 // src/components/sections/IndustriesTeaser.astro
-// Dos industrias destacadas, lado a lado como cards de vidrio oscuro (esta
-// sección vive dentro de <HeroReveal>, sobre la foto continua del home —
-// necesitan fondo propio real para leerse bien, a diferencia de las cards
-// "solo borde" que usamos sobre fondo plano en las páginas de producto).
-// Cada card lleva su propio color de acento, ícono grande y número
-// editorial — el resto de las industrias quedan como tags pulsantes abajo.
+// Acordeón horizontal: fila de 5 tarjetas a flex-1 por defecto; la que
+// recibe el hover crece a flex-[4] desplazando a las demás (que se
+// comprimen, oscurecen y pierden saturación). Al expandirse, el contenido
+// interno pasa de "ícono + nombre vertical" a un layout de 2 columnas
+// (identidad a la izquierda, propuesta + CTA a la derecha). Sin JS: todo
+// el efecto vive en :hover + transition de flex-grow en CSS. En mobile/
+// tablet (sin hover persistente) cada card se muestra siempre expandida,
+// apilada verticalmente.
+import { withBase } from '../../utils/paths';
+
 interface Industry {
   slug: string;
   name: string;
   headline: string;
   desc: string;
+  hasPage: boolean;
+  href: string;
 }
 
 interface Props {
   featured: Industry[];
-  othersLabel: string;
-  others: string[];
+  exploreLabel: string;
+  contactLabel: string;
 }
 
-const { featured, othersLabel, others } = Astro.props;
-
-const ACCENTS: Record<string, string> = {
-  gastronomia: 'var(--dot-micelio)',
-  retail: 'var(--dot-micelio)',
-};
+const { featured, exploreLabel, contactLabel } = Astro.props;
 
 const ICONS: Record<string, string> = {
   gastronomia:
     '<path d="M6 2v6a2 2 0 0 0 4 0V2M8 2v18M14 2c-1.2 1.2-1.6 3-1.6 5s.4 3.8 1.6 5c1.2-1.2 1.6-3 1.6-5s-.4-3.8-1.6-5Zm0 10v8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
   retail:
     '<path d="M6 8V6a4 4 0 1 1 8 0v2M4 8h12l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+  hoteleria:
+    '<path d="M2 16V6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4M2 16h16M2 16v2M18 16v2M6 9h4a2 2 0 0 1 2 2v1H6V9Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+  seguridad:
+    '<path d="M10 2l7 3v5c0 4.5-3 7.5-7 8-4-.5-7-3.5-7-8V5l7-3Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+  'servicios-profesionales':
+    '<rect x="2.5" y="7" width="15" height="9.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 7V5.3A1.3 1.3 0 0 1 8.3 4h3.4A1.3 1.3 0 0 1 13 5.3V7" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 ---
 
 <div class="eco" data-eco>
-  <div class="eco-grid" id="eco-grid">
+  <div class="eco-accordion" id="eco-grid">
     {featured.map((industry, i) => (
       <article
         class="eco-card"
-        style={`--accent: ${ACCENTS[industry.slug] ?? 'var(--dot-micelio)'}; transition-delay: ${(i * 0.15).toFixed(2)}s`}
+        style={`transition-delay: ${(i * 0.08).toFixed(2)}s`}
       >
-        <span class="eco-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <video
+          class="eco-bg-video"
+          src={withBase('/video1.mp4')}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+        />
+        <div class="eco-bg-overlay" aria-hidden="true"></div>
 
-        <div class="eco-orb" aria-hidden="true">
-          <svg viewBox="0 0 20 20" set:html={ICONS[industry.slug] ?? ''} />
+        <div class="eco-collapsed" aria-hidden="true">
+          <div class="eco-orb">
+            <svg viewBox="0 0 20 20" set:html={ICONS[industry.slug] ?? ''} />
+          </div>
+          <p class="eco-name-vertical">{industry.name}</p>
         </div>
 
-        <p class="eco-name">{industry.name}</p>
-        <h3 class="eco-headline">{industry.headline}</h3>
-        <p class="eco-desc">{industry.desc}</p>
+        <div class="eco-expanded">
+          <div class="eco-col eco-col-identity">
+            <div class="eco-orb eco-orb-lg" aria-hidden="true">
+              <svg viewBox="0 0 20 20" set:html={ICONS[industry.slug] ?? ''} />
+            </div>
+            <p class="eco-name">{industry.name}</p>
+            <h3 class="eco-headline">{industry.headline}</h3>
+          </div>
+          <div class="eco-col eco-col-pitch">
+            <p class="eco-desc">{industry.desc}</p>
+            <a href={industry.href} class="eco-cta">
+              {industry.hasPage ? exploreLabel : contactLabel}
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
       </article>
     ))}
-  </div>
-
-  <div class="eco-others">
-    <span class="eco-others-label">{othersLabel}</span>
-    <ul class="eco-others-list">
-      {others.map((o) => (
-        <li>
-          <span class="eco-dot" aria-hidden="true"></span>
-          {o}
-        </li>
-      ))}
-    </ul>
   </div>
 </div>
 
 <script>
-  // Entrada vía toggle de clase (no GSAP inline) a propósito: GSAP setea
-  // transform como estilo inline al animar, y un estilo inline SIEMPRE le
-  // gana a la regla :hover de la hoja de estilos — el lift al hover nunca
-  // se veía en la 1ra card porque quedaba pisado por ese inline leftover.
   function initEcoGrid() {
     const grids = document.querySelectorAll<HTMLElement>('#eco-grid');
     if (!grids.length) return;
@@ -84,7 +101,7 @@ const ICONS: Record<string, string> = {
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
     grids.forEach((grid) => {
@@ -98,189 +115,279 @@ const ICONS: Record<string, string> = {
   }
 
   document.addEventListener('astro:page-load', initEcoGrid);
+
+  // Loop manual de solo los primeros 2s — el atributo `loop` nativo solo
+  // reinicia al llegar al final del archivo completo.
+  const LOOP_SECONDS = 1;
+
+  function clampVideoLoop(video: HTMLVideoElement) {
+    const onTimeUpdate = () => {
+      if (video.currentTime >= LOOP_SECONDS) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+    };
+    video.addEventListener('timeupdate', onTimeUpdate);
+  }
+
+  function initEcoVideos() {
+    document.querySelectorAll<HTMLVideoElement>('.eco-bg-video').forEach(clampVideoLoop);
+  }
+
+  document.addEventListener('astro:page-load', initEcoVideos);
 </script>
 
 <style>
-  .eco-grid {
+  /* ---------- Base (mobile-first): columna vertical, cards siempre
+     expandidas — no hay hover persistente que justifique comprimirlas. ---------- */
+  .eco-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .eco-card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    background: color-mix(in srgb, var(--dot-dark) 55%, transparent);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 25%, transparent);
+    border-radius: var(--radius-md);
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease-out), transform 0.4s var(--ease-out), flex-grow 0.5s ease-in-out,
+      border-color 0.4s ease-in-out, box-shadow 0.4s ease-in-out, filter 0.4s ease-in-out;
+  }
+  .eco-accordion.is-visible .eco-card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .eco-card:hover,
+  .eco-card:focus-within {
+    border-color: var(--dot-micelio);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--dot-micelio) 20%, transparent);
+  }
+
+  /* Fondo en video de la card "abierta" — en mobile/tablet siempre está
+     expandida, así que el video se ve siempre; en desktop solo aparece al
+     hover (ver media query 1024px+ más abajo). */
+  .eco-bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 1;
+    transition: opacity 0.5s var(--ease-out);
+  }
+  .eco-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: color-mix(in srgb, var(--dot-dark) 72%, transparent);
+  }
+
+  .eco-collapsed {
+    display: none;
+  }
+
+  .eco-expanded {
+    position: relative;
+    z-index: 2;
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
-
-  .eco-card {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(1.75rem, 3vw, 2.5rem);
-    background: color-mix(in srgb, var(--dot-dark) 50%, transparent);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-    opacity: 0;
-    transform: translateY(28px);
-    box-shadow: 0 0 0 0 transparent;
-    transition: opacity 0.7s var(--ease-out), transform 0.3s var(--ease-out), border-color 0.4s var(--ease-out),
-      box-shadow 0.4s var(--ease-out);
-  }
-  .eco-grid.is-visible .eco-card {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .eco-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-6px);
-    box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 45%, transparent),
-      inset 0 0 24px color-mix(in srgb, var(--accent) 12%, transparent);
-  }
-  .eco-card::after {
-    content: '';
-    position: absolute;
-    top: -20%;
-    left: -60%;
-    width: 35%;
-    height: 140%;
-    background: linear-gradient(115deg, transparent, color-mix(in srgb, var(--accent) 22%, transparent), transparent);
-    transform: skewX(-15deg);
-    transition: left 0.7s var(--ease-out);
-    pointer-events: none;
-  }
-  .eco-card:hover::after {
-    left: 130%;
-  }
-
-  .eco-number {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.5rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    line-height: 1;
-    color: color-mix(in srgb, var(--accent) 40%, transparent);
-    transition: color 0.4s var(--ease-out);
-  }
-  .eco-card:hover .eco-number {
-    color: color-mix(in srgb, var(--accent) 70%, transparent);
+  .eco-col-identity {
+    margin-bottom: var(--space-sm);
   }
 
   .eco-orb {
-    position: relative;
-    width: 4rem;
-    height: 4rem;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--space-md);
     background: radial-gradient(
       circle at 35% 30%,
-      color-mix(in srgb, var(--accent) 32%, transparent),
-      color-mix(in srgb, var(--accent) 8%, transparent) 62%,
+      color-mix(in srgb, var(--dot-micelio) 32%, transparent),
+      color-mix(in srgb, var(--dot-micelio) 8%, transparent) 62%,
       transparent 78%
     );
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
-    color: var(--accent);
-    box-shadow: 0 0 0 0 transparent;
-    transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 40%, transparent);
+    color: var(--dot-micelio);
+    transition: transform 0.4s var(--ease-out);
   }
   .eco-orb svg {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .eco-orb-lg {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-sm);
+  }
+  .eco-orb-lg svg {
+    width: 1.6rem;
+    height: 1.6rem;
   }
   .eco-card:hover .eco-orb {
-    transform: scale(1.12) rotate(-6deg);
-    border-color: var(--accent);
-    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 65%, transparent);
+    transform: scale(1.1) rotate(-6deg);
   }
 
+  /* Nombre de la industria "de costado" — llena el resto del rectángulo
+     angosto de la card comprimida, pegado al lado derecho, en mayúsculas y
+     grande. Color rotativo (blanco / gris / verde micelio) por card. */
+  .eco-name-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .eco-card:nth-child(3n + 1) .eco-name-vertical {
+    color: var(--dot-micelio);
+  }
+  .eco-card:nth-child(3n + 2) .eco-name-vertical {
+    color: var(--dot-light);
+  }
+  .eco-card:nth-child(3n + 3) .eco-name-vertical {
+    color: var(--text-secondary);
+  }
   .eco-name {
-    position: relative;
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
+    color: var(--dot-micelio);
+    margin-bottom: 0.5rem;
   }
   .eco-headline {
-    position: relative;
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: clamp(1.5rem, 2.6vw, 2rem);
-    line-height: 1.25;
+    line-height: 1.2;
     letter-spacing: -0.02em;
     color: var(--text-primary);
-    margin-bottom: 0.75rem;
-    max-width: 26ch;
   }
   .eco-desc {
-    position: relative;
-    color: var(--text-secondary);
+    color: var(--dot-light);
     font-size: var(--text-base);
     font-weight: 300;
     line-height: 1.6;
-    max-width: 40ch;
   }
 
-  .eco-others {
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm) var(--space-md);
-  }
-  .eco-others-label {
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .eco-others-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .eco-others-list li {
+  .eco-cta {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--text-primary);
-    transform-origin: left center;
-    transition: transform var(--transition-fast), color var(--transition-fast);
-  }
-  .eco-others-list li:hover {
-    transform: scale(1.15);
-    color: var(--dot-micelio);
-  }
-  .eco-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
+    gap: 0.6rem;
+    text-decoration: none;
+    margin-top: var(--space-md);
+    padding: 0.9rem 1.75rem;
     background: var(--dot-micelio);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--dot-micelio) 60%, transparent);
-    animation: eco-pulse 2.4s ease-in-out infinite;
+    color: var(--dot-dark);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    border-radius: var(--radius-full);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--dot-micelio) 25%, transparent);
+    transition: transform var(--transition-fast);
   }
-  @keyframes eco-pulse {
-    0%,
-    100% {
-      opacity: 0.5;
-      transform: scale(0.85);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.15);
-    }
+  .eco-card:hover .eco-cta {
+    transform: scale(1.05);
+  }
+  .eco-cta .arrow {
+    transition: transform var(--transition-fast);
+  }
+  .eco-card:hover .eco-cta .arrow {
+    transform: translateX(3px);
   }
 
-  @media (min-width: 700px) {
-    .eco-grid {
-      grid-template-columns: repeat(2, 1fr);
+  /* ---------- Desktop (1024px+): acordeón horizontal real — flex-row,
+     comprimidas por defecto, la de hover crece y revela las 2 columnas. ---------- */
+  @media (min-width: 1024px) {
+    .eco-accordion {
+      flex-direction: row;
+      min-height: 30rem;
+    }
+
+    /* Piso de ancho para las cards comprimidas — sin esto, un flex-grow tan
+       desbalanceado (1 vs 12) las aplasta a un ancho menor que el ícono. */
+    .eco-card {
+      min-width: 4.5rem;
+      padding: var(--space-sm) 0.5rem;
+    }
+    .eco-card:hover,
+    .eco-card:focus-within {
+      padding: clamp(1.5rem, 2.5vw, 2.5rem);
+    }
+
+    .eco-accordion:has(.eco-card:hover) .eco-card:not(:hover) {
+      filter: grayscale(50%);
+      opacity: 0.55;
+    }
+    .eco-card:hover,
+    .eco-card:focus-within {
+      flex-grow: 12;
+    }
+
+    /* En reposo (comprimida) no se ve el video de fondo — solo aparece al
+       abrirse la card. */
+    .eco-bg-video {
+      opacity: 0;
+    }
+    .eco-card:hover .eco-bg-video,
+    .eco-card:focus-within .eco-bg-video {
+      opacity: 1;
+    }
+
+    .eco-collapsed {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: var(--space-md);
+      height: 100%;
+    }
+    .eco-collapsed .eco-orb {
+      align-self: flex-start;
+    }
+    .eco-collapsed .eco-name-vertical {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .eco-card:hover .eco-collapsed,
+    .eco-card:focus-within .eco-collapsed {
+      display: none;
+    }
+
+    .eco-expanded {
+      display: none;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-xl);
+      height: 100%;
+      align-items: center;
+    }
+    .eco-card:hover .eco-expanded,
+    .eco-card:focus-within .eco-expanded {
+      display: grid;
     }
   }
 </style>

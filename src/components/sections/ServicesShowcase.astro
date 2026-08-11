@@ -9,9 +9,13 @@ import { withBase } from '../../utils/paths';
 interface Product {
   name: string;
   category: string;
-  logo: string;
+  /** Sin logo (ej. socio de integración sin asset propio): se muestra un
+      badge con la inicial del nombre en vez de una imagen. */
+  logo?: string;
   desc: string;
-  href: string;
+  /** Sin href: la card se renderiza como <div>, no <a> (nodo informativo,
+      no navegable — ej. integraciones externas sin página propia). */
+  href?: string;
   highlight?: boolean;
 }
 
@@ -21,22 +25,39 @@ interface Props {
   titleRest: string;
   subtitle: string;
   products: Product[];
+  /** Oculta el bloque de eyebrow+título+subtítulo — usado cuando la página
+      que embebe este componente ya trae su propio encabezado de sección. */
+  hideHeading?: boolean;
+  /** Logo del núcleo del diagrama — por defecto el isotipo de DOT. */
+  coreLogo?: string;
+  coreLabel?: string;
 }
 
-const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
+const {
+  eyebrow,
+  titleHighlight,
+  titleRest,
+  subtitle,
+  products,
+  hideHeading = false,
+  coreLogo = '/logoweb.png',
+  coreLabel = 'DOT Solutions',
+} = Astro.props;
 ---
 
 <section class="mycelium" data-mycelium>
-  <div class="container glass-panel mycelium-header">
-    <p class="mycelium-eyebrow">
-      <span class="dot"></span>
-      {eyebrow}
-    </p>
-    <h2 class="mycelium-title">
-      <span class="mycelium-title-highlight">{titleHighlight}</span>{titleRest}
-    </h2>
-    <p class="mycelium-subtitle">{subtitle}</p>
-  </div>
+  {!hideHeading && (
+    <div class="container glass-panel mycelium-header">
+      <p class="mycelium-eyebrow">
+        <span class="dot"></span>
+        {eyebrow}
+      </p>
+      <h2 class="mycelium-title">
+        <span class="mycelium-title-highlight">{titleHighlight}</span>{titleRest}
+      </h2>
+      <p class="mycelium-subtitle">{subtitle}</p>
+    </div>
+  )}
 
   <div class="container mycelium-canvas" data-mycelium-canvas>
     <svg class="mycelium-svg" data-mycelium-svg aria-hidden="true">
@@ -55,25 +76,32 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
     </svg>
 
     <div class="mycelium-core" data-mycelium-core aria-hidden="true">
-      <img src={withBase('/logoweb.png')} alt="" class="core-logo" />
+      <img src={withBase(coreLogo)} alt={coreLabel} class="core-logo" />
     </div>
 
     <div class="mycelium-grid" data-mycelium-grid>
-      {products.map((p, i) => (
-        <a
-          href={p.href}
-          class:list={['mycelium-card', { 'mycelium-card--highlight': p.highlight }]}
-          data-mycelium-card
-          data-index={i}
-        >
-          <div class="card-logo">
-            <img src={withBase(p.logo)} alt="" loading="lazy" />
-          </div>
-          <p class="card-category">{p.category}</p>
-          <h3 class="card-name">{p.name}</h3>
-          <p class="card-desc">{p.desc}</p>
-        </a>
-      ))}
+      {products.map((p, i) => {
+        const Tag = p.href ? 'a' : 'div';
+        return (
+          <Tag
+            href={p.href}
+            class:list={['mycelium-card', { 'mycelium-card--highlight': p.highlight, 'mycelium-card--static': !p.href }]}
+            data-mycelium-card
+            data-index={i}
+          >
+            <div class="card-logo">
+              {p.logo ? (
+                <img src={withBase(p.logo)} alt="" loading="lazy" />
+              ) : (
+                <span class="card-logo-fallback">{p.name.charAt(0)}</span>
+              )}
+            </div>
+            <p class="card-category">{p.category}</p>
+            <h3 class="card-name">{p.name}</h3>
+            <p class="card-desc">{p.desc}</p>
+          </Tag>
+        );
+      })}
     </div>
   </div>
 </section>
@@ -321,6 +349,21 @@ const { eyebrow, titleHighlight, titleRest, subtitle, products } = Astro.props;
     max-height: 100%;
     object-fit: contain;
     object-position: left center;
+  }
+  .card-logo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 40%, transparent);
+    color: var(--dot-micelio);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-lg);
+  }
+  .mycelium-card--static {
+    cursor: default;
   }
 
   .card-category {

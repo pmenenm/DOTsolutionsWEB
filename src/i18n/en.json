@@ -125,6 +125,9 @@
     "ctaButton": "Talk to an expert",
     "ctaButtonShort": "Let's talk",
     "clientsTitle": "+300 companies already run on DOT",
+    "trustedByTitle": "All these companies already trust us",
+    "dataFlowEyebrow": "Real-time integration",
+    "dataFlowTitle": "A continuous flow of information, with zero friction between systems.",
     "statsTitle": "A track record that backs us up",
     "stats": [
       {
@@ -287,25 +290,37 @@
       "eyebrow": "Industry ecosystems",
       "title": "Your entire industry, in a single ecosystem",
       "subtitle": "We don't sell isolated products: we deliver your industry's full stack, pre-integrated, maintained and supported by a single provider.",
-      "featured": [
+      "exploreLabel": "Explore ecosystem",
+      "contactLabel": "Talk to an expert",
+      "items": [
         {
           "slug": "gastronomia",
           "name": "Gastronomy",
           "headline": "Everything your restaurant needs, in one place",
-          "desc": "ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing — natively integrated with SAP Business One at the core."
+          "desc": "ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing — natively integrated with SAP Business One at the core.",
+          "hasPage": true
         },
         {
           "slug": "retail",
           "name": "Retail",
           "headline": "Unified commerce from the store to e-commerce",
-          "desc": "Omnichannel POS, in-store mobile selling, OMS, loyalty and electronic invoicing on a single SAP core."
+          "desc": "Omnichannel POS, in-store mobile selling, OMS, loyalty and electronic invoicing on a single SAP core.",
+          "hasPage": true
+        },
+        {
+          "slug": "hoteleria",
+          "name": "Hospitality",
+          "headline": "Hotel management connected end to end",
+          "desc": "Reservations, front desk, bar and restaurant POS, and inventory, all under the same SAP Business One core.",
+          "hasPage": false
+        },
+        {
+          "slug": "seguridad",
+          "name": "Security",
+          "headline": "Operational control for security companies",
+          "desc": "Shifts, contracts, recurring billing and centralized financial control on a single platform.",
+          "hasPage": false
         }
-      ],
-      "othersLabel": "We also operate in",
-      "others": [
-        "Hospitality",
-        "Security",
-        "Professional services"
       ]
     },
     "servicesTeaser": {
@@ -1385,6 +1400,166 @@
         }
       ],
       "cta": "Talk to an expert"
+    }
+  },
+  "gastronomia": {
+    "metaTitle": "Food & Beverage Ecosystem",
+    "metaDescription": "ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing — all natively integrated with SAP Business One for restaurants and F&B chains.",
+    "hero": {
+      "eyebrow": "Ecosystem · Food & Beverage",
+      "title": "Everything your restaurant needs. In one place.",
+      "subtitle": "One core, seven pieces, zero friction.",
+      "desc": "DOT brings together all the software your restaurant needs —ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing— natively integrated and automating processes end to end.",
+      "bullets": [
+        "One single provider for all your software",
+        "End-to-end automated processes",
+        "Proven and implemented across the industry",
+        "Full control and limitless scalability"
+      ],
+      "cta": "Talk to an expert"
+    },
+    "problem": {
+      "manifesto": {
+        "phrase1": "The problem isn't your team. It's that your systems speak different languages.",
+        "phrase2": "Five pieces of software running in isolation. And you're stuck in the middle: reconciling inventories, balancing registers, and smoothing frictions between vendors that don't know each other.",
+        "phrase2Highlight": "And you're stuck in the middle:",
+        "phrase3": "It's time to bring it all together into one ecosystem."
+      },
+      "items": [
+        { "title": "Costs", "desc": "Waste and uncontrolled purchasing eating into your margin. (Purchasing × ERP)" },
+        { "title": "Operations", "desc": "The POS doesn't talk to the kitchen, accounting, or delivery. (POS × ERP × Delivery)" },
+        { "title": "Data", "desc": "Flying blind with spreadsheets that arrive late and never add up. (BI × Accounting × POS)" },
+        { "title": "Customers", "desc": "You don't know who your customers are or how to bring them back. (CRM × POS)" },
+        { "title": "Delivery", "desc": "Five apps, five tablets, five different prices, and a lot of chaos. (Delivery × POS)" },
+        { "title": "Support", "desc": "Something breaks at 10 PM on a Friday — and nobody answers the phone. (Multiple vendors)" }
+      ]
+    },
+    "ecosystem": {
+      "eyebrow": "The ecosystem",
+      "titleHighlight": "One core",
+      "titleRest": ", seven pieces that talk to each other",
+      "subtitle": "SAP Business One at the center as ERP and accounting; around it, every piece of the operation natively connected. Every line is a native integration: data flows on its own between the pieces, with no re-typing.",
+      "pieces": [
+        { "name": "TCPOS", "category": "Point of sale", "logo": "/logos/logos dot/tcpos.svg", "desc": "Sales, tables and orders in real time. Works even without internet.", "href": "tc-pos" },
+        { "name": "Smart Order", "category": "Purchasing & Stock", "logo": "/logos/logos dot/smartorder.png", "desc": "Purchasing, inventory and production under full control. Suggests what and how much to order, automatically.", "href": "smart-order" },
+        { "name": "BiPyxis", "category": "Business Intelligence", "logo": "/logos/logos dot/bipyxis.png", "desc": "Your business live, from anywhere. F&B KPIs ready instantly.", "href": "bipyxis" },
+        { "name": "Loyalty", "category": "Loyalty", "logo": "/logos/logos dot/loyalty.png", "desc": "Build loyalty, sell and deliver, all under your brand. No middleman commission.", "href": "loyalty" },
+        { "name": "AyHungry", "category": "Reservations & Front of house", "logo": "/logos/ayhungry.svg", "desc": "Advance orders and table management without lines. Service from the customer's phone." },
+        { "name": "ChefCloud", "category": "Delivery & PIM", "logo": "/logos/chefcloud.svg", "desc": "Every delivery aggregator, straight to the kitchen. Automatic printing, no extra tablets." },
+        { "name": "DTE.", "category": "Invoicing", "logo": "/logos/logos dot/dte.png", "desc": "Electronic receipts and invoices that never fail. Automatically SII-compliant.", "href": "dte-facturacion-electronica" }
+      ]
+    },
+    "pieces": {
+      "eyebrow": "The pieces",
+      "title": "Eight world-class pieces, one single flow",
+      "titleHighlight": "Eight",
+      "items": [
+        { "title": "Your financial health, under control", "desc": "SAP Business One — Live per-location balance sheet and P&L, multi-tax-ID accounting, cash flow and bank/payment reconciliation, no parallel spreadsheets." },
+        { "title": "Tables, kitchen and payments, friction-free", "desc": "TCPOS — Sales, tables, orders, KDS, self-service kiosk and payment methods. Works offline with no in-store server: if the internet goes down, your register keeps charging." },
+        { "title": "Purchasing that anticipates. Automatically.", "desc": "Smart Order — Cross-references SAP's historical purchases with TCPOS's real sales to suggest what and how much to order. Live production, recipes and costs: real margin, not estimated." },
+        { "title": "Your business live, anywhere", "desc": "BiPyxis — TCPOS sales, Smart Order purchasing and SAP accounting on one reconciled dashboard. F&B KPIs ready to go: food cost, average ticket, dish mix." },
+        { "title": "No lines. No waiting. No annoyed customers.", "desc": "AyHungry — Digitizes service and reservations: advance orders, table management, service from the customer's phone, and sentiment analysis for every visit." },
+        { "title": "Build loyalty, sell and deliver. All your brand.", "desc": "Loyalty — Loyalty natively integrated into TCPOS, your own e-commerce channel and last-mile delivery connected to aggregators, with no middleman commission." },
+        { "title": "Delivery, straight to the kitchen", "desc": "ChefCloud — Rappi, PedidosYa, Uber Eats and more all land on the same TCPOS and the same order ticket. Zero extra tablets, auto-acceptance and automatic kitchen printing." },
+        { "title": "Receipts and invoices that never fail", "desc": "DTE Invoicing — Issues all your tax documents online, natively integrated with SAP and TCPOS. Keeps invoicing even without internet, and automatically complies with the SII." }
+      ]
+    },
+    "why": {
+      "eyebrow": "Why DOT",
+      "title": "We don't sell software. We're your 360° partner.",
+      "intro": "Anyone can sell you a POS. Few can sell you an ERP. Nobody else delivers the whole stack pre-integrated, maintained and supported — with our own software factory and a team on kitchen hours.",
+      "items": [
+        { "title": "Our own software factory", "desc": "We build 75% of our products ourselves: a roadmap that responds to your business, native integrations and continuous improvements." },
+        { "title": "7×7 support on restaurant hours", "desc": "The problem doesn't show up at 10 AM on a Tuesday: it shows up Friday at 10:30 PM with the place packed. We're there all 7 days." },
+        { "title": "16+ years in food & beverage", "desc": "We understand food cost, waste, kitchens, aggregators and the SII — real advice based on hundreds of implementations." }
+      ]
+    },
+    "clientsTitle": "Restaurants and chains already running the ecosystem",
+    "finalCta": {
+      "title": "Let's talk about optimizing your operation",
+      "body": "Every business has different challenges. Tell us yours and our team will show you how our solutions can adapt to generate efficiency, control and measurable results for your company.",
+      "button": "Talk to an expert"
+    }
+  },
+  "retail": {
+    "metaTitle": "Retail Ecosystem",
+    "metaDescription": "Unified commerce: physical store, e-commerce, mobile sales and loyalty on one single SAP Business One core.",
+    "hero": {
+      "eyebrow": "Ecosystem · Retail",
+      "title": "Unified commerce, from the store to e-commerce.",
+      "subtitle": "One core, six pieces, every channel.",
+      "desc": "Physical store, mobile sales, e-commerce, marketplaces and delivery all running against the same SAP Business One core, with stock, customers and finances always in sync.",
+      "bullets": [
+        "One pre-integrated stack for all your channels",
+        "Real-time stock and inventory across the whole chain",
+        "Loyalty and promotions at every touchpoint",
+        "Platform-agnostic infrastructure: we adapt to your setup"
+      ],
+      "cta": "Talk to an expert"
+    },
+    "ecosystem": {
+      "eyebrow": "The ecosystem",
+      "titleHighlight": "One core",
+      "titleRest": ", six pieces to sell on every channel",
+      "subtitle": "SAP Business One centralizes finance, inventory and operations; around it, every sales channel and support piece natively connected. Every line is a native integration: orders, payments and stock flow between channels with no re-typing.",
+      "pieces": [
+        { "name": "RetailPro Prism", "category": "Omnichannel POS", "logo": "/logos/logos dot/retail.png", "desc": "Physical store, kiosks and e-commerce on one platform. Promotions engine and unified commerce.", "href": "retail-pro-prism" },
+        { "name": "Mobile One", "category": "Mobile sales on the floor", "logo": "/logos/logos dot/mobineone.png", "desc": "Sell and charge alongside the customer, no register needed. Built for peak-hour rushes.", "href": "mobile-one" },
+        { "name": "BeFlow", "category": "OMS · e-commerce & delivery", "desc": "Orchestrates orders from every channel against real stock. Coordinates prep and last-mile." },
+        { "name": "Loyalty", "category": "Loyalty", "logo": "/logos/logos dot/loyalty.png", "desc": "Points and redemption at every point of sale, physical or digital. Actionable data on every customer.", "href": "loyalty" },
+        { "name": "Hostdot", "category": "Platform & Cybersecurity", "logo": "/logos/logos dot/hostdot.png", "desc": "Agnostic infrastructure, cloud and full-stack support. Adapts to any platform.", "href": "hostdot" },
+        { "name": "DTE.", "category": "Electronic invoicing", "logo": "/logos/logos dot/dte.png", "desc": "SII compliance integrated into the POS and ERP. Speeds up collections, without friction.", "href": "dte-facturacion-electronica" }
+      ]
+    },
+    "pieces": {
+      "eyebrow": "The pieces",
+      "title": "The complete modern retail stack",
+      "items": [
+        { "title": "The core that centralizes everything", "desc": "SAP Business One — Sales, inventory, purchasing, operations and finance in a single scalable system with real-time access. The platform for growing companies." },
+        { "title": "The world leader in point of sale", "desc": "RetailPro Prism — 9,000+ brands and 185,000+ POS in 128+ countries. Workstations, tablets and mobile with a robust promotions engine, gift cards and unified commerce." },
+        { "title": "Sell where the customer is", "desc": "Mobile One — Mobile sales on the floor: your salespeople serve, charge and issue documents right next to the customer, no register needed. Goodbye peak-hour lines." },
+        { "title": "All your orders, one single flow", "desc": "BeFlow OMS — Orchestrates e-commerce, marketplace and delivery orders against real stock, coordinating prep and last-mile for every order." },
+        { "title": "Customers who come back", "desc": "Loyalty — Points earned on every transaction, redeemable at every point of sale, eGiftCards for your site, and actionable data on every customer." },
+        { "title": "The foundation that holds it all up", "desc": "Hostdot — Agnostic infrastructure: we adapt to any platform and brand, with cloud, cybersecurity and full-stack support." },
+        { "title": "Compliance, without friction", "desc": "DTE Invoicing — Lowers invoicing operating costs, speeds up collections and meets SII requirements, integrated into the POS and ERP." }
+      ]
+    },
+    "unified": {
+      "eyebrow": "Unified commerce",
+      "title": "One single channel: the path from multichannel to unified commerce",
+      "desc": "The integration between RetailPro, e-commerce and SAP lets you sell the whole chain's inventory on any channel, with a consistent experience and no unnecessary trips.",
+      "items": [
+        "Find in store: buy or reserve online, pick up in store.",
+        "Ship to store and ship from store.",
+        "Sell store inventory on the online channel.",
+        "Full stock management and control over orders, dispatch and deliveries."
+      ]
+    },
+    "integrations": {
+      "payments": { "eyebrow": "Digital payments", "title": "Reconciled via DOT Conector", "items": ["Transbank", "Mercado Pago", "Getnet", "Store credit"] },
+      "formats": { "eyebrow": "Store formats", "title": "Supported by RetailPro", "items": ["Store", "Outlet", "Kiosk", "Pop-up store", "Store in store", "Self-checkout", "RFID", "+16 more formats"] }
+    },
+    "stats": [
+      { "value": 16, "prefix": "+", "suffix": "", "label": "Years running retail implementations." },
+      { "value": 14, "prefix": "+", "suffix": "", "label": "Years implementing SAP Business One." },
+      { "value": 300, "prefix": "+", "suffix": "", "label": "Clients transformed across Latin America." },
+      { "value": 75, "prefix": "+", "suffix": "", "label": "Certified professionals." }
+    ],
+    "why": {
+      "eyebrow": "Why DOT",
+      "title": "A complete ecosystem of solutions and services",
+      "intro": "Consulting, implementation, training, support, development and integration, infrastructure, cloud and cybersecurity — one single partner for the whole cycle.",
+      "items": [
+        { "title": "Proven results", "desc": "Multinational retailer: full SAP + POS + e-commerce integration with 40% fewer stock errors." },
+        { "title": "Omnichannel loyalty", "desc": "Fashion retailers building loyalty with DOT in-store and on digital channels at the same time." },
+        { "title": "Proven methodology", "desc": "From assessment to blueprint, configuration and go-live, with project management at every stage." }
+      ]
+    },
+    "clientsTitle": "Retailers already running the ecosystem",
+    "finalCta": {
+      "title": "Let's talk about optimizing your operation",
+      "body": "Every business has different challenges. Tell us yours and our team will show you how our solutions can adapt to generate efficiency, control and measurable results for your company.",
+      "button": "Talk to an expert"
     }
   },
   "hostdot": {

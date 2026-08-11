@@ -1,0 +1,430 @@
+---
+// src/components/sections/EcosystemRadialMap.astro
+// "Hub & Spoke Constellation" — SAP Business One como núcleo en el centro,
+// las soluciones conectadas en órbita alrededor, unidas por raíces SVG tipo
+// micelio (curvas orgánicas, no líneas rectas). El posicionamiento (radio,
+// ángulos, curvas) se calcula en el CLIENTE midiendo el tamaño real del
+// contenedor — necesario para que el radio sea siempre grande respecto al
+// tamaño de las cards, sin importar cuánto ancho tenga la pantalla (un
+// radio fijo en % del viewBox se aplastaba en contenedores bajos y las
+// cards quedaban superpuestas). El hover (línea que se ilumina, card que
+// se enfoca, resto que se opaca) sigue siendo 100% CSS vía :has().
+import { withBase } from '../../utils/paths';
+
+interface Piece {
+  name: string;
+  category: string;
+  logo?: string;
+  desc: string;
+  href?: string;
+}
+
+interface Props {
+  eyebrow: string;
+  titleHighlight: string;
+  titleRest: string;
+  subtitle: string;
+  pieces: Piece[];
+  coreLogo: string;
+  coreLabel: string;
+  coreSublabel: string;
+}
+
+const { eyebrow, titleHighlight, titleRest, subtitle, pieces, coreLogo, coreLabel, coreSublabel } = Astro.props;
+
+const nodes = pieces.map((piece, i) => ({ ...piece, index: i }));
+
+// Una regla por nodo: al hacer hover en la card N, la raíz N se enciende.
+// No son hermanos en el DOM (uno vive en el SVG, la otra en el grid de
+// cards), así que van emparejadas por [data-index] en vez de :has()+nth-child.
+const hoverRules = nodes
+  .map(
+    (n) => `
+    .radial-map:has(.eco-node[data-index="${n.index}"]:hover) .eco-path[data-index="${n.index}"] {
+      stroke: var(--dot-micelio);
+      stroke-width: 2.1;
+      stroke-opacity: 1;
+      filter: drop-shadow(0 0 8px var(--dot-micelio));
+    }`
+  )
+  .join('\n');
+---
+
+<div class="ecosystem-radial">
+  <div class="container radial-header glass-panel">
+    <p class="radial-eyebrow">
+      <span class="dot"></span>
+      {eyebrow}
+    </p>
+    <h2 class="radial-title">
+      <span class="radial-title-highlight">{titleHighlight}</span>{titleRest}
+    </h2>
+    <p class="radial-subtitle">{subtitle}</p>
+  </div>
+
+  <div class="container radial-map" data-radial-map>
+    <svg class="radial-svg" data-radial-svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      {nodes.map((n) => (
+        <path id={`eco-path-${n.index}`} class="eco-path" data-index={n.index} d="M 0 0" fill="none" />
+      ))}
+      {nodes.map((n) => {
+        const duration = (3.2 + (n.index % 4) * 0.7).toFixed(1);
+        const delay = (n.index * 0.55).toFixed(2);
+        return (
+          <circle class="eco-flow-dot" r="4" fill="var(--dot-micelio)">
+            <animateMotion dur={`${duration}s`} begin={`${delay}s`} repeatCount="indefinite" rotate="auto">
+              <mpath href={`#eco-path-${n.index}`} />
+            </animateMotion>
+          </circle>
+        );
+      })}
+    </svg>
+
+    <div class="eco-core" aria-hidden="true">
+      <img src={withBase(coreLogo)} alt="" class="eco-core-logo" />
+      <p class="eco-core-label">{coreLabel}</p>
+      <p class="eco-core-sublabel">{coreSublabel}</p>
+    </div>
+
+    {nodes.map((n) => {
+      const Tag = n.href ? 'a' : 'div';
+      return (
+        <Tag
+          href={n.href}
+          class="eco-node"
+          data-index={n.index}
+          data-name={n.name}
+        >
+          <div class="eco-node-logo">
+            {n.logo ? <img src={withBase(n.logo)} alt={n.name} loading="lazy" /> : <span class="eco-node-wordmark">{n.name}</span>}
+          </div>
+          <p class="eco-node-desc">{n.desc}</p>
+        </Tag>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  // Posiciona el núcleo y las cards en un círculo cuyo radio es siempre
+  // proporcional al tamaño REAL medido del contenedor (nunca un % fijo del
+  // viewBox, que se aplasta y superpone las cards en contenedores bajos).
+  function layoutRadialMap(map: HTMLElement) {
+    const nodeEls = Array.from(map.querySelectorAll<HTMLElement>('.eco-node'));
+    const svg = map.querySelector<SVGSVGElement>('[data-radial-svg]');
+    const paths = Array.from(map.querySelectorAll<SVGPathElement>('.eco-path'));
+    if (!svg || nodeEls.length === 0) return;
+
+    function layout() {
+      const rect = map.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w < 10 || h < 10) return;
+
+      svg!.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      const cx = w / 2;
+      const cy = h / 2;
+      const n = nodeEls.length;
+      // Radio holgado (clamp 260–380px) proporcional al lado más corto del
+      // contenedor, para que nunca choque contra el borde ni se aplaste.
+      const radius = Math.max(190, Math.min(280, Math.min(w, h) * 0.42));
+
+      // Estas 4 caen cerca de los extremos horizontales del círculo (los
+      // ángulos con mayor |cos|) — se empujan un poco más lejos sobre su
+      // mismo ángulo para usar más ancho de pantalla a los costados.
+      const pushOut = new Set(['DTE.', 'Smart Order', 'ChefCloud', 'BiPyxis']);
+
+      nodeEls.forEach((el, i) => {
+        const angle = -Math.PI / 2 + i * ((2 * Math.PI) / n);
+        const nodeRadius = pushOut.has(el.dataset.name || '') ? radius + 50 : radius;
+        const x = cx + nodeRadius * Math.cos(angle);
+        const y = cy + nodeRadius * Math.sin(angle);
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        const path = paths[i];
+        if (!path) return;
+        // Curva "raíz de micelio": punto de control desplazado perpendicular
+        // al segmento centro->nodo, alternando de lado — el look orgánico,
+        // no un diagrama técnico de líneas rectas.
+        const midX = (cx + x) / 2;
+        const midY = (cy + y) / 2;
+        const perp = angle + Math.PI / 2;
+        const jitter = (i % 2 === 0 ? 1 : -1) * (6 + (i % 3) * 3);
+        const ctrlX = midX + jitter * Math.cos(perp);
+        const ctrlY = midY + jitter * Math.sin(perp);
+        path.setAttribute('d', `M ${cx} ${cy} Q ${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`);
+      });
+    }
+
+    layout();
+
+    const resizeObserver = new ResizeObserver(() => layout());
+    resizeObserver.observe(map);
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => resizeObserver.disconnect(),
+      { once: true }
+    );
+  }
+
+  function initRadialMaps() {
+    document.querySelectorAll<HTMLElement>('[data-radial-map]').forEach(layoutRadialMap);
+  }
+
+  document.addEventListener('astro:page-load', initRadialMaps);
+</script>
+
+<style set:html={hoverRules} />
+
+<style>
+  .ecosystem-radial {
+    padding-block: var(--space-lg);
+  }
+
+  .radial-header {
+    text-align: center;
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: none;
+  }
+  .radial-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--dot-micelio);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-md);
+  }
+  .radial-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+  .radial-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  .radial-title-highlight {
+    color: var(--dot-micelio);
+  }
+  .radial-subtitle {
+    margin-top: var(--space-md);
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  /* ---------- Mobile/tablet: fallback en lista vertical — el layout
+     radial necesita espacio real para no verse apretado. ---------- */
+  .radial-map {
+    position: relative;
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .radial-svg {
+    display: none;
+  }
+  .eco-core {
+    position: relative;
+    order: -1;
+    width: 100%;
+    padding: var(--space-lg);
+    text-align: center;
+    background: color-mix(in srgb, #6fa8f0 25%, transparent);
+    backdrop-filter: blur(20px);
+    border: 2px solid #6fa8f0;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 40px color-mix(in srgb, #6fa8f0 30%, transparent);
+  }
+  .eco-core-logo {
+    height: 2.25rem;
+    width: auto;
+    margin-inline: auto;
+    margin-bottom: var(--space-sm);
+  }
+  .eco-core-label {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+  }
+  .eco-core-sublabel {
+    margin-top: 0.25rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6fa8f0;
+  }
+
+  .eco-node {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    padding: var(--space-md);
+    background: color-mix(in srgb, var(--dot-light) 5%, transparent);
+    backdrop-filter: blur(24px);
+    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+  }
+  .eco-node:hover {
+    border-color: var(--dot-micelio);
+  }
+
+  /* Nunca un fondo blanco detrás del logo — los archivos ya vienen listos
+     para fondo oscuro (transparentes, en blanco/color de marca). */
+  .eco-node-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6rem;
+    height: 2.25rem;
+    margin-bottom: var(--space-sm);
+  }
+  .eco-node-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  /* Estos logos se leen chicos dentro de la caja fija — se agrandan un
+     poco más allá del box nominal (sin recorte, el contenedor no tiene
+     overflow:hidden). */
+  .eco-node[data-name="AyHungry"] .eco-node-logo img,
+  .eco-node[data-name="Smart Order"] .eco-node-logo img,
+  .eco-node[data-name="TCPOS"] .eco-node-logo img,
+  .eco-node[data-name="Hostdot"] .eco-node-logo img,
+  .eco-node[data-name="Mobile One"] .eco-node-logo img {
+    transform: scale(1.5);
+  }
+  .eco-node[data-name="ChefCloud"] .eco-node-logo img {
+    transform: scale(1.3);
+  }
+  /* Sin logo propio (ej. BeFlow): el nombre hace de wordmark en el mismo
+     espacio que ocuparía el logo. */
+  .eco-node-wordmark {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+  }
+
+  .eco-node-desc {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    transition: color 0.3s var(--ease-out);
+  }
+  .eco-node:hover .eco-node-desc {
+    color: var(--dot-light);
+  }
+
+  /* ---------- Desktop (900px+): layout radial real. ---------- */
+  @media (min-width: 900px) {
+    .ecosystem-radial {
+      padding-block: var(--space-md);
+    }
+    .radial-header {
+      padding: 1.5rem 2rem 2.25rem;
+    }
+    .radial-map {
+      width: 100%;
+      min-height: 34rem;
+      margin-inline: auto;
+      margin-top: var(--space-xl);
+    }
+    .radial-svg {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .eco-path {
+      stroke: var(--dot-light);
+      stroke-opacity: 0.15;
+      stroke-width: 1.3;
+      transition: stroke 0.3s var(--ease-out), stroke-width 0.3s var(--ease-out), stroke-opacity 0.3s var(--ease-out);
+    }
+    .eco-flow-dot {
+      opacity: 0.9;
+    }
+
+    .eco-core {
+      order: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 11.5rem;
+      aspect-ratio: 1;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .eco-node {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      width: 10rem;
+      aspect-ratio: 1;
+      padding: var(--space-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .eco-core-logo {
+      height: 1.75rem;
+    }
+    .eco-node-logo {
+      width: 4.75rem;
+      height: 1.75rem;
+      margin-inline: auto;
+    }
+    .eco-node-desc {
+      font-size: var(--text-xs);
+    }
+    .eco-node:hover {
+      transform: translate(-50%, -50%) scale(1.06);
+      z-index: 20;
+      box-shadow: 0 0 30px color-mix(in srgb, var(--dot-micelio) 25%, transparent);
+    }
+    .radial-map:has(.eco-node:hover) .eco-node:not(:hover) {
+      opacity: 0.4;
+    }
+    .radial-map:has(.eco-core:hover) .eco-path {
+      stroke: var(--dot-micelio);
+      stroke-opacity: 0.6;
+    }
+  }
+
+</style>

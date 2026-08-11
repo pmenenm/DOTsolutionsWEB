@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IndustryHero from '../components/sections/IndustryHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import PiecesCoverflow from '../components/sections/PiecesCoverflow.astro';
+import EcosystemRadialMap from '../components/sections/EcosystemRadialMap.astro';
+import PainPointsNarrative from '../components/sections/PainPointsNarrative.astro';
+import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const g = t.gastronomia;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+
+const pieces = g.ecosystem.pieces.map((p) => ({
+  ...p,
+  href: p.href ? getRelativeLocaleUrl(lang, p.href) : undefined,
+}));
+---
+
+<Layout title={`${g.metaTitle} — DOT Solutions`} description={g.metaDescription} lang={lang} path="/gastronomia">
+  <IndustryHero
+    eyebrow={g.hero.eyebrow}
+    title={g.hero.title}
+    subtitle={g.hero.subtitle}
+    desc={g.hero.desc}
+    bullets={g.hero.bullets}
+    cta={g.hero.cta}
+    ctaHref={contactHref}
+    image="/images/background_1.jpg"
+  />
+
+  <PainPointsNarrative
+    phrase1={g.problem.manifesto.phrase1}
+    phrase2={g.problem.manifesto.phrase2}
+    phrase2Highlight={g.problem.manifesto.phrase2Highlight}
+    phrase3={g.problem.manifesto.phrase3}
+    items={g.problem.items}
+    closingEyebrow={t.common.dataFlowEyebrow}
+    closingTitle={t.common.dataFlowTitle}
+  />
+
+  <ClientLogos title={g.clientsTitle} />
+
+  <EcosystemRadialMap
+    eyebrow={g.ecosystem.eyebrow}
+    titleHighlight={g.ecosystem.titleHighlight}
+    titleRest={g.ecosystem.titleRest}
+    subtitle={g.ecosystem.subtitle}
+    pieces={pieces}
+    coreLogo="/logos/sap.png"
+    coreLabel="SAP Business One"
+    coreSublabel={lang === 'en' ? 'ERP Core' : 'Núcleo ERP'}
+  />
+
+  <section class="section">
+    <div class="container">
+      <PiecesCoverflow
+        eyebrow={g.pieces.eyebrow}
+        title={g.pieces.title}
+        titleHighlight={g.pieces.titleHighlight}
+        modules={g.pieces.items}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel why-panel">
+        <SectionHeading eyebrow={g.why.eyebrow} title={g.why.title} subtitle={g.why.intro} />
+        <div class="section-body">
+          <FeatureGrid items={g.why.items} cols={3} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <CTASection title={g.finalCta.title} body={g.finalCta.body} button={g.finalCta.button} href={contactHref} />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .why-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+</style>

@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IndustryHero from '../components/sections/IndustryHero.astro';
+import SectionHeading from '../components/sections/SectionHeading.astro';
+import EcosystemRadialMap from '../components/sections/EcosystemRadialMap.astro';
+import DataFlowCard from '../components/sections/DataFlowCard.astro';
+import ProductModulesGrid from '../components/sections/ProductModulesGrid.astro';
+import BenefitsList from '../components/sections/BenefitsList.astro';
+import ProductIndustriesStrip from '../components/sections/ProductIndustriesStrip.astro';
+import StatBar from '../components/sections/StatBar.astro';
+import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const r = t.retail;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
+
+const pieces = r.ecosystem.pieces.map((p) => ({
+  ...p,
+  href: p.href ? getRelativeLocaleUrl(lang, p.href) : undefined,
+}));
+---
+
+<Layout title={`${r.metaTitle} — DOT Solutions`} description={r.metaDescription} lang={lang} path="/retail">
+  <IndustryHero
+    eyebrow={r.hero.eyebrow}
+    title={r.hero.title}
+    subtitle={r.hero.subtitle}
+    desc={r.hero.desc}
+    bullets={r.hero.bullets}
+    cta={r.hero.cta}
+    ctaHref={contactHref}
+    image="/images/background_2.jpg"
+    titleMaxWidth="19ch"
+  />
+
+  <DataFlowCard eyebrow={t.common.dataFlowEyebrow} title={t.common.dataFlowTitle} />
+
+  <ClientLogos title={t.common.trustedByTitle} />
+
+  <EcosystemRadialMap
+    eyebrow={r.ecosystem.eyebrow}
+    titleHighlight={r.ecosystem.titleHighlight}
+    titleRest={r.ecosystem.titleRest}
+    subtitle={r.ecosystem.subtitle}
+    pieces={pieces}
+    coreLogo="/logos/sap.png"
+    coreLabel="SAP Business One"
+    coreSublabel={lang === 'en' ? 'ERP Core' : 'Núcleo ERP'}
+  />
+
+  <section class="section">
+    <div class="container">
+      <ProductModulesGrid eyebrow={r.pieces.eyebrow} title={r.pieces.title} modules={r.pieces.items} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel unified-panel">
+        <SectionHeading eyebrow={r.unified.eyebrow} title={r.unified.title} subtitle={r.unified.desc} />
+        <div class="section-body narrow">
+          <BenefitsList items={r.unified.items} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container integrations-grid">
+      <ProductIndustriesStrip
+        eyebrow={r.integrations.payments.eyebrow}
+        title={r.integrations.payments.title}
+        items={r.integrations.payments.items}
+      />
+      <ProductIndustriesStrip
+        eyebrow={r.integrations.formats.eyebrow}
+        title={r.integrations.formats.title}
+        items={r.integrations.formats.items}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <StatBar stats={r.stats} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={r.why.eyebrow} title={r.why.title} subtitle={r.why.intro} />
+      <div class="section-body">
+        <FeatureGrid items={r.why.items} cols={3} />
+      </div>
+    </div>
+  </section>
+
+  <ClientLogos title={r.clientsTitle} />
+
+  <div class="container">
+    <CTASection title={r.finalCta.title} body={r.finalCta.body} button={r.finalCta.button} href={contactHref} />
+  </div>
+</Layout>
+
+<style>
+  .section {
+    padding-block: var(--space-lg);
+  }
+  .section-body {
+    margin-top: var(--space-lg);
+  }
+  .section-body.narrow {
+    max-width: var(--content-max);
+  }
+  .unified-panel {
+    padding: clamp(2rem, 4vw, 3rem);
+    border: none;
+  }
+
+  .integrations-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+  @media (min-width: 900px) {
+    .integrations-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

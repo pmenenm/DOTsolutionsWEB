@@ -6,7 +6,7 @@ interface Item {
 
 interface Props {
   items: Item[];
-  cols?: 2 | 3 | 4;
+  cols?: 2 | 3 | 4 | 5;
 }
 
 const { items, cols = 3 } = Astro.props;
@@ -57,13 +57,17 @@ const { items, cols = 3 } = Astro.props;
     .cols-3 {
       grid-template-columns: repeat(3, 1fr);
     }
-    .cols-4 {
+    .cols-4,
+    .cols-5 {
       grid-template-columns: repeat(2, 1fr);
     }
   }
   @media (min-width: 1100px) {
     .cols-4 {
       grid-template-columns: repeat(4, 1fr);
+    }
+    .cols-5 {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 </style>

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/sections/PageHero.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
 import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import ServicesShowcase from '../components/sections/ServicesShowcase.astro';
 import ProcessTimeline from '../components/sections/ProcessTimeline.astro';
 import ClientLogos from '../components/sections/ClientLogos.astro';
 import CTASection from '../components/sections/CTASection.astro';
@@ -19,19 +20,30 @@ const s = t.servicios;
 ---
 
 <Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/servicios">
-  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/background_2.jpg" />
+  <PageHero eyebrow={s.hero.eyebrow} title={s.hero.title} subtitle={s.hero.subtitle} image="/images/hero-servicios.jpg" />
 
-  <section class="section">
+  <section class="section pillars-section">
     <div class="container">
       <FeatureGrid items={s.pillars} cols={3} />
     </div>
   </section>
 
+  <ServicesShowcase
+    eyebrow={t.home.servicesTeaser.eyebrow}
+    titleHighlight={t.home.servicesTeaser.titleHighlight}
+    titleRest={t.home.servicesTeaser.titleRest}
+    subtitle={t.home.servicesTeaser.subtitle}
+    products={t.home.servicesTeaser.products.map((p) => ({ ...p, href: getRelativeLocaleUrl(lang, p.href) }))}
+    hideHeading
+  />
+
   <section class="section theme-light">
     <div class="container">
-      <SectionHeading eyebrow={s.services.eyebrow} title={s.services.title} />
-      <div class="section-body">
-        <FeatureGrid items={s.services.items} cols={3} />
+      <div class="services-heading">
+        <SectionHeading eyebrow={s.services.eyebrow} title={s.services.title} />
+      </div>
+      <div class="section-body services-grid">
+        <FeatureGrid items={s.services.items} cols={5} />
       </div>
     </div>
   </section>
@@ -47,8 +59,10 @@ const s = t.servicios;
 
   <section class="section theme-light">
     <div class="container">
-      <SectionHeading eyebrow={s.why.eyebrow} title={s.why.title} />
-      <div class="section-body">
+      <div class="why-heading">
+        <SectionHeading eyebrow={s.why.eyebrow} title={s.why.title} />
+      </div>
+      <div class="section-body why-grid">
         <FeatureGrid items={s.why.items} cols={4} />
       </div>
     </div>
@@ -75,5 +89,120 @@ const s = t.servicios;
   }
   .section-body.narrow {
     max-width: var(--content-max);
+  }
+
+  /* Título y texto del hero pegados muy arriba — más aire sobre ellos. */
+  :global(.page-hero) {
+    padding-top: calc(var(--space-hero) * 1.1) !important;
+  }
+
+  /* Hero centrado en esta página. */
+  :global(.page-hero .content) {
+    text-align: center;
+  }
+  :global(.page-hero .eyebrow) {
+    justify-content: center;
+  }
+  :global(.page-hero h1),
+  :global(.page-hero .subtitle) {
+    margin-inline: auto;
+  }
+
+  /* Las cards de pilares quedaban muy abajo tras ese aire extra del hero —
+     las subimos reduciendo el padding superior de su sección. */
+  .pillars-section {
+    padding-top: var(--space-sm);
+  }
+  .pillars-section :global(.feature) {
+    background: var(--dot-dark) !important;
+  }
+  .pillars-section :global(.feature h3) {
+    color: var(--dot-micelio);
+  }
+
+  /* Título "Acompañamiento en todo el ciclo de vida TI" — degradé animado
+     en loop lento, blanco -> verde micelio -> blanco (mismo tratamiento
+     que "El diagnóstico" en la página de SAP). */
+  .services-heading :global(.title) {
+    background: linear-gradient(
+      90deg,
+      var(--dot-light) 0%,
+      var(--dot-light) 35%,
+      var(--dot-micelio) 50%,
+      var(--dot-light) 65%,
+      var(--dot-light) 100%
+    ) !important;
+    background-size: 250% 100% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: services-gradient-loop 6s linear infinite;
+  }
+  @keyframes services-gradient-loop {
+    to {
+      background-position: -250% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .services-heading :global(.title) {
+      animation: none;
+      background-position: 50% 0;
+    }
+  }
+
+  /* 5 cards en una sola línea a partir de 1100px — más compactas para que
+     no se sientan apretadas en la columna angosta que les toca. Fondo
+     negro abisal opaco, borde verde tenue que se enciende (borde + glow)
+     al hacer hover. */
+  .services-grid :global(.feature) {
+    padding: var(--space-sm) !important;
+    background: var(--dot-dark) !important;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 35%, transparent) !important;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .services-grid :global(.feature:hover) {
+    border-color: var(--dot-micelio) !important;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--dot-micelio) 45%, transparent);
+  }
+  /* "Desarrollo e integración" ocupa 2 líneas y empuja su texto más abajo
+     que el resto — reservamos siempre el alto de 2 líneas en el título
+     para que el párrafo arranque a la misma altura en las 5 cards. */
+  .services-grid :global(.feature h3) {
+    font-size: var(--text-lg) !important;
+    color: var(--dot-micelio) !important;
+    line-height: 1.3 !important;
+    min-height: 2.6em;
+    display: flex;
+    align-items: flex-end;
+  }
+  .services-grid :global(.feature p) {
+    font-size: var(--text-sm) !important;
+    color: var(--dot-light) !important;
+  }
+
+  /* Título "Un socio, no un proveedor" — blanco explícito (la sección
+     theme-light nunca pinta background, así que su color por defecto
+     quedaba oscuro sobre el fondo oscuro ambiente). */
+  .why-heading :global(.title) {
+    color: var(--dot-light) !important;
+  }
+
+  /* Mismo tratamiento que las cards de "Acompañamiento en todo el ciclo de
+     vida TI": fondo negro opaco, borde verde tenue que se enciende al
+     hover, título en verde micelio, texto en blanco. */
+  .why-grid :global(.feature) {
+    background: var(--dot-dark) !important;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 35%, transparent) !important;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .why-grid :global(.feature:hover) {
+    border-color: var(--dot-micelio) !important;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--dot-micelio) 45%, transparent);
+  }
+  .why-grid :global(.feature h3) {
+    color: var(--dot-micelio) !important;
+  }
+  .why-grid :global(.feature p) {
+    color: var(--dot-light) !important;
   }
 </style>

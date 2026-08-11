@@ -1,5 +1,13 @@
 ---
 import { withBase } from '../../utils/paths';
+import StatBar from './StatBar.astro';
+
+interface Stat {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+}
 
 interface Props {
   line1: string;
@@ -8,6 +16,10 @@ interface Props {
   /** Línea opcional adicional — cuando se pasa, el título se reparte en 4
       líneas en vez de 3 y el glow de cierre se mueve a esta última. */
   line4?: string;
+  /** Reemplaza el texto de la última línea (line4 o line3) por un logo,
+      dentro del mismo mask-reveal de línea — line4/line3 se sigue pasando
+      como texto para el alt de la imagen. */
+  titleLogo?: string;
   subtitle: string;
   paragraph: string;
   cta: string;
@@ -15,6 +27,12 @@ interface Props {
   /** Logo mostrado en el panel visual de la derecha. Se omite si se pasa
       backgroundImage (esa imagen ya trae el logo incorporado). */
   logo?: string;
+  /** Logo pequeño sobre el título, dentro de la columna de copy — distinto
+      de `logo` (panel lateral), pensado para el modo con backgroundImage. */
+  topLogo?: string;
+  /** Stats mostrados en el panel de la derecha, en vez del logo — activa el
+      layout de 2 columnas igual que `logo` (mutuamente excluyentes). */
+  stats?: Stat[];
   /** Foto de fondo a cobertura completa en vez del grid-texture genérico —
       colapsa la grilla a una sola columna (sin panel visual aparte). */
   backgroundImage?: string;
@@ -27,11 +45,14 @@ const {
   line2,
   line3,
   line4,
+  titleLogo,
   subtitle,
   paragraph,
   cta,
   ctaHref,
   logo,
+  topLogo,
+  stats,
   backgroundImage,
   ctaSecondary,
   ctaSecondaryHref,
@@ -49,15 +70,29 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     <div class="grid-texture" aria-hidden="true"></div>
   )}
 
-  <div class:list={['container product-hero-grid', { 'no-visual': !logo }]}>
+  <div
+    class:list={[
+      'container product-hero-grid',
+      { 'no-visual': !logo && !stats, 'has-stats': !logo && !!stats },
+    ]}
+  >
     <div class="product-hero-copy">
+      {topLogo && <img class="top-logo" src={withBase(topLogo)} alt="" />}
       <h1>
         <span class="line-mask"><span class="line-inner">{line1}</span></span>
         <span class="line-mask"><span class="line-inner">{line2}</span></span>
         {line4 ? (
           <>
             <span class="line-mask"><span class="line-inner">{line3}</span></span>
-            <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line4}</span></span></span>
+            <span class="line-mask">
+              <span class="line-inner">
+                {titleLogo ? (
+                  <img class="title-logo" src={withBase(titleLogo)} alt={line4} />
+                ) : (
+                  <span class="sap-glow">{line4}</span>
+                )}
+              </span>
+            </span>
           </>
         ) : (
           <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line3}</span></span></span>
@@ -86,6 +121,12 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
         <div class="visual-panel">
           <img src={withBase(logo)} alt="" />
         </div>
+      </div>
+    )}
+
+    {!logo && stats && (
+      <div class="product-hero-stats">
+        <StatBar stats={stats} />
       </div>
     )}
   </div>
@@ -146,6 +187,22 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     align-items: center;
   }
 
+  .top-logo {
+    display: block;
+    height: 2.25rem;
+    width: auto;
+    margin-bottom: var(--space-sm);
+  }
+
+  /* Logo que reemplaza el texto de la última línea del título — mismo alto
+     de línea que el texto de las otras, para no romper el ritmo vertical. */
+  .title-logo {
+    display: inline-block;
+    height: clamp(2.25rem, 5.8vw, 3.5rem);
+    width: auto;
+    vertical-align: middle;
+  }
+
   .product-hero-copy h1 {
     font-family: var(--font-heading);
     font-weight: 500;
@@ -161,6 +218,9 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
      de las 3 que definen line1/line2/line3. */
   .product-hero-grid.no-visual .product-hero-copy h1 {
     max-width: 34ch;
+  }
+  .product-hero-grid.has-stats .product-hero-copy h1 {
+    max-width: 40ch;
   }
 
   /* Hard-Edge Mask Reveal — mismo mecanismo que el Hero de Home: corte
@@ -317,11 +377,30 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     object-fit: contain;
   }
 
+  .product-hero-stats {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md) 0;
+  }
+  .product-hero-stats :global(.stat-bar) {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-md) !important;
+  }
+  .product-hero-stats :global(.stat) {
+    text-align: left !important;
+  }
+  .product-hero-stats :global(.value) {
+    font-size: clamp(1.5rem, 2.6vw, 2rem) !important;
+  }
+
   @media (min-width: 900px) {
     .product-hero-grid:not(.no-visual) {
       grid-template-columns: 3fr 2fr;
     }
-    .product-hero-grid:not(.no-visual) .product-hero-copy h1 {
+    .product-hero-grid.has-stats {
+      grid-template-columns: 7fr 3fr;
+    }
+    .product-hero-grid:not(.no-visual):not(.has-stats) .product-hero-copy h1 {
       max-width: 14ch;
     }
   }

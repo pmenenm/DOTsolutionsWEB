@@ -1,0 +1,99 @@
+---
+// src/components/sections/SeparatorDot.astro
+// Separador visual de transición: 3 esferas se transforman en el isotipo "dot" (las letras
+// D-O-T) vía GSAP MorphSVGPlugin. Portado desde el brandbook (dot-solutions/SeparatorDot.astro).
+// Disparado al entrar en viewport (play al bajar / reverse al subir), sin pin.
+//
+// Los 4 <path> vienen del isotipo real (viewBox 0 0 1920 1080): la "d", la "o", el cuerpo de
+// la "t" y su punto de acento. Como son 3 esferas → 3 letras, la 3ª esfera morphea al cuerpo
+// de la "t" + su punto combinados en un solo path (dos subtrazados, mismo `d`).
+---
+
+<section class="separator-dot" data-gsap-section="separator-dot">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" class="separator-dot__svg">
+    <defs>
+      <g id="separator-dot-letters">
+        <path id="separator-dot-letter-d" d="M353.87,1001.1c39.42,0,77.46-6.09,114.12-18.12,36.24-12.03,69.58-30.57,100.7-55.19,31.12-24.62,55.19-57.54,73.31-99.32,18.12-41.77,27.39-89.08,27.39-142.47V78.9h-121.17v381.49l-7.47-9.68c-4.7-5.53-13-13-25.04-22.27s-25.04-18.54-40.39-27.39c-15.35-8.85-34.86-16.18-58.93-22.27-23.65-6.09-49.24-9.27-75.66-9.27h-2.35c-97.93.97-172.21,30.57-222.7,89.63-51.04,58.93-76.08,134.59-76.08,226.43s29.19,168.48,87.28,227.4c57.96,58.51,134.17,87.7,227.82,87.7l-.97.41h.14ZM214.72,539.38c36.24-39.42,82.58-59.34,139.29-59.34s104.02,19.92,141.5,59.34c38.04,39.42,57.13,88.11,57.13,146.21s-19.09,106.79-57.13,146.62c-38.04,39.84-85.35,59.89-141.5,59.89s-103.05-19.92-139.29-59.34c-36.24-39.42-54.36-88.66-54.36-146.62s18.12-107.2,54.36-146.62v-.14Z" />
+        <path id="separator-dot-letter-o" d="M1390.32,684.62c0-86.31-31.12-160.59-92.81-222.28-61.69-61.69-135.97-92.81-222.28-92.81s-160.59,31.12-222.28,92.81c-61.69,61.69-92.81,135.97-92.81,222.28s31.12,160.59,92.81,222.28c61.69,61.69,135.97,92.81,222.28,92.81s160.59-31.12,222.28-92.81c61.69-61.69,92.81-135.97,92.81-222.28ZM1212.02,829.86c-34.86,39.01-80.23,57.96-136.94,57.96s-102.5-19.5-138.32-57.96c-35.69-39.01-53.39-87.28-53.39-145.24s17.57-106.79,53.39-145.24c35.69-39.01,81.75-57.96,138.32-57.96s102.08,19.5,136.94,57.96c34.86,38.45,52.01,87.28,52.01,145.24s-17.15,106.79-52.01,145.24Z" />
+        <path id="separator-dot-letter-t" d="M1843.19,877.16c-57.54,0-104.02-17.57-140.12-52.84-35.69-35.27-53.81-81.2-53.81-138.74V140.18h-121.17v242.2h-116.05v103.05h116.05v200.01c0,86.31,30.57,158.66,91.85,216.34,61.28,57.68,135.97,86.73,222.7,86.73v-111.35h.55Z M1793.12,347.25c-48.27,0-87.28,39.01-87.28,87.28s39.01,87.28,87.28,87.28,87.28-39.01,87.28-87.28-39.01-87.28-87.28-87.28Z" />
+      </g>
+    </defs>
+
+    <!-- Estado inicial: 3 puntos alineados en fila (misma cy) antes de abrirse hacia cada letra -->
+    <circle id="separator-dot-1" cx="370" cy="540" r="150" />
+    <circle id="separator-dot-2" cx="1080" cy="540" r="150" />
+    <circle id="separator-dot-3" cx="1650" cy="540" r="150" />
+  </svg>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+
+  gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
+
+  function initSeparatorDot() {
+    const section = document.querySelector('.separator-dot');
+    if (!section) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Convierte los <circle> nativos a <path> para el morphing — necesario para que el morph
+    // sea visible sobre el elemento que el usuario ve, no sobre una copia oculta. Selector
+    // acotado a esta sección para no afectar círculos de otros componentes.
+    MorphSVGPlugin.convertToPath('.separator-dot circle');
+
+    if (reduced) {
+      gsap.set('#separator-dot-1', { morphSVG: '#separator-dot-letter-d' });
+      gsap.set('#separator-dot-2', { morphSVG: '#separator-dot-letter-o' });
+      gsap.set('#separator-dot-3', { morphSVG: '#separator-dot-letter-t' });
+      return;
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.separator-dot',
+        start: 'top center',
+        end: 'center center',
+        toggleActions: 'play none none reverse',
+      },
+      defaults: { ease: 'power2.inOut', duration: 1.2 },
+    });
+
+    tl.to('#separator-dot-1', { morphSVG: '#separator-dot-letter-d' }, 0)
+      .to('#separator-dot-2', { morphSVG: '#separator-dot-letter-o' }, 0.2)
+      .to('#separator-dot-3', { morphSVG: '#separator-dot-letter-t' }, 0.4);
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => tl.scrollTrigger?.kill(),
+      { once: true }
+    );
+  }
+
+  document.addEventListener('astro:page-load', initSeparatorDot);
+</script>
+
+<style>
+  .separator-dot {
+    height: 100vh;
+    height: 100svh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+  }
+
+  .separator-dot__svg {
+    width: min(42vw, 500px);
+    height: auto;
+  }
+
+  .separator-dot__svg circle,
+  .separator-dot__svg path {
+    fill: var(--text-primary);
+    fill-rule: evenodd;
+  }
+</style>

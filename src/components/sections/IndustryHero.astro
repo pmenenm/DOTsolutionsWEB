@@ -1,0 +1,231 @@
+---
+// src/components/sections/IndustryHero.astro
+// Hero para páginas de industria (Gastronomía, Retail): foto de fondo +
+// overlay oscuro, eyebrow, título, subtítulo, párrafo, checklist de
+// beneficios destacados y CTA — mismo lenguaje que ProductHero pero con
+// una lista de bullets en vez de solo texto corrido.
+import { withBase } from '../../utils/paths';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  bullets: string[];
+  cta: string;
+  ctaHref: string;
+  image: string;
+  /** Fuerza el quiebre de línea del título a un ancho fijo (en ch) — para
+      controlar en cuántas líneas cae un título puntual. */
+  titleMaxWidth?: string;
+}
+
+const { eyebrow, title, subtitle, desc, bullets, cta, ctaHref, image, titleMaxWidth } = Astro.props;
+---
+
+<section class="industry-hero">
+  <img class="hero-bg" src={withBase(image)} alt="" loading="eager" />
+  <div class="hero-bg-overlay" aria-hidden="true"></div>
+
+  <div class="container hero-content">
+    <div class="hero-left">
+      <p class="eyebrow" data-reveal>
+        <span class="dot"></span>
+        {eyebrow}
+      </p>
+      <h1 class="mask" style={titleMaxWidth ? `max-width: ${titleMaxWidth};` : undefined}>
+        <span class="mask-inner">{title}</span>
+      </h1>
+      <p class="subtitle" data-reveal>{subtitle}</p>
+      <p class="desc" data-reveal>{desc}</p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-card" data-reveal>
+        <ul class="bullets">
+          {bullets.map((b) => (
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              {b}
+            </li>
+          ))}
+        </ul>
+
+        <a href={ctaHref} class="cta">{cta}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .industry-hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: calc(var(--space-hero) * 0.75) var(--space-xl);
+    background: var(--dot-dark);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dot-dark) 55%, transparent) 0%,
+      color-mix(in srgb, var(--dot-dark) 80%, transparent) 65%,
+      var(--dot-dark) 100%
+    );
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+  }
+
+  .hero-right {
+    margin-top: var(--space-lg);
+  }
+  .hero-right-card {
+    background: var(--dot-dark);
+    border: 1px solid var(--dot-micelio);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--dot-micelio) 25%, transparent),
+      inset 0 0 24px color-mix(in srgb, var(--dot-micelio) 8%, transparent);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--dot-micelio);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+
+  .mask {
+    display: block;
+    overflow: hidden;
+    margin-bottom: -0.1em;
+  }
+  .mask-inner {
+    display: block;
+    padding-bottom: 0.15em;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    transform: translateY(100%);
+    animation: industry-hero-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+  @keyframes industry-hero-reveal {
+    to {
+      transform: translateY(0%);
+    }
+  }
+
+  .subtitle {
+    margin-top: var(--space-sm);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--dot-micelio);
+  }
+  .desc {
+    margin-top: var(--space-sm);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 52ch;
+  }
+
+  .bullets {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+  }
+  .bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: left;
+  }
+  .bullets svg {
+    flex-shrink: 0;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.1rem;
+    color: var(--dot-micelio);
+  }
+
+  .cta {
+    display: inline-flex;
+    margin-top: var(--space-lg);
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 1rem 2.25rem;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .cta:hover {
+    background: color-mix(in srgb, var(--dot-micelio) 85%, var(--dot-light) 15%);
+    transform: scale(1.03);
+  }
+
+  @media (min-width: 700px) {
+    .bullets {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Desktop: texto principal a la izquierda, checklist + CTA a la derecha —
+     en vez de todo apilado en una sola columna angosta. */
+  @media (min-width: 900px) {
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+    .hero-right {
+      margin-top: 0;
+    }
+    .bullets {
+      grid-template-columns: 1fr;
+    }
+    .desc {
+      max-width: none;
+    }
+  }
+</style>

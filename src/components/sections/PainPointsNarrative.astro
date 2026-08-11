@@ -1,0 +1,676 @@
+---
+// src/components/sections/PainPointsNarrative.astro
+// Componente narrativo completo: manifiesto inicial con efecto typewriter (GSAP TextPlugin)
+// seguido de un scrollytelling pineado de puntos de dolor (estilo Serve Robotics), cerrando
+// con el isotipo "dot" (3 esferas → D-O-T, GSAP MorphSVGPlugin) — toda la secuencia vive en UN
+// timeline con scrub (1:1 con el scroll, sin autoplay), pineado con ScrollTrigger. Solo se ve
+// un bloque a la vez, todos naciendo del mismo punto medio del stage.
+//
+// Modo claro: fondo Bruma Digital, texto principal en negro, acentos en Verde Raíz (destacados
+// de texto) y Salvia (fondo de badge) — a diferencia del resto del sitio (tema oscuro). El
+// cursor tipeado y el isotipo final van en negro.
+//
+// FASE 1 — manifiesto tipeado: `phrase1` (verde) → `phrase2` (negro), cada una reemplazando a
+// la anterior en el mismo lugar. La velocidad de tipeo es proporcional al largo de cada frase
+// (~35ms/carácter) y las pausas entre frases son mayores que entre letras, para que se sienta
+// como una lectura pausada, no un volcado de texto.
+//
+// Dentro de `phrase2`, si `phrase2Highlight` aparece tal cual como substring, esa frase se
+// tipea en verde micelio (no negro) inline junto al resto — y una vez leída completa, SOLO esa
+// frase resaltada "crece" (scale) hasta desaparecer, arrastrando al resto de la línea con ella;
+// después, el texto que viene después del highlight se tipea de cero en el mismo lugar. Da un
+// quiebre de ritmo a mitad de frase en vez de tipear todo `phrase2` de una sola pasada.
+//
+// FASE 2 — puntos de dolor: cada `item` de `items` entra desde abajo (y:50→0, opacity 0→1), se
+// lee, y sale hacia arriba (y:-50, 0) para dar paso al siguiente. La alineación horizontal
+// rota izquierda/centro/derecha cada 3 items para dar ritmo visual. El "badge" de cada card se
+// extrae automáticamente del `(...)` final de `item.desc` (ej. "...margen. (Compras × ERP)" →
+// título "...margen." + badge "Compras × ERP"); si no hay paréntesis, no se renderiza badge.
+//
+// FASE 2.5 — `phrase3` (destacada, en verde) reaparece en el mismo lugar del manifiesto,
+// después del último punto de dolor y antes del cierre.
+//
+// FASE 3 — cierre: `phrase3` se retira, el isotipo "dot" (negro) nace del mismo punto medio
+// morpheando desde 3 esferas a las letras D-O-T, y un iris negro brota exactamente del hueco
+// de la "O" y crece hasta tragarse toda la pantalla (nunca aparece negro en otro punto).
+//
+// FASE 4 (opcional, vía `closingEyebrow`/`closingTitle`) — con la pantalla ya en negro, se
+// desvanece dentro la card completa de DataFlowCard (circuito SVG + orbes bioluminiscentes en
+// loop, card con borde/sombra propios), sin su ScrollTrigger — ya no hace falta, porque esta
+// secuencia ya está pineada. Una vez visible se queda quieta: no hay más pasos después, así
+// que el resto del tramo de scroll pineado es simplemente una pausa antes de soltar el pin.
+interface Item {
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  phrase1: string;
+  phrase2: string;
+  /** Frase exacta dentro de `phrase2` que se tipea en verde y luego "crece" hasta desaparecer. */
+  phrase2Highlight?: string;
+  phrase3: string;
+  items: Item[];
+  closingEyebrow?: string;
+  closingTitle?: string;
+}
+
+const { phrase1, phrase2, phrase2Highlight, phrase3, items, closingEyebrow, closingTitle } = Astro.props;
+const hasClosing = Boolean(closingEyebrow && closingTitle);
+
+// Circuito de la card de cierre — idéntico al de DataFlowCard.astro (mismas rutas, mismo
+// generador de esquinas redondeadas): esta card reproduce esa pieza completa (líneas +
+// orbes en loop), solo que vive dentro de esta secuencia pineada en vez de tener su propio
+// ScrollTrigger con pin — por eso no se reutiliza el componente tal cual, se porta el markup.
+const DATAFLOW_VB_W = 1200;
+const DATAFLOW_VB_H = 600;
+
+function roundedOrthogonalPath(points: number[][], radius: number) {
+  let d = `M ${points[0][0]} ${points[0][1]}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const [x0, y0] = points[i - 1];
+    const [x1, y1] = points[i];
+    const [x2, y2] = points[i + 1];
+    const d1x = x1 - x0;
+    const d1y = y1 - y0;
+    const len1 = Math.hypot(d1x, d1y);
+    const d2x = x2 - x1;
+    const d2y = y2 - y1;
+    const len2 = Math.hypot(d2x, d2y);
+    const r = Math.min(radius, len1 / 2, len2 / 2);
+    const beforeX = x1 - (d1x / len1) * r;
+    const beforeY = y1 - (d1y / len1) * r;
+    const afterX = x1 + (d2x / len2) * r;
+    const afterY = y1 + (d2y / len2) * r;
+    d += ` L ${beforeX} ${beforeY} Q ${x1} ${y1} ${afterX} ${afterY}`;
+  }
+  const [lastX, lastY] = points[points.length - 1];
+  d += ` L ${lastX} ${lastY}`;
+  return d;
+}
+
+const DATAFLOW_ROUTES = [
+  [[-20, 90], [260, 90], [260, 26], [640, 26], [640, 150], [1220, 150]],
+  [[-20, 480], [220, 480], [220, 562], [560, 562], [560, 400], [940, 400], [940, 480], [1220, 480]],
+  [[180, 620], [180, 320], [460, 320], [460, 196], [1220, 196]],
+  [[860, -20], [860, 240], [1120, 240], [1120, 340], [1220, 340]],
+  [[-20, 280], [380, 280], [380, 70], [760, 70], [760, 520], [1220, 520]],
+  [[1220, 60], [980, 60], [980, 260], [620, 260], [620, 620]],
+];
+
+const DATAFLOW_PATHS = DATAFLOW_ROUTES.map((points, i) => ({
+  index: i,
+  d: roundedOrthogonalPath(points, 40),
+  duration: (5 + (i % 4) * 1.3).toFixed(1),
+  delay: (i * 0.6).toFixed(2),
+}));
+
+const ALIGNS = ['left', 'center', 'right'] as const;
+
+const parsedItems = items.map((item, i) => {
+  const match = item.desc.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  const title = match ? match[1].trim() : item.desc.trim();
+  const badge = match ? match[2].trim() : '';
+  return {
+    tag: `${String(i + 1).padStart(2, '0')} · ${item.title.toUpperCase()}`,
+    title,
+    badge,
+    align: ALIGNS[i % ALIGNS.length],
+  };
+});
+---
+
+<div class="pain-narrative-wrap" data-pain-wrap>
+<section class="pain-narrative" data-pain-narrative>
+  <div class="pain-narrative__stage">
+    <div class="pain-narrative__layer pain-narrative__layer--center">
+      <p
+        class="pain-narrative__typewriter"
+        data-pain-typewriter
+        data-phrase-one={phrase1}
+        data-phrase-two={phrase2}
+        data-phrase-two-highlight={phrase2Highlight}
+        data-phrase-three={phrase3}
+      ><span data-pain-type-main>{phrase1}</span><span data-pain-type-highlight class="pain-narrative__typewriter-highlight"></span></p>
+    </div>
+
+    {parsedItems.map((item) => (
+      <div class={`pain-narrative__layer pain-narrative__layer--${item.align}`} data-pain-item>
+        <div class="pain-item">
+          <p class="pain-item__tag">{item.tag}</p>
+          <h3 class="pain-item__title">{item.title}</h3>
+          {item.badge && <span class="pain-item__badge">{item.badge}</span>}
+        </div>
+      </div>
+    ))}
+
+    <div class="pain-narrative__layer pain-narrative__layer--center">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" class="pain-narrative__svg" data-pain-svg>
+        <defs>
+          <g id="pain-narrative-letters">
+            <path id="pain-narrative-letter-d" d="M353.87,1001.1c39.42,0,77.46-6.09,114.12-18.12,36.24-12.03,69.58-30.57,100.7-55.19,31.12-24.62,55.19-57.54,73.31-99.32,18.12-41.77,27.39-89.08,27.39-142.47V78.9h-121.17v381.49l-7.47-9.68c-4.7-5.53-13-13-25.04-22.27s-25.04-18.54-40.39-27.39c-15.35-8.85-34.86-16.18-58.93-22.27-23.65-6.09-49.24-9.27-75.66-9.27h-2.35c-97.93.97-172.21,30.57-222.7,89.63-51.04,58.93-76.08,134.59-76.08,226.43s29.19,168.48,87.28,227.4c57.96,58.51,134.17,87.7,227.82,87.7l-.97.41h.14ZM214.72,539.38c36.24-39.42,82.58-59.34,139.29-59.34s104.02,19.92,141.5,59.34c38.04,39.42,57.13,88.11,57.13,146.21s-19.09,106.79-57.13,146.62c-38.04,39.84-85.35,59.89-141.5,59.89s-103.05-19.92-139.29-59.34c-36.24-39.42-54.36-88.66-54.36-146.62s18.12-107.2,54.36-146.62v-.14Z" />
+            <path id="pain-narrative-letter-o" d="M1390.32,684.62c0-86.31-31.12-160.59-92.81-222.28-61.69-61.69-135.97-92.81-222.28-92.81s-160.59,31.12-222.28,92.81c-61.69,61.69-92.81,135.97-92.81,222.28s31.12,160.59,92.81,222.28c61.69,61.69,135.97,92.81,222.28,92.81s160.59-31.12,222.28-92.81c61.69-61.69,92.81-135.97,92.81-222.28ZM1212.02,829.86c-34.86,39.01-80.23,57.96-136.94,57.96s-102.5-19.5-138.32-57.96c-35.69-39.01-53.39-87.28-53.39-145.24s17.57-106.79,53.39-145.24c35.69-39.01,81.75-57.96,138.32-57.96s102.08,19.5,136.94,57.96c34.86,38.45,52.01,87.28,52.01,145.24s-17.15,106.79-52.01,145.24Z" />
+            <path id="pain-narrative-letter-t" d="M1843.19,877.16c-57.54,0-104.02-17.57-140.12-52.84-35.69-35.27-53.81-81.2-53.81-138.74V140.18h-121.17v242.2h-116.05v103.05h116.05v200.01c0,86.31,30.57,158.66,91.85,216.34,61.28,57.68,135.97,86.73,222.7,86.73v-111.35h.55Z M1793.12,347.25c-48.27,0-87.28,39.01-87.28,87.28s39.01,87.28,87.28,87.28,87.28-39.01,87.28-87.28-39.01-87.28-87.28-87.28Z" />
+          </g>
+        </defs>
+
+        <!-- Estado inicial: 3 puntos alineados en fila (misma cy) antes de abrirse hacia cada letra -->
+        <circle id="pain-narrative-dot-1" cx="370" cy="540" r="150" />
+        <circle id="pain-narrative-dot-2" cx="1080" cy="540" r="150" />
+        <circle id="pain-narrative-dot-3" cx="1650" cy="540" r="150" />
+      </svg>
+    </div>
+
+    <!-- Círculo negro que nace exactamente en el centro del hueco de la "O" y crece hasta
+         cubrir toda la pantalla — la oscuridad final debe originarse ahí, nunca en otro punto. -->
+    <div class="pain-narrative__iris" data-pain-iris aria-hidden="true"></div>
+
+    {hasClosing && (
+      <div class="pain-narrative__layer pain-narrative__layer--center">
+        <div class="pain-narrative__closing" data-pain-closing>
+          <svg
+            class="pain-narrative__closing-svg"
+            viewBox={`0 0 ${DATAFLOW_VB_W} ${DATAFLOW_VB_H}`}
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+          >
+            {DATAFLOW_PATHS.map((p) => (
+              <path id={`pain-closing-path-${p.index}`} class="pain-narrative__closing-line" d={p.d} fill="none" />
+            ))}
+            {DATAFLOW_PATHS.map((p) => (
+              <>
+                <circle class="pain-narrative__closing-orb pain-narrative__closing-orb--trail-2" r="2.2" fill="var(--dot-micelio)">
+                  <animateMotion dur={`${p.duration}s`} begin={`${(Number(p.delay) + 0.18).toFixed(2)}s`} repeatCount="indefinite" rotate="auto">
+                    <mpath href={`#pain-closing-path-${p.index}`} />
+                  </animateMotion>
+                </circle>
+                <circle class="pain-narrative__closing-orb pain-narrative__closing-orb--trail-1" r="3.2" fill="var(--dot-micelio)">
+                  <animateMotion dur={`${p.duration}s`} begin={`${(Number(p.delay) + 0.09).toFixed(2)}s`} repeatCount="indefinite" rotate="auto">
+                    <mpath href={`#pain-closing-path-${p.index}`} />
+                  </animateMotion>
+                </circle>
+                <circle class="pain-narrative__closing-orb" r="4.5" fill="var(--dot-micelio)">
+                  <animateMotion dur={`${p.duration}s`} begin={`${p.delay}s`} repeatCount="indefinite" rotate="auto">
+                    <mpath href={`#pain-closing-path-${p.index}`} />
+                  </animateMotion>
+                </circle>
+              </>
+            ))}
+          </svg>
+
+          <div class="pain-narrative__closing-content">
+            <p class="pain-narrative__closing-eyebrow">
+              <span class="dot"></span>
+              {closingEyebrow}
+            </p>
+            <h3 class="pain-narrative__closing-title">{closingTitle}</h3>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { TextPlugin } from 'gsap/TextPlugin';
+  import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+
+  gsap.registerPlugin(ScrollTrigger, TextPlugin, MorphSVGPlugin);
+
+  const MS_PER_CHAR = 0.035; // ~35ms por carácter, igual escala que las pausas entre frases
+
+  function initPainPointsNarrative() {
+    const section = document.querySelector<HTMLElement>('[data-pain-narrative]');
+    if (!section) return;
+
+    const typeEl = section.querySelector<HTMLElement>('[data-pain-typewriter]');
+    const typeLayer = typeEl?.closest<HTMLElement>('.pain-narrative__layer');
+    const mainEl = typeEl?.querySelector<HTMLElement>('[data-pain-type-main]');
+    const highlightEl = typeEl?.querySelector<HTMLElement>('[data-pain-type-highlight]');
+    const itemLayers = Array.from(section.querySelectorAll<HTMLElement>('[data-pain-item]'));
+    const svgEl = section.querySelector<SVGSVGElement>('[data-pain-svg]');
+    const svgLayer = svgEl?.closest<HTMLElement>('.pain-narrative__layer');
+    const stageEl = section.querySelector<HTMLElement>('.pain-narrative__stage');
+    const irisEl = section.querySelector<HTMLElement>('[data-pain-iris]');
+    const closingEl = section.querySelector<HTMLElement>('[data-pain-closing]');
+    if (
+      !typeEl ||
+      !typeLayer ||
+      !mainEl ||
+      !highlightEl ||
+      !itemLayers.length ||
+      !svgEl ||
+      !svgLayer ||
+      !stageEl ||
+      !irisEl
+    )
+      return;
+
+    // Convierte los <circle> nativos a <path> para el morphing — necesario para que el morph
+    // sea visible sobre el elemento que el usuario ve, no sobre una copia oculta.
+    MorphSVGPlugin.convertToPath('[data-pain-svg] circle');
+
+    // Centro real de la "O" — medido con getBBox() sobre el path de referencia (no adivinado
+    // a mano desde el `d`), así el zoom de cierre y el iris quedan perfectamente centrados en
+    // el hueco. getBoundingClientRect() se toma en reposo (escala 1): como el zoom del SVG usa
+    // ese mismo punto como transform-origin, el punto no se mueve en pantalla al escalar, así
+    // que medirlo una sola vez acá ya es válido durante toda la animación.
+    const letterO = svgEl.querySelector<SVGGraphicsElement>('#pain-narrative-letter-o');
+    let oOriginX = 50;
+    let oOriginY = 50;
+    if (letterO) {
+      const box = letterO.getBBox();
+      oOriginX = ((box.x + box.width / 2) / 1920) * 100;
+      oOriginY = ((box.y + box.height / 2) / 1080) * 100;
+    }
+    const oTransformOrigin = `${oOriginX}% ${oOriginY}%`;
+
+    const svgRect = svgEl.getBoundingClientRect();
+    const stageRect = stageEl.getBoundingClientRect();
+    const oScreenX = svgRect.left + (oOriginX / 100) * svgRect.width;
+    const oScreenY = svgRect.top + (oOriginY / 100) * svgRect.height;
+    const irisLeft = oScreenX - stageRect.left;
+    const irisTop = oScreenY - stageRect.top;
+    // Diámetro final: el doble de la distancia al rincón de pantalla más lejano desde ese
+    // punto, con margen — garantiza que el círculo termine cubriendo toda la ventana sin
+    // dejar bordes visibles sin importar en qué esquina caiga el centro de la "O".
+    const maxDist = Math.max(
+      Math.hypot(oScreenX, oScreenY),
+      Math.hypot(window.innerWidth - oScreenX, oScreenY),
+      Math.hypot(oScreenX, window.innerHeight - oScreenY),
+      Math.hypot(window.innerWidth - oScreenX, window.innerHeight - oScreenY)
+    );
+    const irisFinalSize = maxDist * 2.2;
+
+    gsap.set(irisEl, { left: irisLeft, top: irisTop, width: 4, height: 4 });
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced) {
+      // Estado final estático: si hay closing card, esa es la conclusión real de la
+      // secuencia y es lo único que debería quedar visible; si no, el isotipo formado.
+      gsap.set('#pain-narrative-dot-1', { morphSVG: '#pain-narrative-letter-d' });
+      gsap.set('#pain-narrative-dot-2', { morphSVG: '#pain-narrative-letter-o' });
+      gsap.set('#pain-narrative-dot-3', { morphSVG: '#pain-narrative-letter-t' });
+      gsap.set(typeLayer, { autoAlpha: 0 });
+      gsap.set(itemLayers, { autoAlpha: 0 });
+      if (closingEl) {
+        gsap.set(svgLayer, { autoAlpha: 0 });
+        gsap.set(irisEl, { autoAlpha: 1, width: '250vmax', height: '250vmax' });
+        gsap.set(closingEl, { autoAlpha: 1 });
+      } else {
+        gsap.set(svgLayer, { autoAlpha: 1 });
+        gsap.set(irisEl, { autoAlpha: 0 });
+      }
+      return;
+    }
+
+    const phrase1 = typeEl.dataset.phraseOne ?? '';
+    const phrase2 = typeEl.dataset.phraseTwo ?? '';
+    const phrase2Highlight = typeEl.dataset.phraseTwoHighlight ?? '';
+    const phrase3 = typeEl.dataset.phraseThree ?? '';
+    const hlIndex = phrase2Highlight ? phrase2.indexOf(phrase2Highlight) : -1;
+    const phrase2Prefix = hlIndex >= 0 ? phrase2.slice(0, hlIndex) : phrase2;
+    const phrase2Suffix = hlIndex >= 0 ? phrase2.slice(hlIndex + phrase2Highlight.length) : '';
+    mainEl.textContent = '';
+    highlightEl.textContent = '';
+
+    gsap.set(itemLayers, { autoAlpha: 0, y: 50 });
+    gsap.set(svgLayer, { autoAlpha: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=950%',
+        pin: true,
+        scrub: 0.5,
+      },
+    });
+
+    // Fase 1: manifiesto tipeado — `phrase1` y `phrase2` se reemplazan en el mismo lugar.
+    tl.set(mainEl, { autoAlpha: 1, color: 'var(--dot-moss)' }, 0)
+      .to(mainEl, { text: phrase1, duration: phrase1.length * MS_PER_CHAR, ease: 'none' })
+      .to(mainEl, { autoAlpha: 0, duration: 0.4, ease: 'none' }, '+=1.0')
+      .set(mainEl, { text: '', autoAlpha: 1, color: 'var(--dot-dark)' })
+      // `phrase2`, parte A: prefijo (negro) + frase resaltada (verde micelio) tipeados en
+      // línea, uno justo después del otro, para que se lean como una sola oración.
+      .to(mainEl, { text: phrase2Prefix, duration: phrase2Prefix.length * MS_PER_CHAR, ease: 'none' })
+      .to(highlightEl, { text: phrase2Highlight, duration: phrase2Highlight.length * MS_PER_CHAR, ease: 'none' })
+      // Pausa para leer la oración completa. Luego SOLO la frase resaltada "crece" hasta
+      // desaparecer (mismo lenguaje visual que el zoom del isotipo más adelante), arrastrando
+      // al resto de la línea con ella en el mismo momento.
+      .to(highlightEl, { scale: 14, autoAlpha: 0, duration: 1.2, ease: 'power2.in' }, '+=0.8')
+      .to(mainEl, { autoAlpha: 0, duration: 0.6, ease: 'none' }, '<')
+      .set(highlightEl, { scale: 1, text: '' })
+      .set(mainEl, { text: '', autoAlpha: 1 })
+      // `phrase2`, parte B: el resto de la oración, tipeada de cero en el mismo lugar.
+      .to(mainEl, { text: phrase2Suffix, duration: phrase2Suffix.length * MS_PER_CHAR, ease: 'none' })
+      // El manifiesto se retira hacia arriba para dar paso a la secuencia de dolor.
+      .to(typeLayer, { y: -50, autoAlpha: 0, duration: 0.5, ease: 'none' }, '+=1.5');
+
+    // Fase 2: puntos de dolor, uno a la vez — entra desde abajo, se lee, sale hacia arriba.
+    itemLayers.forEach((layer) => {
+      tl.to(layer, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' }, '+=0.3')
+        .to(layer, { y: -50, autoAlpha: 0, duration: 0.5, ease: 'power2.in' }, '+=1.2');
+    });
+
+    // Fase 2.5: `phrase3` reaparece en el mismo lugar del manifiesto, después del último
+    // punto de dolor (06 · Soporte) y antes del cierre. El texto se limpia MIENTRAS la capa
+    // sigue invisible (autoAlpha:0 de la fase anterior) — si se limpiara después de hacer
+    // fade-in, el `phrase2` que quedó en el DOM alcanzaría a verse un instante antes de vaciarse.
+    tl.set(mainEl, { text: '', autoAlpha: 1, color: 'var(--dot-moss)' }, '+=0.3')
+      .set(typeLayer, { y: 50 })
+      .to(typeLayer, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' })
+      .to(mainEl, { text: phrase3, duration: phrase3.length * MS_PER_CHAR, ease: 'none' })
+      .to(typeLayer, { y: -50, autoAlpha: 0, duration: 0.5, ease: 'none' }, '+=1.0');
+
+    // Fase 3: cierre — el isotipo nace del mismo centro, morpheando desde 3 esferas a D-O-T.
+    tl.set(svgLayer, { autoAlpha: 1 }, '+=0.3')
+      .to('#pain-narrative-dot-1', { morphSVG: '#pain-narrative-letter-d', duration: 1.2, ease: 'none' })
+      .to('#pain-narrative-dot-2', { morphSVG: '#pain-narrative-letter-o', duration: 1.2, ease: 'none' }, '<0.2')
+      .to('#pain-narrative-dot-3', { morphSVG: '#pain-narrative-letter-t', duration: 1.2, ease: 'none' }, '<0.4');
+
+    // Fase 4: zoom hacia el hueco de la "O" + iris negro que nace justo en ese punto y crece
+    // hasta cubrir toda la pantalla — la oscuridad SIEMPRE se origina ahí, nunca en otro lado
+    // ni de golpe en toda la sección (por eso es un círculo que crece, no un cambio de color
+    // de fondo). Arranca un poco después que el zoom, para que se sienta como algo que brota
+    // desde dentro del isotipo a medida que la cámara se acerca, no como algo simultáneo.
+    tl.to(svgEl, { scale: 60, transformOrigin: oTransformOrigin, duration: 2, ease: 'power2.in' }, '+=0.5')
+      .set(irisEl, { autoAlpha: 1 }, '<0.2')
+      .to(irisEl, { width: irisFinalSize, height: irisFinalSize, duration: 1.8, ease: 'power2.in' }, '<');
+
+    // Fase 4: con la pantalla ya en negro, aparece la card de cierre (mismo texto que
+    // DataFlowCard) y se queda ahí — es el último paso, no hay nada más que animar después.
+    if (closingEl) {
+      tl.to(closingEl, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, '+=0.2');
+    }
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => tl.scrollTrigger?.kill(),
+      { once: true }
+    );
+  }
+
+  // Wipe de entrada del wrapper — separado del timeline pineado de arriba a propósito: es
+  // solo un efecto de paint (clip-path), no toca la geometría de nada dentro, así que puede
+  // vivir en su propio ScrollTrigger sin arriesgar las mediciones del isotipo/iris.
+  function initPainNarrativeReveal() {
+    const wrapEl = document.querySelector<HTMLElement>('[data-pain-wrap]');
+    if (!wrapEl) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set(wrapEl, { clipPath: 'inset(0% 0 0 0 round 2.5rem 2.5rem 0 0)' });
+      return;
+    }
+
+    const tween = gsap.fromTo(
+      wrapEl,
+      { clipPath: 'inset(100% 0 0 0 round 2.5rem 2.5rem 0 0)' },
+      {
+        clipPath: 'inset(0% 0 0 0 round 2.5rem 2.5rem 0 0)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: wrapEl,
+          start: 'top bottom',
+          end: 'top 15%',
+          scrub: true,
+        },
+      }
+    );
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => tween.scrollTrigger?.kill(),
+      { once: true }
+    );
+  }
+
+  document.addEventListener('astro:page-load', initPainPointsNarrative);
+  document.addEventListener('astro:page-load', initPainNarrativeReveal);
+</script>
+
+<style>
+  /* Envoltura que hace que esta sección clara se sienta como una card de esquinas superiores
+     redondeadas que "sube" y cubre el fondo oscuro del Home al hacer scroll. El wipe se hace
+     con clip-path (no con un transform/translate) a propósito: un transform en este wrapper
+     cambiaría el getBoundingClientRect() de sus hijos justo cuando el script mide el centro
+     de la "O" y posiciona el iris — clip-path solo afecta el pintado, nunca la geometría, así
+     que esas mediciones siguen siendo válidas sin importar en qué punto del wipe estén. */
+  .pain-narrative-wrap {
+    position: relative;
+    z-index: 2;
+    clip-path: inset(0% 0 0 0 round 2.5rem 2.5rem 0 0);
+  }
+
+  .pain-narrative {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dot-light);
+    overflow: hidden;
+  }
+
+  .pain-narrative__stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pain-narrative__iris {
+    position: absolute;
+    border-radius: 50%;
+    background: #121212;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pain-narrative__layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding-inline: var(--space-lg);
+  }
+
+  .pain-narrative__layer--left {
+    justify-content: flex-start;
+  }
+  .pain-narrative__layer--center {
+    justify-content: center;
+  }
+  .pain-narrative__layer--right {
+    justify-content: flex-end;
+  }
+
+  .pain-narrative__typewriter {
+    max-width: 56rem;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.96rem, 5.04vw, 3.36rem);
+    line-height: 1.35;
+  }
+
+  /* El texto "normal" del manifiesto vive en este span — color y opacidad los controla GSAP
+     por fase (verde para phrase1/phrase3, negro para phrase2), arranca invisible como el resto
+     de las piezas de la secuencia (recién se revela al llegar su turno en el timeline). */
+  .pain-narrative__typewriter [data-pain-type-main] {
+    color: var(--dot-moss);
+    opacity: 0;
+  }
+
+  /* Frase resaltada dentro de `phrase2` — siempre verde micelio, tipeada inline junto al
+     resto y luego escalada hasta desaparecer (ver Fase 1 en el script). */
+  .pain-narrative__typewriter-highlight {
+    display: inline-block;
+    color: var(--dot-micelio);
+    transform-origin: center center;
+  }
+
+  .pain-narrative__typewriter::after {
+    content: '|';
+    color: var(--dot-dark);
+    animation: pain-cursor-blink 0.9s step-end infinite;
+  }
+
+  @keyframes pain-cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .pain-narrative__svg {
+    width: min(42vw, 500px);
+    height: auto;
+    /* Fallback aproximado antes de que corra el JS — el valor real (medido con getBBox sobre
+       el path de la "O") se aplica en el propio tween de zoom del cierre, más preciso que
+       este estimado a mano. */
+    transform-origin: 60.8% 63.4%;
+  }
+
+  .pain-narrative__svg circle,
+  .pain-narrative__svg path {
+    fill: var(--dot-dark);
+    fill-rule: evenodd;
+  }
+
+  .pain-item {
+    max-width: 48rem;
+  }
+
+  .pain-narrative__layer--left .pain-item {
+    text-align: left;
+  }
+  .pain-narrative__layer--center .pain-item {
+    text-align: center;
+  }
+  .pain-narrative__layer--right .pain-item {
+    text-align: right;
+  }
+
+  .pain-item__tag {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--dot-dark);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .pain-item__title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2.1rem, 4.5vw, 3.5rem);
+    line-height: 1.25;
+    color: var(--dot-dark);
+    margin: 0;
+  }
+
+  .pain-item__badge {
+    display: inline-block;
+    margin-top: var(--space-sm);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--dot-sage) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dot-moss) 30%, transparent);
+    color: var(--dot-dark);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  /* Card de cierre — port completo de DataFlowCard.astro (circuito + orbes en loop + card
+     con borde/sombra propios), sin su ScrollTrigger con pin: acá vive dentro de la secuencia
+     ya pineada de PainPointsNarrative y se queda quieta una vez revelada, sin pin propio. */
+  .pain-narrative__closing {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 60rem;
+    min-height: 24rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    background: #121212;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 15%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+  }
+
+  .pain-narrative__closing-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .pain-narrative__closing-line {
+    stroke: var(--dot-light);
+    stroke-opacity: 0.2;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .pain-narrative__closing-orb {
+    filter: drop-shadow(0 0 6px var(--dot-micelio));
+  }
+  .pain-narrative__closing-orb--trail-1 {
+    opacity: 0.5;
+  }
+  .pain-narrative__closing-orb--trail-2 {
+    opacity: 0.22;
+  }
+
+  .pain-narrative__closing-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 42rem;
+  }
+
+  .pain-narrative__closing-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--dot-micelio);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 var(--space-sm);
+  }
+  .pain-narrative__closing-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+
+  .pain-narrative__closing-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--dot-light);
+    margin: 0;
+  }
+
+  @media (min-width: 900px) {
+    .pain-narrative__closing {
+      min-height: 28rem;
+    }
+  }
+</style>
