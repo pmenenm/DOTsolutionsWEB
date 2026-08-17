@@ -30,12 +30,18 @@ const { eyebrow, title, body, points, image } = Astro.props;
 <style>
   .panel {
     background: var(--dot-gray);
-    border: 1px solid var(--border);
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 35%, transparent);
     border-radius: var(--radius-lg);
     padding: var(--space-md);
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
+    box-shadow: 0 0 32px color-mix(in srgb, var(--dot-micelio) 12%, transparent);
+    transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  }
+  .panel:hover {
+    border-color: var(--dot-micelio);
+    box-shadow: 0 0 44px color-mix(in srgb, var(--dot-micelio) 22%, transparent);
   }
 
   .panel-image {
@@ -43,6 +49,7 @@ const { eyebrow, title, body, points, image } = Astro.props;
     border-radius: var(--radius-md);
     aspect-ratio: 16/9;
     object-fit: cover;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 25%, transparent);
   }
 
   .eyebrow {

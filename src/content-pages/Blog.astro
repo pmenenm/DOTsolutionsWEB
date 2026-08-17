@@ -1,16 +1,16 @@
 ---
 // src/content-pages/Blog.astro
-// Listado de /blog — hero editorial con mask-reveal y una "leyenda" de
-// categorías (cada una con su color de marca), el post más reciente
-// destacado como portada de edición, y el resto en grilla. Sin PageHero
-// genérico a propósito: esta página se apoya en el mismo sistema visual
-// pero con una composición propia, más de revista que de landing.
+// Listado de /blog — hero con fondo en video (loop) y título gigante a 2 líneas, seguido
+// de un stack de tarjetas tipo archivador (position:sticky, CSS puro): cada post se fija
+// en pantalla un momento y el siguiente se desliza por encima, sin necesitar JS para el
+// efecto de apilado. Sin PageHero genérico a propósito: esta página se apoya en el mismo
+// sistema visual pero con una composición propia, más de revista que de landing.
 import Layout from '../layouts/Layout.astro';
-import BlogCard from '../components/sections/BlogCard.astro';
 import CTASection from '../components/sections/CTASection.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
-import { categoryColor } from '../utils/blog';
+import { categoryColor, formatBlogDate } from '../utils/blog';
+import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -21,52 +21,67 @@ const t = useTranslations(lang);
 const b = t.blog;
 
 const posts = [...b.posts].sort((a, b) => (a.date < b.date ? 1 : -1));
-const [featured, ...rest] = posts;
 const categories = [...new Set(posts.map((p) => p.category))];
 const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 ---
 
 <Layout title={`${b.metaTitle} — DOT Solutions`} description={b.metaDescription} lang={lang} path="/blog">
   <section class="blog-hero">
-    <div class="grid-texture" aria-hidden="true"></div>
-    <div class="container blog-hero-inner">
-      <p class="eyebrow" data-reveal>
-        <span class="dot"></span>
-        {b.eyebrow}
-      </p>
-      <h1 class="mask"><span class="mask-inner">{b.title}</span></h1>
-      <p class="subtitle" data-reveal>{b.subtitle}</p>
+    <video
+      class="blog-hero-video"
+      src={withBase('/video1.mp4')}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      aria-hidden="true"
+    />
+    <div class="blog-hero-overlay" aria-hidden="true"></div>
 
-      <ul class="category-legend" data-reveal>
-        {categories.map((c) => (
-          <li style={`--legend-color: ${categoryColor(c)}`}>
-            <span class="legend-dot"></span>
-            {c}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul class="category-legend" data-reveal>
+      {categories.map((c) => (
+        <li style={`--legend-color: ${categoryColor(c)}`}>
+          <span class="legend-dot"></span>
+          {c}
+        </li>
+      ))}
+    </ul>
   </section>
 
-  <section class="section">
+  <!-- Stack de tarjetas tipo archivador: todas fijas al mismo `top` (position:sticky, CSS
+       puro, sin JS) con z-index creciente, así cada card nueva sube y tapa por completo a
+       la anterior en vez de asomar un borde de las de más atrás. -->
+  <section class="news-stack-section">
     <div class="container">
-      <div class="blog-grid">
-        {featured && (
-          <BlogCard
-            post={featured}
-            href={`${getRelativeLocaleUrl(lang, 'blog')}/${featured.slug}`}
-            readMore={b.readMore}
-            lang={lang}
-            featured
-          />
-        )}
-        {rest.map((post) => (
-          <BlogCard
-            post={post}
-            href={`${getRelativeLocaleUrl(lang, 'blog')}/${post.slug}`}
-            readMore={b.readMore}
-            lang={lang}
-          />
+      <h2 class="news-stack-title" data-reveal>{b.stackTitle}</h2>
+      <p class="news-stack-subtitle" data-reveal>{b.subtitle}</p>
+
+      <div class="news-stack">
+        {posts.map((post, i) => (
+          <a
+            href={`${getRelativeLocaleUrl(lang, 'blog')}${post.slug}`}
+            class="news-card"
+            data-reveal
+            style={`z-index: ${i + 1}; --card-accent: ${categoryColor(post.category)};`}
+          >
+            <div class="news-card-media">
+              <img src={withBase(`/blog/${post.slug}.jpg`)} alt="" loading="lazy" />
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-top">
+                <p class="news-card-date">{formatBlogDate(post.date, lang)}</p>
+                <h3>{post.title}</h3>
+              </div>
+              <div class="news-card-bottom">
+                <p class="news-card-excerpt">{post.excerpt}</p>
+                <span class="news-card-cta">
+                  {b.readMore}
+                  <span class="arrow" aria-hidden="true">→</span>
+                </span>
+              </div>
+            </div>
+          </a>
         ))}
       </div>
     </div>
@@ -83,84 +98,53 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 <style>
   .blog-hero {
     position: relative;
+    min-height: 34rem;
+    display: flex;
+    align-items: center;
     background: var(--dot-dark);
     padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
     overflow: hidden;
   }
-  .grid-texture {
+  .blog-hero-video {
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 64px 64px;
-    -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
-    mask-image: linear-gradient(180deg, transparent, #000 15%, #000 70%, transparent);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
   }
-  .blog-hero-inner {
-    position: relative;
+  .blog-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    /* El último tramo llega a opacidad total (var(--dot-dark) sólido) ANTES del borde
+       inferior del video —no al 78% como antes—, así el fondo queda completamente cubierto
+       por el mismo color plano de la sección siguiente antes de que el video corte, sin
+       salto visible en el límite entre ambas. */
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dot-dark) 55%, transparent) 0%,
+      color-mix(in srgb, var(--dot-dark) 32%, transparent) 40%,
+      var(--dot-dark) 85%,
+      var(--dot-dark) 100%
+    );
   }
-
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--accent-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: var(--space-sm);
-  }
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--dot-micelio);
-  }
-
-  .mask {
-    display: block;
-    overflow: hidden;
-    margin-bottom: -0.1em;
-  }
-  .mask-inner {
-    display: block;
-    padding-bottom: 0.1em;
-    font-family: var(--font-heading);
-    font-weight: 500;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 1.12;
-    letter-spacing: -0.03em;
-    color: var(--text-primary);
-    max-width: 16ch;
-    transform: translateY(100%);
-    animation: blog-hero-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-  }
-  @keyframes blog-hero-reveal {
-    to {
-      transform: translateY(0%);
-    }
-  }
-
-  .subtitle {
-    margin-top: var(--space-sm);
-    font-size: var(--text-lg);
-    font-weight: 300;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    max-width: 48ch;
-  }
-
-  /* Leyenda de categorías — cada punto usa el mismo color que su badge en
-     las cards de abajo, para que se lea de inmediato como un sistema. */
+  /* Leyenda de categorías — abajo a la derecha del hero, no junto al título.
+     Cada punto usa el mismo color que su badge en las cards de abajo, para
+     que se lea de inmediato como un sistema. */
   .category-legend {
+    position: absolute;
+    z-index: 1;
+    right: var(--container-pad);
+    bottom: var(--space-lg);
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     gap: var(--space-md);
     list-style: none;
     padding: 0;
-    margin-top: var(--space-lg);
+    margin: 0;
+    max-width: 60%;
   }
   .category-legend li {
     display: inline-flex;
@@ -178,18 +162,154 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     box-shadow: 0 0 12px var(--legend-color);
   }
 
-  .section {
-    padding-block: var(--space-lg);
+  /* Stack de tarjetas tipo archivador — fondo oscuro, cards claras (colores invertidos a
+     propósito respecto al primer intento). El efecto de apilado es 100% CSS: TODAS las
+     cards comparten el mismo `top` (sticky) y solo el z-index crece por índice, así cada
+     card nueva sube y tapa por completo a la anterior en vez de asomar un borde de las de
+     más atrás — sin necesitar JS. */
+  .news-stack-section {
+    background: var(--dot-dark);
+    padding-block: var(--space-xl);
   }
-  .blog-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
+  .news-stack-title {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    color: var(--dot-light);
+    text-align: center;
+  }
+  .news-stack-subtitle {
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--dot-light) 75%, transparent);
+    text-align: center;
+    max-width: 48ch;
+    margin-inline: auto;
   }
 
-  @media (min-width: 700px) {
-    .blog-grid {
+  .news-stack {
+    max-width: 80rem;
+    margin-inline: auto;
+  }
+
+  .news-card {
+    position: sticky;
+    top: 6rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    text-decoration: none;
+    width: 100%;
+    min-height: 580px;
+    margin-bottom: 6rem;
+    border-radius: 2.5rem;
+    overflow: hidden;
+    background: var(--dot-light);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .news-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .news-card-media {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
+  }
+  .news-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .news-card:hover .news-card-media img {
+    transform: scale(1.05);
+  }
+
+  .news-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+    color: var(--dot-dark);
+  }
+
+  .news-card-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--dot-moss);
+    margin-bottom: 1rem;
+  }
+  .news-card-body h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.875rem, 3.2vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+  }
+
+  /* Bloque inferior — descripción y CTA en fila a md+ (`items-end` para que ambos queden
+     alineados contra el borde inferior de la card), apilados en mobile. */
+  .news-card-bottom {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: end;
+    gap: 1.5rem;
+    padding-top: 2rem;
+  }
+  .news-card-excerpt {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--dot-dark) 65%, transparent);
+  }
+
+  .news-card-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    background: color-mix(in srgb, var(--dot-dark) 6%, var(--dot-light) 94%);
+    border: 1px solid color-mix(in srgb, var(--dot-dark) 12%, transparent);
+    border-radius: 1rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--dot-dark);
+    transition: border-color var(--transition-fast);
+  }
+  .news-card:hover .news-card-cta {
+    border-color: var(--card-accent);
+  }
+  .news-card-cta .arrow {
+    color: var(--card-accent);
+    transition: transform var(--transition-fast);
+  }
+  .news-card:hover .news-card-cta .arrow {
+    transform: translateX(4px);
+  }
+
+  @media (min-width: 768px) {
+    .news-card-bottom {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .news-card {
+      grid-template-columns: repeat(2, 1fr);
+      min-height: 640px;
+    }
+    .news-card-media {
+      min-height: 640px;
+    }
+    .news-card-body {
+      padding: 3.5rem;
     }
   }
 </style>

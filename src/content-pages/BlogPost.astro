@@ -53,10 +53,17 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     </div>
 
     <div class="container post-body-wrap">
-      <div class="post-body" data-reveal>
-        {post.body.map((paragraph) => (
-          <p>{paragraph}</p>
-        ))}
+      <div class="post-body">
+        {post.body.map((block) => {
+          if (block.type === 'h2') return <h2 data-reveal>{block.text}</h2>;
+          if (block.type === 'list') return (
+            <ul class="post-list" data-reveal>
+              {block.items?.map((item) => <li>{item}</li>)}
+            </ul>
+          );
+          if (block.type === 'callout') return <div class="post-callout" data-reveal>{block.text}</div>;
+          return <p data-reveal>{block.text}</p>;
+        })}
       </div>
     </div>
   </article>
@@ -67,7 +74,7 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
         <h2 class="related-title">{b.relatedTitle}</h2>
         <div class="related-grid">
           {related.map((p) => (
-            <BlogCard post={p} href={`${blogHref}/${p.slug}`} readMore={b.readMore} lang={lang} />
+            <BlogCard post={p} href={`${blogHref}${p.slug}`} readMore={b.readMore} lang={lang} />
           ))}
         </div>
       </div>
@@ -171,8 +178,62 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     line-height: 1.75;
     color: var(--text-secondary);
   }
-  .post-body p + p {
-    margin-top: var(--space-sm);
+  .post-body p + p,
+  .post-body p + h2,
+  .post-body h2 + p,
+  .post-body p + ul,
+  .post-body ul + p,
+  .post-body p + .post-callout,
+  .post-body .post-callout + p {
+    margin-top: var(--space-md);
+  }
+
+  .post-body h2 {
+    margin-top: var(--space-lg);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+    color: var(--post-accent);
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .post-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .post-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--post-accent);
+    box-shadow: 0 0 8px var(--post-accent);
+  }
+
+  /* Dato destacado — mismo lenguaje de card con borde/glow que el resto del sitio, para
+     que resalte del cuerpo de texto normal sin salirse del sistema visual. */
+  .post-callout {
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--post-accent);
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 26px color-mix(in srgb, var(--post-accent) 25%, transparent);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-primary);
   }
 
   .section {

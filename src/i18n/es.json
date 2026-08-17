@@ -8,6 +8,7 @@
     "sap": "SAP",
     "about": "Nosotros",
     "services": "Servicios",
+    "industries": "Industrias",
     "blog": "Novedades",
     "contact": "Contacto",
     "cta": "Hablar con un experto",
@@ -480,11 +481,17 @@
     },
     "manifesto": {
       "text": "Transformamos el caos operativo en control absoluto.",
-      "highlight": ["control", "absoluto."]
+      "highlight": [
+        "control",
+        "absoluto."
+      ]
     },
     "closingManifesto": {
       "text": "Haz que tu empresa opere sin fricción.",
-      "highlight": ["sin", "fricción."],
+      "highlight": [
+        "sin",
+        "fricción."
+      ],
       "cta": "Hablar con un experto"
     }
   },
@@ -736,22 +743,63 @@
       "cta": "Hablar con un experto"
     },
     "heroStats": [
-      { "value": 75, "prefix": "+", "suffix": "", "label": "Profesionales certificados en SAP Business One." },
-      { "value": 14, "prefix": "+", "suffix": "", "label": "Años implementando SAP Business One." },
-      { "value": 83, "prefix": "+", "suffix": "k", "label": "Empresas usan SAP Business One como ERP principal." },
-      { "value": 300, "prefix": "+", "suffix": "", "label": "Clientes transformados en toda Latinoamérica." }
+      {
+        "value": 75,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Profesionales certificados en SAP Business One."
+      },
+      {
+        "value": 14,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Años implementando SAP Business One."
+      },
+      {
+        "value": 83,
+        "prefix": "+",
+        "suffix": "k",
+        "label": "Empresas usan SAP Business One como ERP principal."
+      },
+      {
+        "value": 300,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Clientes transformados en toda Latinoamérica."
+      }
     ],
     "platform": {
       "eyebrow": "La plataforma",
       "title": "Todo tu negocio, en módulos que conversan entre sí",
       "modules": [
-        { "title": "Finanzas y contabilidad", "desc": "Consolida balances, flujo de caja y conciliación bancaria en tiempo real." },
-        { "title": "Ventas y CRM", "desc": "Ciclo completo de ventas, campañas y soporte integrado." },
-        { "title": "Compras e inventario", "desc": "Control de adquisiciones, almacenes y stock." },
-        { "title": "Analítica y reporting", "desc": "Dashboards e informes personalizables." },
-        { "title": "Movilidad", "desc": "Aplicación optimizada para móvil y acceso web remoto." },
-        { "title": "Business Intelligence", "desc": "Datos en tiempo real para decisiones ágiles." },
-        { "title": "Escalabilidad internacional", "desc": "Soporte multilenguaje y multimoneda." }
+        {
+          "title": "Finanzas y contabilidad",
+          "desc": "Consolida balances, flujo de caja y conciliación bancaria en tiempo real."
+        },
+        {
+          "title": "Ventas y CRM",
+          "desc": "Ciclo completo de ventas, campañas y soporte integrado."
+        },
+        {
+          "title": "Compras e inventario",
+          "desc": "Control de adquisiciones, almacenes y stock."
+        },
+        {
+          "title": "Analítica y reporting",
+          "desc": "Dashboards e informes personalizables."
+        },
+        {
+          "title": "Movilidad",
+          "desc": "Aplicación optimizada para móvil y acceso web remoto."
+        },
+        {
+          "title": "Business Intelligence",
+          "desc": "Datos en tiempo real para decisiones ágiles."
+        },
+        {
+          "title": "Escalabilidad internacional",
+          "desc": "Soporte multilenguaje y multimoneda."
+        }
       ]
     },
     "addons": {
@@ -759,17 +807,40 @@
       "title": "Amplía SAP Business One con más de 20 add-ons y conectores",
       "desc": "Las soluciones complementarias añaden módulos y conectan SAP Business One con las apps que ya usas, automatizando cada proceso de punta a punta.",
       "stats": [
-        { "value": 6, "suffix": "", "label": "Soluciones verticales" },
-        { "value": 6, "suffix": "", "label": "Add-ons propios" },
-        { "value": 4, "suffix": "", "label": "Automatizaciones" },
-        { "value": 7, "suffix": "", "label": "Integraciones" }
+        {
+          "value": 6,
+          "suffix": "",
+          "label": "Soluciones verticales"
+        },
+        {
+          "value": 6,
+          "suffix": "",
+          "label": "Add-ons propios"
+        },
+        {
+          "value": 4,
+          "suffix": "",
+          "label": "Automatizaciones"
+        },
+        {
+          "value": 7,
+          "suffix": "",
+          "label": "Integraciones"
+        }
       ],
       "cta": "Explorar add-ons y conectores"
     },
     "industries": {
       "eyebrow": "Preparado para tu vertical",
       "title": "Una implementación distinta para cada industria",
-      "items": ["Retail", "Comercio", "Minería", "Gastronomía", "Agrícola", "Salud"]
+      "items": [
+        "Retail",
+        "Comercio",
+        "Minería",
+        "Gastronomía",
+        "Agrícola",
+        "Salud"
+      ]
     },
     "upsell": {
       "eyebrow": "El siguiente nivel",
@@ -804,12 +875,30 @@
       "title": "Procesos de misión crítica, de punta a punta",
       "intro": "Cobertura funcional profunda para las operaciones complejas de una gran organización.",
       "items": [
-        { "title": "Finanzas en tiempo real", "desc": "Contabilidad, tesorería y control con cierre acelerado sobre el Universal Journal y analítica embebida." },
-        { "title": "Cadena de suministro", "desc": "Planificación, inventario y logística con visibilidad de extremo a extremo y respuesta en tiempo real." },
-        { "title": "Manufactura avanzada", "desc": "Planificación de producción, MRP en vivo y gestión de planta para operaciones industriales." },
-        { "title": "Compras y abastecimiento", "desc": "Sourcing, contratos y gestión de proveedores integrados al flujo financiero." },
-        { "title": "Ventas y servicio", "desc": "Ciclo comercial completo, pricing y postventa conectados a inventario y finanzas." },
-        { "title": "IA y analítica embebida", "desc": "Escenarios predictivos, asistentes y automatización inteligente dentro de cada proceso." }
+        {
+          "title": "Finanzas en tiempo real",
+          "desc": "Contabilidad, tesorería y control con cierre acelerado sobre el Universal Journal y analítica embebida."
+        },
+        {
+          "title": "Cadena de suministro",
+          "desc": "Planificación, inventario y logística con visibilidad de extremo a extremo y respuesta en tiempo real."
+        },
+        {
+          "title": "Manufactura avanzada",
+          "desc": "Planificación de producción, MRP en vivo y gestión de planta para operaciones industriales."
+        },
+        {
+          "title": "Compras y abastecimiento",
+          "desc": "Sourcing, contratos y gestión de proveedores integrados al flujo financiero."
+        },
+        {
+          "title": "Ventas y servicio",
+          "desc": "Ciclo comercial completo, pricing y postventa conectados a inventario y finanzas."
+        },
+        {
+          "title": "IA y analítica embebida",
+          "desc": "Escenarios predictivos, asistentes y automatización inteligente dentro de cada proceso."
+        }
       ]
     },
     "whenToConsider": {
@@ -827,9 +916,18 @@
       "title": "Un camino claro hacia S/4HANA",
       "intro": "Evaluamos, diseñamos e implementamos por fases, sin frenar tu operación actual.",
       "steps": [
-        { "title": "Assessment", "desc": "Evaluamos tu operación, tus procesos y el caso de negocio para dimensionar el proyecto con precisión." },
-        { "title": "Hoja de ruta", "desc": "Definimos alcance, arquitectura y modelo de despliegue —cloud, on-premise o híbrido— alineados a tu estrategia." },
-        { "title": "Implementación y evolución", "desc": "Ejecución por fases y acompañamiento continuo para adoptar el ERP sin frenar la operación." }
+        {
+          "title": "Assessment",
+          "desc": "Evaluamos tu operación, tus procesos y el caso de negocio para dimensionar el proyecto con precisión."
+        },
+        {
+          "title": "Hoja de ruta",
+          "desc": "Definimos alcance, arquitectura y modelo de despliegue —cloud, on-premise o híbrido— alineados a tu estrategia."
+        },
+        {
+          "title": "Implementación y evolución",
+          "desc": "Ejecución por fases y acompañamiento continuo para adoptar el ERP sin frenar la operación."
+        }
       ]
     },
     "compare": {
@@ -865,15 +963,51 @@
       "columnB1": "SAP Business One",
       "columnS4": "SAP S/4HANA",
       "rows": [
-        { "criterion": "Empresa objetivo", "b1": "Pymes y medianas empresas en crecimiento", "s4": "Grandes empresas y corporaciones" },
-        { "criterion": "Usuarios típicos", "b1": "Desde pocos hasta cientos", "s4": "De cientos a miles" },
-        { "criterion": "Alcance funcional", "b1": "ERP completo: finanzas, ventas, compras e inventario", "s4": "Suite extendida con manufactura y logística avanzadas" },
-        { "criterion": "Base de datos", "b1": "SQL Server o SAP HANA", "s4": "SAP HANA en memoria (nativo)" },
-        { "criterion": "Analítica e IA", "b1": "Business Intelligence integrado y dashboards", "s4": "Analítica e IA embebidas en cada proceso" },
-        { "criterion": "Despliegue", "b1": "Cloud u on-premise", "s4": "Cloud, on-premise o híbrido (RISE with SAP)" },
-        { "criterion": "Tiempo de implementación", "b1": "Semanas a pocos meses", "s4": "Meses, por fases" },
-        { "criterion": "Inversión", "b1": "Accesible para pymes", "s4": "De nivel corporativo" },
-        { "criterion": "Ideal cuando", "b1": "Buscas control total con retorno rápido", "s4": "La escala y complejidad superan a un ERP estándar" }
+        {
+          "criterion": "Empresa objetivo",
+          "b1": "Pymes y medianas empresas en crecimiento",
+          "s4": "Grandes empresas y corporaciones"
+        },
+        {
+          "criterion": "Usuarios típicos",
+          "b1": "Desde pocos hasta cientos",
+          "s4": "De cientos a miles"
+        },
+        {
+          "criterion": "Alcance funcional",
+          "b1": "ERP completo: finanzas, ventas, compras e inventario",
+          "s4": "Suite extendida con manufactura y logística avanzadas"
+        },
+        {
+          "criterion": "Base de datos",
+          "b1": "SQL Server o SAP HANA",
+          "s4": "SAP HANA en memoria (nativo)"
+        },
+        {
+          "criterion": "Analítica e IA",
+          "b1": "Business Intelligence integrado y dashboards",
+          "s4": "Analítica e IA embebidas en cada proceso"
+        },
+        {
+          "criterion": "Despliegue",
+          "b1": "Cloud u on-premise",
+          "s4": "Cloud, on-premise o híbrido (RISE with SAP)"
+        },
+        {
+          "criterion": "Tiempo de implementación",
+          "b1": "Semanas a pocos meses",
+          "s4": "Meses, por fases"
+        },
+        {
+          "criterion": "Inversión",
+          "b1": "Accesible para pymes",
+          "s4": "De nivel corporativo"
+        },
+        {
+          "criterion": "Ideal cuando",
+          "b1": "Buscas control total con retorno rápido",
+          "s4": "La escala y complejidad superan a un ERP estándar"
+        }
       ]
     },
     "choose": {
@@ -933,13 +1067,19 @@
             "name": "Conciliación de Operadores de Tarjetas de Crédito",
             "shortDesc": "Automatiza la conciliación de los depósitos de Transbank o Getnet contra tus ventas con tarjeta.",
             "fullDesc": "El add-on de conciliación de Tarjetas de Crédito es esencial para empresas que operan con Transbank o Getnet. Su función es automatizar la conciliación de los depósitos recibidos con los pagos con tarjeta de las ventas registradas en SAP Business One. La solución importa los archivos de liquidación, realizando un pareo inteligente entre los montos depositados por el operador y los pagos de las ventas recibidos (crédito/débito). Esto permite contabilizar automáticamente las comisiones y retenciones aplicadas, asegurando que el saldo contable coincida con el saldo real. Elimina el trabajo manual de conciliación, garantiza la precisión y acelera significativamente el cierre financiero.",
-            "compatible": ["Transbank", "Getnet"]
+            "compatible": [
+              "Transbank",
+              "Getnet"
+            ]
           },
           {
             "name": "Gestión en Almacenes (WMS) — Produmex",
             "shortDesc": "Reglas de almacenamiento, picking eficiente y escaneo móvil para tus bodegas.",
             "fullDesc": "Produmex WMS y Produmex Scan ofrecen una solución avanzada para optimizar la gestión de bodegas en SAP Business One. Produmex WMS aporta la inteligencia de negocio para implementar reglas de almacenamiento complejas, optimizar el uso de ubicaciones y definir estrategias de picking de alta eficiencia. Produmex Scan es el componente móvil que permite a los operarios ejecutar todas las tareas de manejo de productos, desde la recepción y el conteo cíclico hasta el despacho final, utilizando dispositivos móviles para el escaneo. Esto elimina el papel, reduce drásticamente los errores de inventario y asegura una trazabilidad precisa de cada artículo.",
-            "compatible": ["Produmex WMS", "Produmex Scan"]
+            "compatible": [
+              "Produmex WMS",
+              "Produmex Scan"
+            ]
           },
           {
             "name": "Apparel & Footwear",
@@ -1053,7 +1193,10 @@
             "name": "Procesos",
             "shortDesc": "Automatizaciones de facturación que le ahorran tiempo a tu equipo administrativo.",
             "fullDesc": "Automatizaciones sobre el flujo de facturación en SAP Business One para eliminar tareas repetitivas.",
-            "features": ["Creación masiva de facturas.", "Creación de facturas a partir de orden de venta."]
+            "features": [
+              "Creación masiva de facturas.",
+              "Creación de facturas a partir de orden de venta."
+            ]
           }
         ]
       },
@@ -1067,43 +1210,71 @@
             "name": "Rindegastos",
             "shortDesc": "Automatiza la rendición y gestión de gastos de viáticos.",
             "fullDesc": "La integración de Rindegastos con SAP Business One automatiza la rendición y gestión de gastos de viáticos. Centraliza la digitalización de comprobantes por parte de los empleados. Una vez validados y aprobados en Rindegastos, se transfieren automáticamente a SAP Business One creando los documentos contables correspondientes (asientos o facturas de proveedor), respetando centros de costo y cuentas contables. Elimina la entrada manual y acelera el proceso de pago.",
-            "compatible": ["Rindegastos"]
+            "compatible": [
+              "Rindegastos"
+            ]
           },
           {
             "name": "Remuneraciones",
             "shortDesc": "Cierre contable del proceso de sueldos, integrado a SAP Business One.",
             "fullDesc": "La integración de plataformas de remuneraciones con SAP Business One automatiza el cierre contable del proceso de sueldos. Una vez procesada la nómina, genera y transfiere un asiento contable consolidado a SAP Business One, detallando gastos, provisiones y cuentas por pagar según tu estructura contable. Elimina la doble digitación y acelera el cierre mensual.",
-            "compatible": ["Buk", "Talana", "Rex+"]
+            "compatible": [
+              "Buk",
+              "Talana",
+              "Rex+"
+            ]
           },
           {
             "name": "TMS · Gestión de Transporte",
             "shortDesc": "Optimización de rutas y seguimiento de entregas conectados a tus pedidos.",
             "fullDesc": "La integración de soluciones TMS con SAP Business One automatiza la gestión de la distribución. Los pedidos y ventas generados en SAP Business One se transfieren automáticamente al TMS para optimización de rutas, asignación de vehículos y planificación logística. El TMS entrega el seguimiento en tiempo real y devuelve el estado de la entrega y la prueba de entrega digital a SAP Business One.",
-            "compatible": ["DispatchTrack", "Drivin", "SimpliRoute"]
+            "compatible": [
+              "DispatchTrack",
+              "Drivin",
+              "SimpliRoute"
+            ]
           },
           {
             "name": "Multivende",
             "shortDesc": "Unifica tu e-commerce y marketplaces con sincronización de pedidos y stock en tiempo real.",
             "fullDesc": "La integración de Multivende con SAP Business One unifica la gestión de tu comercio electrónico y marketplaces. Su valor reside en la sincronización bidireccional y en tiempo real. Los pedidos de todos los canales online se transfieren instantáneamente a SAP Business One como pedidos de cliente. El stock y los precios actualizados se replican en tiempo real a Multivende y a todos los canales, eliminando el riesgo de sobreventa.",
-            "compatible": ["Mercado Libre", "Ripley", "Paris", "Falabella"]
+            "compatible": [
+              "Mercado Libre",
+              "Ripley",
+              "Paris",
+              "Falabella"
+            ]
           },
           {
             "name": "E-commerce",
             "shortDesc": "Canal de ventas unificado con Shopify, Magento o VTEX.",
             "fullDesc": "La integración de plataformas de e-commerce líderes con SAP Business One crea un canal de ventas unificado con sincronización bidireccional en tiempo real. Los pedidos de la tienda online se transfieren automáticamente a SAP Business One como pedidos de cliente. El stock y los precios se replican en la plataforma e-commerce, eliminando la sobreventa y automatizando el ciclo de vida del pedido.",
-            "compatible": ["Shopify", "Magento", "VTEX"]
+            "compatible": [
+              "Shopify",
+              "Magento",
+              "VTEX"
+            ]
           },
           {
             "name": "Terminales POS",
             "shortDesc": "Ciclo de venta en tienda sin errores: el cobro llega al terminal desde la boleta.",
             "fullDesc": "La integración de terminales POS con SAP Business One crea un ciclo de venta en tienda altamente eficiente. Al generar la boleta o factura, el sistema envía automáticamente el monto a cobrar al terminal POS, eliminando errores de digitación. Tras la aprobación de la transacción, la confirmación y el tipo de pago se registran de inmediato, y se facilita la conciliación bancaria posterior.",
-            "compatible": ["Transbank", "Getnet", "Mercado Pago"]
+            "compatible": [
+              "Transbank",
+              "Getnet",
+              "Mercado Pago"
+            ]
           },
           {
             "name": "ComercioNet · Pedidos B2B (EDI)",
             "shortDesc": "Recibe automáticamente las órdenes de compra B2B de las grandes cadenas.",
             "fullDesc": "La integración de pedidos B2B de grandes clientes a través de ComercioNet con SAP Business One opera como un conector EDI (Intercambio Electrónico de Datos). Automatiza la recepción de la orden de compra que el retailer ingresa en su propio sistema: el documento se extrae de ComercioNet y se transfiere a SAP Business One, creando un pedido de cliente listo para procesar. Elimina la digitación y acelera la preparación de los pedidos B2B.",
-            "compatible": ["Sodimac", "Tottus", "Jumbo", "Unimarc"]
+            "compatible": [
+              "Sodimac",
+              "Tottus",
+              "Jumbo",
+              "Unimarc"
+            ]
           }
         ]
       }
@@ -1426,12 +1597,30 @@
         "phrase3": "Es momento de unir todo en un solo ecosistema."
       },
       "items": [
-        { "title": "Costos", "desc": "Mermas y compras descontroladas que se comen tu margen. (Compras × ERP)" },
-        { "title": "Operación", "desc": "El POS no habla con cocina, ni contabilidad, ni delivery. (POS × ERP × Delivery)" },
-        { "title": "Data", "desc": "Decisiones a ciegas con planillas que llegan tarde y nunca cuadran. (BI × Contable × POS)" },
-        { "title": "Clientes", "desc": "No sabes quiénes son tus clientes ni cómo hacerlos volver. (CRM × POS)" },
-        { "title": "Delivery", "desc": "Cinco apps, cinco tablets, cinco precios distintos y mucho caos. (Delivery × POS)" },
-        { "title": "Soporte", "desc": "Un viernes 22:00 algo falla, y nadie contesta el teléfono. (Múltiples proveedores)" }
+        {
+          "title": "Costos",
+          "desc": "Mermas y compras descontroladas que se comen tu margen. (Compras × ERP)"
+        },
+        {
+          "title": "Operación",
+          "desc": "El POS no habla con cocina, ni contabilidad, ni delivery. (POS × ERP × Delivery)"
+        },
+        {
+          "title": "Data",
+          "desc": "Decisiones a ciegas con planillas que llegan tarde y nunca cuadran. (BI × Contable × POS)"
+        },
+        {
+          "title": "Clientes",
+          "desc": "No sabes quiénes son tus clientes ni cómo hacerlos volver. (CRM × POS)"
+        },
+        {
+          "title": "Delivery",
+          "desc": "Cinco apps, cinco tablets, cinco precios distintos y mucho caos. (Delivery × POS)"
+        },
+        {
+          "title": "Soporte",
+          "desc": "Un viernes 22:00 algo falla, y nadie contesta el teléfono. (Múltiples proveedores)"
+        }
       ]
     },
     "ecosystem": {
@@ -1440,13 +1629,53 @@
       "titleRest": ", siete piezas que conversan solas",
       "subtitle": "SAP Business One al centro como ERP y contabilidad; alrededor, cada pieza de la operación conectada de forma nativa. Cada línea es una integración nativa: los datos fluyen solos entre las piezas, sin re-digitación.",
       "pieces": [
-        { "name": "TCPOS", "category": "Punto de venta", "logo": "/logos/logos dot/tcpos.svg", "desc": "Ventas, mesas y comandas en tiempo real. Funciona incluso sin internet.", "href": "tc-pos" },
-        { "name": "Smart Order", "category": "Compras & Stock", "logo": "/logos/logos dot/smartorder.png", "desc": "Compras, inventario y producción con control total. Sugiere qué y cuánto pedir, automáticamente.", "href": "smart-order" },
-        { "name": "BiPyxis", "category": "Business Intelligence", "logo": "/logos/logos dot/bipyxis.png", "desc": "Tu negocio en vivo, desde cualquier lugar. KPIs gastronómicos listos al instante.", "href": "bipyxis" },
-        { "name": "Loyalty", "category": "Fidelización", "logo": "/logos/logos dot/loyalty.png", "desc": "Fideliza, vende y entrega, todo bajo tu marca. Sin pagar comisión a intermediarios.", "href": "loyalty" },
-        { "name": "AyHungry", "category": "Reservas & Atención", "logo": "/logos/ayhungry.svg", "desc": "Pedidos anticipados y gestión de mesas sin filas. Atención desde el celular del cliente." },
-        { "name": "ChefCloud", "category": "Delivery & PIM", "logo": "/logos/chefcloud.svg", "desc": "Todos los agregadores de delivery, directo a la cocina. Impresión automática, sin tablets extra." },
-        { "name": "DTE.", "category": "Facturación", "logo": "/logos/logos dot/dte.png", "desc": "Boletas y facturas electrónicas que no fallan nunca. Cumple automáticamente con el SII.", "href": "dte-facturacion-electronica" }
+        {
+          "name": "TCPOS",
+          "category": "Punto de venta",
+          "logo": "/logos/logos dot/tcpos.svg",
+          "desc": "Ventas, mesas y comandas en tiempo real. Funciona incluso sin internet.",
+          "href": "tc-pos"
+        },
+        {
+          "name": "Smart Order",
+          "category": "Compras & Stock",
+          "logo": "/logos/logos dot/smartorder.png",
+          "desc": "Compras, inventario y producción con control total. Sugiere qué y cuánto pedir, automáticamente.",
+          "href": "smart-order"
+        },
+        {
+          "name": "BiPyxis",
+          "category": "Business Intelligence",
+          "logo": "/logos/logos dot/bipyxis.png",
+          "desc": "Tu negocio en vivo, desde cualquier lugar. KPIs gastronómicos listos al instante.",
+          "href": "bipyxis"
+        },
+        {
+          "name": "Loyalty",
+          "category": "Fidelización",
+          "logo": "/logos/logos dot/loyalty.png",
+          "desc": "Fideliza, vende y entrega, todo bajo tu marca. Sin pagar comisión a intermediarios.",
+          "href": "loyalty"
+        },
+        {
+          "name": "AyHungry",
+          "category": "Reservas & Atención",
+          "logo": "/logos/ayhungry.svg",
+          "desc": "Pedidos anticipados y gestión de mesas sin filas. Atención desde el celular del cliente."
+        },
+        {
+          "name": "ChefCloud",
+          "category": "Delivery & PIM",
+          "logo": "/logos/chefcloud.svg",
+          "desc": "Todos los agregadores de delivery, directo a la cocina. Impresión automática, sin tablets extra."
+        },
+        {
+          "name": "DTE.",
+          "category": "Facturación",
+          "logo": "/logos/logos dot/dte.png",
+          "desc": "Boletas y facturas electrónicas que no fallan nunca. Cumple automáticamente con el SII.",
+          "href": "dte-facturacion-electronica"
+        }
       ]
     },
     "pieces": {
@@ -1454,14 +1683,38 @@
       "title": "Ocho piezas world-class, un solo flujo",
       "titleHighlight": "Ocho piezas",
       "items": [
-        { "title": "Tu salud financiera, bajo control", "desc": "SAP Business One — Balance y estado de resultado por local en vivo, contabilidad multi-RUT, flujo de caja y conciliación bancaria y de medios de pago, sin planillas paralelas." },
-        { "title": "Mesas, cocina y pagos sin fricciones", "desc": "TCPOS — Ventas, mesas, comandas, KDS, tótem de autoatención y medios de pago. Funciona offline sin servidor en tienda: si se cae internet, tu caja sigue cobrando." },
-        { "title": "Compras que se anticipan, automáticamente", "desc": "Smart Order — Cruza compras históricas de SAP y ventas reales de TCPOS para sugerir qué y cuánto pedir. Producción, recetas y costos vivos: margen real, no estimado." },
-        { "title": "Tu negocio en vivo, donde sea", "desc": "BiPyxis — Ventas de TCPOS, compras de Smart Order y contabilidad de SAP en un solo tablero conciliado. KPIs gastronómicos listos: food cost, ticket promedio, mix de platos." },
-        { "title": "Sin filas, sin esperas, sin cliente molesto", "desc": "AyHungry — Digitaliza atención y reservas: pedidos anticipados, gestión de mesas, atención desde el celular del cliente y análisis de sentimiento de cada visita." },
-        { "title": "Fideliza, vende y entrega. Todo tu marca", "desc": "Loyalty — Fidelización integrada nativamente a TCPOS, canal e-commerce propio y última milla conectada a los agregadores, sin pagarle comisión a un intermediario." },
-        { "title": "El delivery, directo a la cocina", "desc": "ChefCloud — Rappi, PedidosYa, Uber Eats y más llegan al mismo TCPOS y la misma comanda. Cero tablets extra, auto-aceptación e impresión automática en cocina." },
-        { "title": "Boletas y facturas que no fallan nunca", "desc": "DTE. Facturación — Emite todos tus documentos tributarios en línea, integrado nativamente a SAP y TCPOS. Sigue facturando incluso sin internet, y cumple automáticamente con el SII." }
+        {
+          "title": "Tu salud financiera, bajo control",
+          "desc": "SAP Business One — Balance y estado de resultado por local en vivo, contabilidad multi-RUT, flujo de caja y conciliación bancaria y de medios de pago, sin planillas paralelas."
+        },
+        {
+          "title": "Mesas, cocina y pagos sin fricciones",
+          "desc": "TCPOS — Ventas, mesas, comandas, KDS, tótem de autoatención y medios de pago. Funciona offline sin servidor en tienda: si se cae internet, tu caja sigue cobrando."
+        },
+        {
+          "title": "Compras que se anticipan, automáticamente",
+          "desc": "Smart Order — Cruza compras históricas de SAP y ventas reales de TCPOS para sugerir qué y cuánto pedir. Producción, recetas y costos vivos: margen real, no estimado."
+        },
+        {
+          "title": "Tu negocio en vivo, donde sea",
+          "desc": "BiPyxis — Ventas de TCPOS, compras de Smart Order y contabilidad de SAP en un solo tablero conciliado. KPIs gastronómicos listos: food cost, ticket promedio, mix de platos."
+        },
+        {
+          "title": "Sin filas, sin esperas, sin cliente molesto",
+          "desc": "AyHungry — Digitaliza atención y reservas: pedidos anticipados, gestión de mesas, atención desde el celular del cliente y análisis de sentimiento de cada visita."
+        },
+        {
+          "title": "Fideliza, vende y entrega. Todo tu marca",
+          "desc": "Loyalty — Fidelización integrada nativamente a TCPOS, canal e-commerce propio y última milla conectada a los agregadores, sin pagarle comisión a un intermediario."
+        },
+        {
+          "title": "El delivery, directo a la cocina",
+          "desc": "ChefCloud — Rappi, PedidosYa, Uber Eats y más llegan al mismo TCPOS y la misma comanda. Cero tablets extra, auto-aceptación e impresión automática en cocina."
+        },
+        {
+          "title": "Boletas y facturas que no fallan nunca",
+          "desc": "DTE. Facturación — Emite todos tus documentos tributarios en línea, integrado nativamente a SAP y TCPOS. Sigue facturando incluso sin internet, y cumple automáticamente con el SII."
+        }
       ]
     },
     "why": {
@@ -1469,9 +1722,18 @@
       "title": "No vendemos software. Somos tu partner 360°.",
       "intro": "Cualquiera te vende un POS. Pocos te venden un ERP. Nadie te entrega todo el stack pre-integrado, mantenido y soportado — con software factory propia y equipo en horario de cocina.",
       "items": [
-        { "title": "Software factory propia", "desc": "El 75% de los productos los desarrollamos nosotros: roadmap que responde a tu negocio, integraciones nativas y mejoras continuas." },
-        { "title": "Soporte 7×7 en horario gastronómico", "desc": "El problema no aparece a las 10 AM del martes: aparece el viernes 22:30 con el local lleno. Estamos ahí los 7 días." },
-        { "title": "16+ años en gastronomía", "desc": "Entendemos de food cost, mermas, cocinas, agregadores y SII — asesoría real basada en cientos de implementaciones." }
+        {
+          "title": "Software factory propia",
+          "desc": "El 75% de los productos los desarrollamos nosotros: roadmap que responde a tu negocio, integraciones nativas y mejoras continuas."
+        },
+        {
+          "title": "Soporte 7×7 en horario gastronómico",
+          "desc": "El problema no aparece a las 10 AM del martes: aparece el viernes 22:30 con el local lleno. Estamos ahí los 7 días."
+        },
+        {
+          "title": "16+ años en gastronomía",
+          "desc": "Entendemos de food cost, mermas, cocinas, agregadores y SII — asesoría real basada en cientos de implementaciones."
+        }
       ]
     },
     "clientsTitle": "Restaurantes y cadenas que ya operan con el ecosistema",
@@ -1503,25 +1765,80 @@
       "titleRest": ", seis piezas para vender en todos los canales",
       "subtitle": "SAP Business One centraliza finanzas, inventario y operaciones; alrededor, cada canal de venta y soporte conectado de forma nativa. Cada línea es una integración nativa: pedidos, pagos y stock fluyen entre canales sin re-digitación.",
       "pieces": [
-        { "name": "RetailPro Prism", "category": "POS omnicanal", "logo": "/logos/logos dot/retail.png", "desc": "Tienda física, kioscos y e-commerce en una plataforma. Motor de promociones y comercio unificado.", "href": "retail-pro-prism" },
-        { "name": "Mobile One", "category": "Venta móvil en sala", "logo": "/logos/logos dot/mobineone.png", "desc": "Vende y cobra junto al cliente, sin depender de la caja. Ideal para horas de alta demanda.", "href": "mobile-one" },
-        { "name": "BeFlow", "category": "OMS · e-commerce & delivery", "desc": "Orquesta pedidos de todos los canales contra el stock real. Coordina preparación y última milla." },
-        { "name": "Loyalty", "category": "Fidelización", "logo": "/logos/logos dot/loyalty.png", "desc": "Puntos y canje en cada punto de venta, físico o digital. Datos accionables de cada cliente.", "href": "loyalty" },
-        { "name": "Hostdot", "category": "Plataforma & Ciberseguridad", "logo": "/logos/logos dot/hostdot.png", "desc": "Infraestructura agnóstica, cloud y soporte del stack completo. Se adapta a cualquier plataforma.", "href": "hostdot" },
-        { "name": "DTE.", "category": "Facturación electrónica", "logo": "/logos/logos dot/dte.png", "desc": "Cumplimiento SII integrado al POS y al ERP. Agiliza la cobranza, sin fricción.", "href": "dte-facturacion-electronica" }
+        {
+          "name": "RetailPro Prism",
+          "category": "POS omnicanal",
+          "logo": "/logos/logos dot/retail.png",
+          "desc": "Tienda física, kioscos y e-commerce en una plataforma. Motor de promociones y comercio unificado.",
+          "href": "retail-pro-prism"
+        },
+        {
+          "name": "Mobile One",
+          "category": "Venta móvil en sala",
+          "logo": "/logos/logos dot/mobineone.png",
+          "desc": "Vende y cobra junto al cliente, sin depender de la caja. Ideal para horas de alta demanda.",
+          "href": "mobile-one"
+        },
+        {
+          "name": "BeFlow",
+          "category": "OMS · e-commerce & delivery",
+          "desc": "Orquesta pedidos de todos los canales contra el stock real. Coordina preparación y última milla."
+        },
+        {
+          "name": "Loyalty",
+          "category": "Fidelización",
+          "logo": "/logos/logos dot/loyalty.png",
+          "desc": "Puntos y canje en cada punto de venta, físico o digital. Datos accionables de cada cliente.",
+          "href": "loyalty"
+        },
+        {
+          "name": "Hostdot",
+          "category": "Plataforma & Ciberseguridad",
+          "logo": "/logos/logos dot/hostdot.png",
+          "desc": "Infraestructura agnóstica, cloud y soporte del stack completo. Se adapta a cualquier plataforma.",
+          "href": "hostdot"
+        },
+        {
+          "name": "DTE.",
+          "category": "Facturación electrónica",
+          "logo": "/logos/logos dot/dte.png",
+          "desc": "Cumplimiento SII integrado al POS y al ERP. Agiliza la cobranza, sin fricción.",
+          "href": "dte-facturacion-electronica"
+        }
       ]
     },
     "pieces": {
       "eyebrow": "Las piezas",
       "title": "El stack completo del retail moderno",
       "items": [
-        { "title": "El núcleo que centraliza todo", "desc": "SAP Business One — Ventas, inventario, compras, operaciones y finanzas en un único sistema escalable con acceso en tiempo real. La plataforma para empresas en crecimiento." },
-        { "title": "El líder mundial en punto de venta", "desc": "RetailPro Prism — +9.000 marcas y +185.000 POS en +128 países. Workstations, tablets y móviles con motor de promociones robusto, giftcards y comercio unificado." },
-        { "title": "Vende donde está el cliente", "desc": "Mobile One — Venta móvil en sala: tus vendedores atienden, cobran y emiten documentos junto al cliente, sin depender de la caja. Adiós filas en hora punta." },
-        { "title": "Todos tus pedidos, un solo flujo", "desc": "BeFlow OMS — Orquesta pedidos de e-commerce, marketplaces y delivery contra el stock real, coordinando la preparación y la última milla de cada orden." },
-        { "title": "Clientes que vuelven a comprar", "desc": "Loyalty — Acumulación de puntos en cada transacción con canje en todos los puntos de venta, eGiftCards para tu web y datos accionables de cada cliente." },
-        { "title": "La base que sostiene la operación", "desc": "∞Infraestructura — Infraestructura agnóstica: nos adaptamos a cualquier plataforma y marca, con cloud, ciberseguridad y soporte del stack completo." },
-        { "title": "Cumplimiento sin fricción", "desc": "DTE. Facturación — Disminuye costos operacionales de facturación, agiliza la cobranza y cumple las exigencias del SII, integrado al POS y al ERP." }
+        {
+          "title": "El núcleo que centraliza todo",
+          "desc": "SAP Business One — Ventas, inventario, compras, operaciones y finanzas en un único sistema escalable con acceso en tiempo real. La plataforma para empresas en crecimiento."
+        },
+        {
+          "title": "El líder mundial en punto de venta",
+          "desc": "RetailPro Prism — +9.000 marcas y +185.000 POS en +128 países. Workstations, tablets y móviles con motor de promociones robusto, giftcards y comercio unificado."
+        },
+        {
+          "title": "Vende donde está el cliente",
+          "desc": "Mobile One — Venta móvil en sala: tus vendedores atienden, cobran y emiten documentos junto al cliente, sin depender de la caja. Adiós filas en hora punta."
+        },
+        {
+          "title": "Todos tus pedidos, un solo flujo",
+          "desc": "BeFlow OMS — Orquesta pedidos de e-commerce, marketplaces y delivery contra el stock real, coordinando la preparación y la última milla de cada orden."
+        },
+        {
+          "title": "Clientes que vuelven a comprar",
+          "desc": "Loyalty — Acumulación de puntos en cada transacción con canje en todos los puntos de venta, eGiftCards para tu web y datos accionables de cada cliente."
+        },
+        {
+          "title": "La base que sostiene la operación",
+          "desc": "∞Infraestructura — Infraestructura agnóstica: nos adaptamos a cualquier plataforma y marca, con cloud, ciberseguridad y soporte del stack completo."
+        },
+        {
+          "title": "Cumplimiento sin fricción",
+          "desc": "DTE. Facturación — Disminuye costos operacionales de facturación, agiliza la cobranza y cumple las exigencias del SII, integrado al POS y al ERP."
+        }
       ]
     },
     "unified": {
@@ -1536,23 +1853,74 @@
       ]
     },
     "integrations": {
-      "payments": { "eyebrow": "Pagos digitales", "title": "Conciliados vía DOT Conector", "items": ["Transbank", "Mercado Pago", "Getnet", "Crédito propio"] },
-      "formats": { "eyebrow": "Formatos de tienda", "title": "Soportados por RetailPro", "items": ["Tienda", "Outlet", "Kiosko", "Tienda Pop-up", "Store in Store", "Auto atención", "RFID", "+16 formatos más"] }
+      "payments": {
+        "eyebrow": "Pagos digitales",
+        "title": "Conciliados vía DOT Conector",
+        "items": [
+          "Transbank",
+          "Mercado Pago",
+          "Getnet",
+          "Crédito propio"
+        ]
+      },
+      "formats": {
+        "eyebrow": "Formatos de tienda",
+        "title": "Soportados por RetailPro",
+        "items": [
+          "Tienda",
+          "Outlet",
+          "Kiosko",
+          "Tienda Pop-up",
+          "Store in Store",
+          "Auto atención",
+          "RFID",
+          "+16 formatos más"
+        ]
+      }
     },
     "stats": [
-      { "value": 16, "prefix": "+", "suffix": "", "label": "Años realizando implementaciones de retail." },
-      { "value": 14, "prefix": "+", "suffix": "", "label": "Años implementando SAP Business One." },
-      { "value": 300, "prefix": "+", "suffix": "", "label": "Clientes transformados en Latinoamérica." },
-      { "value": 75, "prefix": "+", "suffix": "", "label": "Profesionales certificados." }
+      {
+        "value": 16,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Años realizando implementaciones de retail."
+      },
+      {
+        "value": 14,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Años implementando SAP Business One."
+      },
+      {
+        "value": 300,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Clientes transformados en Latinoamérica."
+      },
+      {
+        "value": 75,
+        "prefix": "+",
+        "suffix": "",
+        "label": "Profesionales certificados."
+      }
     ],
     "why": {
       "eyebrow": "Por qué DOT",
       "title": "Un ecosistema integral de soluciones y servicios",
       "intro": "Consultoría, implementación, capacitación, soporte, desarrollo e integración, infraestructura, cloud y ciberseguridad — un solo partner para todo el ciclo.",
       "items": [
-        { "title": "Resultados demostrados", "desc": "Retail multinacional: integración completa SAP + POS + e-commerce con 40% menos errores de stock." },
-        { "title": "Fidelización omnicanal", "desc": "Retailers de moda fidelizando con DOT en tienda física y canal digital a la vez." },
-        { "title": "Metodología probada", "desc": "De la evaluación al blueprint, parametrización y puesta en marcha, con administración de proyecto en cada etapa." }
+        {
+          "title": "Resultados demostrados",
+          "desc": "Retail multinacional: integración completa SAP + POS + e-commerce con 40% menos errores de stock."
+        },
+        {
+          "title": "Fidelización omnicanal",
+          "desc": "Retailers de moda fidelizando con DOT en tienda física y canal digital a la vez."
+        },
+        {
+          "title": "Metodología probada",
+          "desc": "De la evaluación al blueprint, parametrización y puesta en marcha, con administración de proyecto en cada etapa."
+        }
       ]
     },
     "clientsTitle": "Retailers que ya operan con el ecosistema",
@@ -2011,10 +2379,11 @@
     "metaTitle": "Novedades",
     "metaDescription": "Ideas, guías y perspectivas de DOT Solutions sobre SAP Business One, retail, hospitality y la tecnología que hace operar tu negocio.",
     "eyebrow": "Eventos y novedades",
-    "title": "Lo último de DOT",
+    "title": ["Lo último en", "novedades"],
     "subtitle": "Eventos, novedades y guías de nuestro equipo sobre ERP, retail y hospitality.",
     "viewAll": "Ver todas las novedades",
-    "readMore": "Leer más",
+    "stackTitle": "Lo último de DOT",
+    "readMore": "Leer artículo completo",
     "backToList": "Volver a Novedades",
     "publishedLabel": "Publicado",
     "relatedTitle": "Sigue explorando",
@@ -2026,10 +2395,22 @@
         "title": "SAP Business One o S/4HANA: cómo saber cuál necesita tu empresa",
         "excerpt": "El tamaño, la complejidad y la proyección de tu operación definen el ERP correcto. Te explicamos cuándo conviene cada uno, sin sobredimensionar la inversión.",
         "body": [
-          "Elegir un ERP no es elegir «el más grande», sino el que se ajusta a cómo opera tu empresa hoy y a dónde quiere llegar. En la práctica, la decisión entre SAP Business One y SAP S/4HANA se reduce a tres variables: tamaño y complejidad de la operación, volumen de transacciones y proyección de crecimiento.",
-          "SAP Business One está pensado para pequeñas y medianas empresas que necesitan integrar finanzas, ventas, inventario, compras y producción en una sola plataforma, con una implementación ágil y un costo total predecible. Es el núcleo sobre el que la mayoría de los negocios de retail y hospitality construyen su operación.",
-          "SAP S/4HANA entra en juego cuando la organización alcanza una escala y una complejidad, múltiples sociedades, altísimo volumen transaccional, procesos que exigen analítica en tiempo real, que justifican una plataforma corporativa. No es «la versión mejor» de Business One: es una herramienta para un problema distinto.",
-          "Nuestra recomendación es simple: no sobredimensiones. Un Business One bien implementado sostiene años de crecimiento, y la migración a S/4HANA tiene sentido cuando el negocio realmente lo pide."
+          {
+            "type": "p",
+            "text": "Elegir un ERP no es elegir «el más grande», sino el que se ajusta a cómo opera tu empresa hoy y a dónde quiere llegar. En la práctica, la decisión entre SAP Business One y SAP S/4HANA se reduce a tres variables: tamaño y complejidad de la operación, volumen de transacciones y proyección de crecimiento."
+          },
+          {
+            "type": "p",
+            "text": "SAP Business One está pensado para pequeñas y medianas empresas que necesitan integrar finanzas, ventas, inventario, compras y producción en una sola plataforma, con una implementación ágil y un costo total predecible. Es el núcleo sobre el que la mayoría de los negocios de retail y hospitality construyen su operación."
+          },
+          {
+            "type": "p",
+            "text": "SAP S/4HANA entra en juego cuando la organización alcanza una escala y una complejidad, múltiples sociedades, altísimo volumen transaccional, procesos que exigen analítica en tiempo real, que justifican una plataforma corporativa. No es «la versión mejor» de Business One: es una herramienta para un problema distinto."
+          },
+          {
+            "type": "p",
+            "text": "Nuestra recomendación es simple: no sobredimensiones. Un Business One bien implementado sostiene años de crecimiento, y la migración a S/4HANA tiene sentido cuando el negocio realmente lo pide."
+          }
         ]
       },
       {
@@ -2039,10 +2420,22 @@
         "title": "Comercio unificado: un solo núcleo para tienda, e-commerce y venta móvil",
         "excerpt": "Cuando todos tus canales operan sobre el mismo núcleo SAP, el stock, los clientes y las finanzas siempre cuadran. Así se ve el comercio unificado en la práctica.",
         "body": [
-          "Multicanal no es lo mismo que unificado. Muchos retailers venden en tienda, e-commerce y marketplaces, pero cada canal vive en su propio sistema: el stock se descuadra, el cliente se duplica y la conciliación financiera se vuelve un dolor de cabeza a fin de mes.",
-          "El comercio unificado resuelve esto poniendo un solo núcleo, SAP Business One, por debajo de todos los canales. El punto de venta, la tienda online, la venta móvil y la fidelización leen y escriben sobre la misma fuente de verdad: un solo inventario, un solo cliente, una sola contabilidad.",
-          "El resultado operativo es concreto: promesas de stock confiables, despacho desde la tienda más cercana, precios y promociones consistentes en todos los canales, y un cierre financiero sin planillas paralelas. El cliente vive una sola marca, no cinco sistemas desconectados.",
-          "No hace falta reemplazar todo de golpe. La ruta habitual es consolidar primero el núcleo ERP y el punto de venta, y luego ir sumando e-commerce, venta móvil y fidelización sobre esa base. Cada canal que se integra suma sin romper lo que ya funciona."
+          {
+            "type": "p",
+            "text": "Multicanal no es lo mismo que unificado. Muchos retailers venden en tienda, e-commerce y marketplaces, pero cada canal vive en su propio sistema: el stock se descuadra, el cliente se duplica y la conciliación financiera se vuelve un dolor de cabeza a fin de mes."
+          },
+          {
+            "type": "p",
+            "text": "El comercio unificado resuelve esto poniendo un solo núcleo, SAP Business One, por debajo de todos los canales. El punto de venta, la tienda online, la venta móvil y la fidelización leen y escriben sobre la misma fuente de verdad: un solo inventario, un solo cliente, una sola contabilidad."
+          },
+          {
+            "type": "p",
+            "text": "El resultado operativo es concreto: promesas de stock confiables, despacho desde la tienda más cercana, precios y promociones consistentes en todos los canales, y un cierre financiero sin planillas paralelas. El cliente vive una sola marca, no cinco sistemas desconectados."
+          },
+          {
+            "type": "p",
+            "text": "No hace falta reemplazar todo de golpe. La ruta habitual es consolidar primero el núcleo ERP y el punto de venta, y luego ir sumando e-commerce, venta móvil y fidelización sobre esa base. Cada canal que se integra suma sin romper lo que ya funciona."
+          }
         ]
       },
       {
@@ -2052,10 +2445,192 @@
         "title": "Facturación electrónica (DTE) en Chile: lo que tu operación debe tener resuelto",
         "excerpt": "Del SII a tus clientes, sin fricción. Qué exige la normativa de documentos tributarios electrónicos y cómo automatizarla dentro de tu ERP.",
         "body": [
-          "En Chile, la emisión de documentos tributarios electrónicos (DTE), facturas, boletas, notas de crédito y débito, no es opcional: es la forma en que el SII exige que operen las empresas. La pregunta ya no es «si» emitir electrónicamente, sino qué tan integrado y confiable es ese proceso dentro de tu operación.",
-          "El riesgo de resolverlo con herramientas aisladas es la fricción: documentos que se emiten por fuera del ERP, folios que se descuadran y conciliaciones manuales entre lo que se vendió y lo que se declaró. Cada paso manual es una oportunidad de error frente al SII.",
-          "La alternativa es que la facturación electrónica viva dentro del ERP. Cuando el DTE se genera automáticamente a partir de la venta, en el punto de venta o en Business One, el documento llega al cliente y al SII sin intervención manual, con trazabilidad completa y folios siempre cuadrados.",
-          "Para una operación de retail o hospitality con alto volumen, esa automatización es la diferencia entre un cierre tributario tranquilo y una carrera contra el reloj cada mes. Es, además, la base para escalar: más locales y más canales sin sumar trabajo administrativo."
+          {
+            "type": "p",
+            "text": "En Chile, la emisión de documentos tributarios electrónicos (DTE), facturas, boletas, notas de crédito y débito, no es opcional: es la forma en que el SII exige que operen las empresas. La pregunta ya no es «si» emitir electrónicamente, sino qué tan integrado y confiable es ese proceso dentro de tu operación."
+          },
+          {
+            "type": "p",
+            "text": "El riesgo de resolverlo con herramientas aisladas es la fricción: documentos que se emiten por fuera del ERP, folios que se descuadran y conciliaciones manuales entre lo que se vendió y lo que se declaró. Cada paso manual es una oportunidad de error frente al SII."
+          },
+          {
+            "type": "p",
+            "text": "La alternativa es que la facturación electrónica viva dentro del ERP. Cuando el DTE se genera automáticamente a partir de la venta, en el punto de venta o en Business One, el documento llega al cliente y al SII sin intervención manual, con trazabilidad completa y folios siempre cuadrados."
+          },
+          {
+            "type": "p",
+            "text": "Para una operación de retail o hospitality con alto volumen, esa automatización es la diferencia entre un cierre tributario tranquilo y una carrera contra el reloj cada mes. Es, además, la base para escalar: más locales y más canales sin sumar trabajo administrativo."
+          }
+        ]
+      },
+      {
+        "slug": "ecosistema-gastronomia-que-es-y-como-se-arma",
+        "category": "Gastronomía",
+        "date": "2026-08-12",
+        "title": "El ecosistema de gastronomía de DOT: qué lo compone y cómo se arma",
+        "excerpt": "Ocho piezas que cubren salón, cocina, delivery, compras y fidelización sobre un mismo núcleo de datos. Puedes tomarlas todas o partir por una.",
+        "body": [
+          {
+            "type": "p",
+            "text": "En un restaurante el software no se rompe en la caja: se rompe en los bordes. En el pedido de delivery que alguien retipea, en la merma que aparece a fin de mes. Un ecosistema son piezas que ya vienen conversando entre sí, sobre un mismo núcleo de datos."
+          },
+          {
+            "type": "p",
+            "text": "Así, lo que pasa en la cocina, en la caja y en el delivery es una sola historia, no cinco sistemas que hay que cuadrar a mano."
+          },
+          {
+            "type": "h2",
+            "text": "Las ocho piezas"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Business One — ERP y contabilidad",
+              "TCPOS — Punto de venta",
+              "Smart Order — Compras y stock",
+              "ChefCloud — Delivery",
+              "AyHungry — Reservas y atención",
+              "Loyalty — Fidelización",
+              "BiPyxis — Business Intelligence",
+              "DTE — Facturación electrónica"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Cada línea es una integración nativa: los datos fluyen solos entre las piezas, sin re-digitación."
+          },
+          {
+            "type": "h2",
+            "text": "Cómo se arma"
+          },
+          {
+            "type": "p",
+            "text": "Puedes tomar el ecosistema completo o empezar por una pieza. Ninguno es más correcto: depende de dónde estás hoy."
+          },
+          {
+            "type": "p",
+            "text": "Completo conviene al abrir una operación nueva o al reemplazar un sistema que ya no da más: todo llega pre-integrado y con un solo responsable de que funcione."
+          },
+          {
+            "type": "p",
+            "text": "Por partes es lo más habitual. Parte por donde más duele hoy; cada pieza funciona sola, y la siguiente entra ya conectada, sin proyecto de integración de por medio."
+          },
+          {
+            "type": "list",
+            "items": [
+              "Si el problema es el delivery en tablets → ChefCloud.",
+              "Si es la merma y el costo del plato → Smart Order.",
+              "Si es la fila en hora punta → AyHungry.",
+              "Si no sabes qué local dejó margen → BiPyxis."
+            ]
+          },
+          {
+            "type": "p",
+            "text": "¿Ya tienes un ERP? El ecosistema está construido sobre SAP Business One, pero también se integra con el que tu empresa ya use."
+          },
+          {
+            "type": "callout",
+            "text": "Dato con fecha: desde el 1 de noviembre de 2026, las guías y facturas electrónicas que respaldan traslado de mercadería deben incluir datos de transporte. Si tienes cocina central o mueves insumos entre locales, el sistema que emite el documento tiene que capturar esos campos."
+          },
+          {
+            "type": "h2",
+            "text": "En resumen"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Ocho piezas sobre un mismo núcleo, con SAP Business One al centro.",
+              "Puedes tomarlas todas o empezar por una.",
+              "Cada una funciona sola; sumar la siguiente no es un proyecto de integración."
+            ]
+          },
+          {
+            "type": "p",
+            "text": "DOT Solutions implementa este ecosistema hace más de 18 años, con más de 300 clientes en 8 países de Latinoamérica."
+          }
+        ]
+      },
+      {
+        "slug": "ecosistema-retail-que-es-y-como-se-arma",
+        "category": "Retail",
+        "date": "2026-08-12",
+        "title": "El ecosistema de retail de DOT: qué lo compone y cómo se arma",
+        "excerpt": "Ocho piezas que comparten el mismo stock, el mismo precio y el mismo cliente. Puedes tomarlas todas o partir por una e ir sumando.",
+        "body": [
+          {
+            "type": "p",
+            "text": "Un ecosistema no es un paquete de productos con descuento. Son piezas que ya vienen conversando entre sí: comparten un mismo núcleo de datos, así que el stock, el precio y el cliente son los mismos en la tienda, en el e-commerce y en la venta móvil."
+          },
+          {
+            "type": "p",
+            "text": "Esa es la diferencia: nada que integrar, y nadie a quién llamar cuando el problema está entre dos sistemas."
+          },
+          {
+            "type": "h2",
+            "text": "Las ocho piezas"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Business One — Núcleo ERP",
+              "RetailPro Prism — POS omnicanal",
+              "Mobile One — Venta móvil",
+              "BeFlow — Orquestación de pedidos",
+              "BiPyxis — Business Intelligence",
+              "Loyalty — Fidelización",
+              "DTE — Facturación electrónica",
+              "Infraestructura — Plataforma y soporte"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Cada línea es una integración nativa: los datos fluyen solos entre las piezas, sin re-digitación."
+          },
+          {
+            "type": "h2",
+            "text": "Cómo se arma"
+          },
+          {
+            "type": "p",
+            "text": "Puedes tomar el ecosistema completo o empezar por una pieza. Ninguno es más correcto: depende de dónde estás hoy."
+          },
+          {
+            "type": "p",
+            "text": "Completo conviene al abrir una operación nueva o al reemplazar un sistema que ya no da más: todo llega pre-integrado y con un solo responsable de que funcione."
+          },
+          {
+            "type": "p",
+            "text": "Por partes es lo más habitual. Parte por donde más duele hoy; cada pieza funciona sola, y la siguiente entra ya conectada, sin proyecto de integración de por medio."
+          },
+          {
+            "type": "list",
+            "items": [
+              "Si el problema es la fila en hora punta → Mobile One.",
+              "Si el stock no cuadra entre canales → RetailPro Prism.",
+              "Si no sabes qué margen dejó cada tienda → BiPyxis.",
+              "Si necesitas cumplir con el SII → DTE. Facturación electrónica."
+            ]
+          },
+          {
+            "type": "p",
+            "text": "¿Ya tienes un ERP? El ecosistema está construido sobre SAP Business One, pero también se integra con el que tu empresa ya use."
+          },
+          {
+            "type": "h2",
+            "text": "En resumen"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Ocho piezas sobre un mismo núcleo, con SAP Business One al centro.",
+              "Puedes tomarlas todas o empezar por una.",
+              "Cada una funciona sola; sumar la siguiente no es un proyecto de integración."
+            ]
+          },
+          {
+            "type": "p",
+            "text": "DOT Solutions implementa este ecosistema hace más de 16 años, con más de 300 clientes en 8 países de Latinoamérica."
+          }
         ]
       }
     ]

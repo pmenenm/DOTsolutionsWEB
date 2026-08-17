@@ -35,6 +35,13 @@ const resolveHref = (href: string) => (isExternal(href) ? href : getRelativeLoca
 // va en la cuadrícula de productos (los otros 8 sí, incluyendo Mobile One).
 const sapItem = t.nav.solutionsMenu.items.find((item) => item.title === 'SAP Business One');
 const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP Business One');
+
+// Mismo criterio que la sección de industrias del Home: si la industria todavía no tiene
+// página propia (hasPage:false), su link cae al formulario de contacto en su lugar.
+const industriesItems = t.home.industries.items.map((item) => ({
+  name: item.name,
+  href: item.hasPage ? getRelativeLocaleUrl(lang, item.slug) : contactHref,
+}));
 ---
 
 <header class="navbar" id="navbar">
@@ -58,6 +65,32 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
             <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
+      </div>
+
+      <div class="mega industries" id="mega-industries">
+        <button
+          type="button"
+          class="mega-trigger"
+          id="industries-trigger"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="industries-panel"
+        >
+          {t.nav.industries}
+          <svg class="mega-chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div class="industries-panel" id="industries-panel" role="menu">
+          <ul>
+            {industriesItems.map((item) => (
+              <li role="none">
+                <a href={item.href} role="menuitem">{item.name}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <a href={aboutHref}>{t.nav.about}</a>
@@ -166,6 +199,15 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     </a>
     <a href={servicesHref}>{t.nav.services}</a>
     <a href={aboutHref}>{t.nav.about}</a>
+
+    <p class="mobile-solutions-title">{t.nav.industries}</p>
+    <ul class="mobile-solutions mobile-industries">
+      {industriesItems.map((item) => (
+        <li>
+          <a href={item.href}>{item.name}</a>
+        </li>
+      ))}
+    </ul>
 
     <ul class="mobile-solutions">
       {t.nav.solutionsMenu.items.map((item) => (
@@ -308,6 +350,59 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     document.addEventListener('keydown', megaKeydown);
   }
 
+  // Dropdown liviano de "Industrias" — mismo patrón hover/click/outside-click/escape que
+  // el mega-menú de Servicios, pero con un panel chico anclado bajo el trigger (como el
+  // popover de presencia LATAM) en vez de un panel full-width, porque acá son solo 4 links.
+  let industriesOutsideClick: ((e: MouseEvent) => void) | undefined;
+  let industriesKeydown: ((e: KeyboardEvent) => void) | undefined;
+
+  function initIndustriesMenu() {
+    const wrapper = document.getElementById('mega-industries');
+    const trigger = document.getElementById('industries-trigger');
+    if (!wrapper || !trigger) return;
+
+    let hoverTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    function close() {
+      wrapper!.classList.remove('is-open');
+      trigger!.setAttribute('aria-expanded', 'false');
+    }
+    function open() {
+      wrapper!.classList.add('is-open');
+      trigger!.setAttribute('aria-expanded', 'true');
+    }
+    function toggle() {
+      wrapper!.classList.contains('is-open') ? close() : open();
+    }
+
+    const canHover = window.matchMedia('(hover: hover)').matches;
+    if (canHover) {
+      const cancelClose = () => clearTimeout(hoverTimeout);
+      const scheduleClose = () => {
+        hoverTimeout = setTimeout(close, 150);
+      };
+      wrapper.addEventListener('mouseenter', () => {
+        cancelClose();
+        open();
+      });
+      wrapper.addEventListener('mouseleave', scheduleClose);
+    }
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+    });
+
+    industriesOutsideClick = (e) => {
+      if (!wrapper!.contains(e.target as Node)) close();
+    };
+    industriesKeydown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('click', industriesOutsideClick);
+    document.addEventListener('keydown', industriesKeydown);
+  }
+
   function initMenuToggle() {
     const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('nav-mobile');
@@ -324,12 +419,15 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     if (keydownHandler) document.removeEventListener('keydown', keydownHandler);
     if (megaOutsideClick) document.removeEventListener('click', megaOutsideClick);
     if (megaKeydown) document.removeEventListener('keydown', megaKeydown);
+    if (industriesOutsideClick) document.removeEventListener('click', industriesOutsideClick);
+    if (industriesKeydown) document.removeEventListener('keydown', industriesKeydown);
   });
 
   document.addEventListener('astro:page-load', () => {
     initScrollState();
     initPresence();
     initMegaMenu();
+    initIndustriesMenu();
     initMenuToggle();
   });
 </script>
@@ -362,16 +460,21 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
   }
 
   @media (min-width: 900px) {
+    /* El logo sigue siendo hermano de nav-left/nav-right en el DOM (no puede vivir DENTRO
+       de nav-left porque ahí es display:none en mobile, y eso lo escondería también a él) —
+       acá se reordena solo visualmente con `order` para que quede primero, a la izquierda
+       de todo, antes del logo de SAP. */
     .navbar-inner {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      display: flex;
       align-items: center;
+      justify-content: flex-start;
+      gap: var(--space-lg);
     }
     .logo {
-      justify-self: center;
+      order: -1;
     }
     .nav-right {
-      justify-self: end;
+      margin-left: auto;
     }
   }
 
@@ -430,6 +533,48 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
   }
   .mega.is-open .mega-chevron {
     transform: rotate(180deg);
+  }
+
+  /* Dropdown de "Industrias" — panel chico anclado bajo el trigger (mismo lenguaje visual
+     que el popover de presencia LATAM), no el mega-panel full-width de Servicios. */
+  .industries-panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    min-width: 200px;
+    background: color-mix(in srgb, var(--dot-dark) 92%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out);
+  }
+  .industries.is-open .industries-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .industries-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .industries-panel a {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    color: var(--dot-light);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+  .industries-panel a:hover {
+    background: color-mix(in srgb, var(--dot-micelio) 12%, transparent);
+    color: var(--dot-micelio);
   }
 
   /* Mega menú full-width estilo enterprise (HubSpot): un panel que ocupa el
@@ -834,6 +979,14 @@ const gridItems = t.nav.solutionsMenu.items.filter((item) => item.title !== 'SAP
     background: var(--dot-light);
     border-radius: var(--radius-sm);
     padding: 0.2rem;
+  }
+
+  .mobile-solutions-title {
+    margin-top: var(--space-xs);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-secondary);
   }
 
   .mobile-presence-title {

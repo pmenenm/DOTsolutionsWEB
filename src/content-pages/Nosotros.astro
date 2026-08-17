@@ -5,6 +5,7 @@ import SectionHeading from '../components/sections/SectionHeading.astro';
 import HighlightPanel from '../components/sections/HighlightPanel.astro';
 import FeatureGrid from '../components/sections/FeatureGrid.astro';
 import TeamGrid from '../components/sections/TeamGrid.astro';
+import PresenceNetwork from '../components/sections/PresenceNetwork.astro';
 import StatBar from '../components/sections/StatBar.astro';
 import ClientLogos from '../components/sections/ClientLogos.astro';
 import CTASection from '../components/sections/CTASection.astro';
@@ -19,6 +20,9 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const about = t.about;
+
+const presenceCore = t.nav.countries.find((c) => c.name === 'Chile') ?? t.nav.countries[0];
+const presenceNodes = t.nav.countries.filter((c) => c !== presenceCore);
 ---
 
 <Layout
@@ -51,7 +55,7 @@ const about = t.about;
   </section>
 
   <section class="section theme-light">
-    <div class="container">
+    <div class="container values-panel">
       <SectionHeading eyebrow={about.values.eyebrow} title={about.values.title} />
       <div class="section-body">
         <FeatureGrid items={about.values.items} cols={4} />
@@ -59,23 +63,21 @@ const about = t.about;
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeading eyebrow={about.team.eyebrow} title={about.team.title} />
-      <div class="section-body">
-        <TeamGrid members={about.team.members} />
-      </div>
-    </div>
-  </section>
+  <TeamGrid eyebrow={about.team.eyebrow} title={about.team.title} members={about.team.members} />
 
   <section class="section">
     <div class="container">
+      <SectionHeading eyebrow={about.presence.eyebrow} title={about.presence.title} subtitle={about.presence.subtitle} align="center" />
+
+      <div class="presence-network-wrap">
+        <PresenceNetwork core={presenceCore} coreLabel={about.presence.officeLabel} nodes={presenceNodes} />
+      </div>
+      <ul class="countries countries-mobile">
+        {t.nav.countries.map((c) => <li>{c.flag} {c.name}</li>)}
+      </ul>
+
       <div class="presence">
         <div class="presence-text" data-reveal>
-          <SectionHeading eyebrow={about.presence.eyebrow} title={about.presence.title} subtitle={about.presence.subtitle} />
-          <ul class="countries">
-            {t.nav.countries.map((c) => <li>{c.flag} {c.name}</li>)}
-          </ul>
           <p class="office-label">{about.presence.officeLabel}</p>
           <p class="office-address">{about.presence.office}</p>
         </div>
@@ -96,7 +98,7 @@ const about = t.about;
 
   <ClientLogos title={t.common.clientsTitle} />
 
-  <div class="container">
+  <div class="container final-cta">
     <CTASection
       title={about.cta.title}
       body={about.cta.body}
@@ -127,35 +129,52 @@ const about = t.about;
     text-align: center;
   }
 
-  .presence {
-    display: grid;
-    gap: var(--space-lg);
-    align-items: center;
+  /* Diagrama de red (Chile + 7 países) — solo desktop; en mobile no hay espacio real para
+     que un hub-and-spoke se lea bien, así que se reemplaza por el listado simple de pills. */
+  .presence-network-wrap {
+    display: none;
   }
-  .countries {
+  .countries-mobile {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.6rem;
     list-style: none;
     padding: 0;
-    margin-top: var(--space-md);
+    margin-top: var(--space-lg);
   }
-  .countries li {
+  .countries-mobile li {
     font-size: var(--text-sm);
     color: var(--text-primary);
     border: 1px solid var(--border);
     border-radius: var(--radius-full);
     padding: 0.4rem 0.9rem;
   }
+  @media (min-width: 900px) {
+    .presence-network-wrap {
+      display: block;
+      margin-block: var(--space-xl);
+    }
+    .countries-mobile {
+      display: none;
+    }
+  }
+
+  .presence {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+    margin-top: var(--space-lg);
+  }
   .office-label {
-    margin-top: var(--space-md);
     font-size: var(--text-sm);
-    color: var(--accent-secondary);
+    color: var(--dot-micelio);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 500;
   }
   .office-address {
+    margin-top: var(--space-xs);
     color: var(--text-secondary);
   }
   .presence-photo {
@@ -163,18 +182,77 @@ const about = t.about;
     border-radius: var(--radius-lg);
     aspect-ratio: 4/3;
     object-fit: cover;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 25%, transparent);
   }
 
+  /* Badge "Partner SAP en Latinoamérica" — glow micelio, mismo lenguaje que el resto de
+     las cards/pills ajustadas en Gastronomía y Retail. */
   .partner-badge {
-    text-align: center;
-    color: var(--accent);
-    font-weight: 500;
-    margin-top: var(--space-sm);
+    display: table;
+    margin-inline: auto;
+    margin-top: var(--space-md);
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--dot-micelio);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--dot-micelio) 30%, transparent);
+    color: var(--dot-micelio);
+    font-weight: 600;
   }
 
   @media (min-width: 900px) {
     .presence {
       grid-template-columns: 1fr 1fr;
     }
+  }
+
+  /* "Cómo trabajamos" — cards oscuras con acento y borde que se ilumina, para que
+     contrasten contra el fondo claro (.theme-light) de esta sección (FeatureGrid es
+     compartido con Gastronomía/Retail/Servicios, por eso el scope va acá). */
+  .values-panel :global(.feature-grid) {
+    gap: 1.25rem !important;
+  }
+  .values-panel :global(.feature) {
+    position: relative;
+    overflow: hidden;
+    background: var(--dot-dark) !important;
+    border: 1px solid color-mix(in srgb, var(--card-values-accent, var(--dot-micelio)) 45%, transparent) !important;
+    transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  }
+  .values-panel :global(.feature:hover) {
+    border-color: var(--card-values-accent, var(--dot-micelio)) !important;
+    box-shadow: 0 0 30px color-mix(in srgb, var(--card-values-accent, var(--dot-micelio)) 30%, transparent);
+    transform: translateY(-4px);
+  }
+  .values-panel :global(.feature:nth-child(4n + 1)) {
+    --card-values-accent: var(--dot-micelio);
+  }
+  .values-panel :global(.feature:nth-child(4n + 2)) {
+    --card-values-accent: var(--dot-moss);
+  }
+  .values-panel :global(.feature:nth-child(4n + 3)) {
+    --card-values-accent: var(--dot-sage);
+  }
+  .values-panel :global(.feature:nth-child(4n + 4)) {
+    --card-values-accent: var(--dot-forest);
+  }
+  .values-panel :global(.feature h3) {
+    color: var(--dot-light) !important;
+  }
+  .values-panel :global(.feature p) {
+    color: color-mix(in srgb, var(--dot-light) 75%, transparent) !important;
+  }
+
+  /* CTA final — mismo tratamiento que Gastronomía/Retail: card negra sólida con borde
+     micelio resplandeciente, título en micelio y cuerpo en blanco. */
+  .final-cta :global(.cta-panel) {
+    background: var(--dot-dark) !important;
+    border: 1px solid var(--dot-micelio) !important;
+    box-shadow: 0 0 36px color-mix(in srgb, var(--dot-micelio) 40%, transparent) !important;
+  }
+  .final-cta :global(.cta-panel h2) {
+    color: var(--dot-micelio) !important;
+  }
+  .final-cta :global(.cta-panel p) {
+    color: var(--dot-light) !important;
   }
 </style>
