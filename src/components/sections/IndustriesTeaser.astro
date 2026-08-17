@@ -46,7 +46,7 @@ const ICONS: Record<string, string> = {
     {featured.map((industry, i) => (
       <article
         class="eco-card"
-        style={`transition-delay: ${(i * 0.08).toFixed(2)}s`}
+        style={`--eco-enter-delay: ${(i * 0.08).toFixed(2)}s`}
       >
         <video
           class="eco-bg-video"
@@ -161,8 +161,15 @@ const ICONS: Record<string, string> = {
     border-radius: var(--radius-md);
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.7s var(--ease-out), transform 0.4s var(--ease-out), flex-grow 0.5s ease-in-out,
-      border-color 0.4s ease-in-out, box-shadow 0.4s ease-in-out, filter 0.4s ease-in-out;
+    /* El delay escalonado (--eco-enter-delay, distinto por card) es solo
+       para la aparición al hacer scroll (opacity/transform) — si también
+       retrasara flex-grow, cada card tardaría un tiempo distinto en
+       terminar de agrandarse al hacer hover, rompiendo el timing fijo del
+       fade-in del texto expandido (ver .eco-expanded más abajo). Por eso
+       flex-grow y el resto quedan con delay 0 explícito. */
+    transition: opacity 0.7s var(--ease-out) var(--eco-enter-delay, 0s),
+      transform 0.4s var(--ease-out) var(--eco-enter-delay, 0s), flex-grow 0.5s ease-in-out 0s,
+      border-color 0.4s ease-in-out 0s, box-shadow 0.4s ease-in-out 0s, filter 0.4s ease-in-out 0s;
   }
   .eco-accordion.is-visible .eco-card {
     opacity: 1;
@@ -259,13 +266,10 @@ const ICONS: Record<string, string> = {
     color: var(--text-primary);
     white-space: nowrap;
   }
-  .eco-card:nth-child(3n + 1) .eco-name-vertical {
-    color: var(--dot-micelio);
-  }
-  .eco-card:nth-child(3n + 2) .eco-name-vertical {
-    color: var(--dot-light);
-  }
-  .eco-card:nth-child(3n + 3) .eco-name-vertical {
+  /* Mismo color para todas las cards — antes rotaba (micelio / bruma /
+     text-secondary) por posición; ahora todas usan el de "Hotelería"
+     (3ra posición, text-secondary). */
+  .eco-name-vertical {
     color: var(--text-secondary);
   }
   .eco-name {
@@ -368,10 +372,11 @@ const ICONS: Record<string, string> = {
       align-self: flex-start;
     }
     .eco-collapsed .eco-name-vertical {
-      flex: 1;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      /* Empuja el nombre al borde inferior de la card — en un flex column,
+         un margin-top:auto absorbe todo el espacio sobrante, pegando este
+         elemento (y no uno que lo contenga) contra el final del eje. */
+      margin-top: auto;
+      margin-bottom: 0;
     }
     .eco-card:hover .eco-collapsed,
     .eco-card:focus-within .eco-collapsed {
@@ -379,15 +384,61 @@ const ICONS: Record<string, string> = {
     }
 
     .eco-expanded {
-      display: none;
+      /* Posicionado absoluto y SIEMPRE en display:grid (nunca none) — así el
+         texto ya está maquetado en su ancho final desde el primer instante
+         del hover, mientras la card todavía se está agrandando (flex-grow
+         0.5s). Se mantiene invisible (opacity/visibility) durante ese lapso
+         y solo aparece cuando la card ya terminó de crecer, para que el
+         texto aparezca directo en su posición final en vez de reacomodarse
+         en vivo mientras la card cambia de ancho. */
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
       grid-template-columns: 1fr 1.2fr;
       gap: var(--space-xl);
-      height: 100%;
-      align-items: center;
+      /* Mismo padding que .eco-card en su estado hover — al ser absoluto,
+         ignora el padding del propio .eco-card, así que hay que repetirlo. */
+      padding: clamp(1.5rem, 2.5vw, 2.5rem);
+      /* Columnas estiradas a la altura completa (no centradas) — el ícono
+         se queda fijo arriba en cada columna y solo el bloque de texto se
+         empuja al borde inferior (ver margin-top:auto más abajo), así el
+         ícono no salta de posición al pasar de comprimida a expandida. */
+      align-items: stretch;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease 0s, visibility 0s linear 0.3s, pointer-events 0s linear 0.3s;
     }
     .eco-card:hover .eco-expanded,
     .eco-card:focus-within .eco-expanded {
-      display: grid;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      /* Delay ~= duración del flex-grow de la card (0.5s), así el fade-in
+         arranca justo cuando la card ya terminó de agrandarse. */
+      transition: opacity 0.3s ease 0.45s, visibility 0s linear 0.45s, pointer-events 0s linear 0.45s;
+    }
+    .eco-expanded .eco-col-identity,
+    .eco-expanded .eco-col-pitch {
+      display: flex;
+      flex-direction: column;
+    }
+    /* El margin-bottom base es para el layout apilado de mobile (separa
+       identidad de pitch); en desktop las columnas van lado a lado y ese
+       margen desalinearía el borde inferior de esta columna respecto a la
+       otra. */
+    .eco-expanded .eco-col-identity {
+      margin-bottom: 0;
+    }
+    /* margin-top:auto en el primer elemento de texto absorbe el espacio
+       sobrante debajo del ícono, pegando el texto (y todo lo que le sigue)
+       contra el borde inferior de la columna. */
+    .eco-expanded .eco-col-identity .eco-name {
+      margin-top: auto;
+    }
+    .eco-expanded .eco-col-pitch .eco-desc {
+      margin-top: auto;
     }
   }
 </style>

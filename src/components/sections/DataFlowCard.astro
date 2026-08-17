@@ -3,8 +3,7 @@
 // Card de alto impacto: "circuito impreso" de datos — rutas SVG ortogonales
 // (segmentos horizontales/verticales con esquinas redondeadas a 90°, estilo
 // autopista/PCB) con orbes bioluminiscentes + estela viajando en loop (SMIL
-// animateMotion), y GSAP ScrollTrigger que fija la card en el centro de la
-// pantalla por un tramo de scroll antes de dejarla seguir su camino normal.
+// animateMotion, sin GSAP) — sigue el scroll normal de la página, sin pin.
 interface Props {
   eyebrow: string;
   title: string;
@@ -100,43 +99,6 @@ const PATHS = ROUTES.map((points, i) => ({
     </div>
   </div>
 </div>
-
-<script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initDataFlowPins() {
-    const cards = document.querySelectorAll<HTMLElement>('[data-dataflow-card]');
-    if (!cards.length) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const triggers: ScrollTrigger[] = [];
-    cards.forEach((card) => {
-      // Se fija al llegar al centro de pantalla, y suelta sola al terminar
-      // el tramo — sin fade, sigue su camino normal hacia arriba.
-      const trigger = ScrollTrigger.create({
-        trigger: card,
-        start: 'center center',
-        end: '+=150%',
-        pin: true,
-        pinSpacing: true,
-      });
-      triggers.push(trigger);
-    });
-
-    document.addEventListener(
-      'astro:before-swap',
-      () => triggers.forEach((t) => t.kill()),
-      { once: true }
-    );
-  }
-
-  document.addEventListener('astro:page-load', initDataFlowPins);
-</script>
 
 <style>
   .dataflow-wrap {

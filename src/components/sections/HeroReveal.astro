@@ -50,12 +50,19 @@ const { image = '/images/hero2.jpg' } = Astro.props;
   .hero-reveal-overlay {
     position: absolute;
     inset: 0;
+    /* El último tramo llega a opacidad total (var(--dot-dark) sólido) ANTES
+       del borde inferior de la imagen —no al 75% como antes—, así la foto
+       queda completamente cubierta por el mismo color plano del fondo de la
+       página (--bg-primary = --dot-dark) antes de que la imagen termine.
+       Sin esto quedaba un 25% de la foto visible justo en el corte, lo que
+       se leía como un salto brusco hacia la sección siguiente. */
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--dot-dark) 45%, transparent) 0%,
       color-mix(in srgb, var(--dot-dark) 32%, transparent) 30%,
-      color-mix(in srgb, var(--dot-dark) 32%, transparent) 70%,
-      color-mix(in srgb, var(--dot-dark) 75%, transparent) 100%
+      color-mix(in srgb, var(--dot-dark) 32%, transparent) 60%,
+      var(--dot-dark) 88%,
+      var(--dot-dark) 100%
     );
   }
 

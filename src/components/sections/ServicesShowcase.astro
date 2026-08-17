@@ -88,6 +88,7 @@ const {
             class:list={['mycelium-card', { 'mycelium-card--highlight': p.highlight, 'mycelium-card--static': !p.href }]}
             data-mycelium-card
             data-index={i}
+            data-name={p.name}
           >
             <div class="card-logo">
               {p.logo ? (
@@ -277,6 +278,9 @@ const {
     filter: url(#mycelium-glow);
   }
 
+  /* Fondo blanco de la paleta (Bruma Digital) con opacidad, no sólido —
+     así sigue viéndose como una card que brilla (glow micelio en el
+     box-shadow) en vez de un bloque plano. */
   .mycelium-core {
     position: relative;
     z-index: 1;
@@ -288,14 +292,21 @@ const {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: color-mix(in srgb, var(--dot-forest) 55%, transparent);
+    background: color-mix(in srgb, var(--dot-light) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid color-mix(in srgb, var(--dot-micelio) 40%, transparent);
     box-shadow: 0 0 32px color-mix(in srgb, var(--dot-micelio) 25%, transparent);
   }
+  /* El logo (PNG claro, pensado para fondo oscuro) se fuerza a negro con un
+     filtro — brightness(0) pinta a negro sólido cualquier píxel no
+     transparente sin importar su color original, sin necesitar un archivo
+     nuevo. */
   .core-logo {
     height: 1.5rem;
     width: auto;
     object-fit: contain;
+    filter: brightness(0);
   }
 
   .mycelium-grid {
@@ -324,16 +335,28 @@ const {
   }
 
   /* SAP Business One cierra el diagrama como núcleo ERP del ecosistema —
-     mismo tamaño de card que el resto, solo con un borde más marcado. */
+     mismo tamaño de card que el resto. Fondo blanco de la paleta (Bruma
+     Digital) con opacidad casi máxima, textos en negro — mismo tratamiento
+     que la card del logo DOT de más arriba, pero acá con más opacidad
+     porque se pidió explícitamente "casi máxima" (no translúcida). */
   .mycelium-card--highlight {
     border-color: color-mix(in srgb, var(--dot-micelio) 45%, transparent);
-    background: color-mix(in srgb, var(--dot-forest) 30%, transparent);
+    background: color-mix(in srgb, var(--dot-light) 92%, transparent);
   }
   .mycelium-card--highlight:hover {
     border-color: color-mix(in srgb, var(--dot-micelio) 75%, transparent);
   }
   .mycelium-card--highlight .card-logo {
     height: 2.75rem;
+  }
+  .mycelium-card--highlight .card-name,
+  .mycelium-card--highlight .card-desc {
+    color: var(--dot-dark);
+  }
+  /* Mismo celeste SAP usado en la página propia del producto (#6fa8f0) —
+     no es parte de los 7 tokens de marca, es el color oficial de SAP. */
+  .mycelium-card--highlight .card-category {
+    color: #6fa8f0;
   }
 
   .card-logo {
@@ -349,6 +372,12 @@ const {
     max-height: 100%;
     object-fit: contain;
     object-position: left center;
+  }
+  /* Estos dos se leen chicos dentro de la caja fija del logo. */
+  .mycelium-card[data-name="Smart Order"] .card-logo img,
+  .mycelium-card[data-name="Mobile One"] .card-logo img {
+    transform: scale(1.1);
+    transform-origin: left center;
   }
   .card-logo-fallback {
     display: flex;

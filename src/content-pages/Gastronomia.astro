@@ -83,7 +83,7 @@ const pieces = g.ecosystem.pieces.map((p) => ({
     </div>
   </section>
 
-  <div class="container">
+  <div class="container final-cta">
     <CTASection title={g.finalCta.title} body={g.finalCta.body} button={g.finalCta.button} href={contactHref} />
   </div>
 </Layout>
@@ -98,5 +98,84 @@ const pieces = g.ecosystem.pieces.map((p) => ({
   .why-panel {
     padding: clamp(2rem, 4vw, 3rem);
     border: none;
+  }
+
+  /* Cards de "Por qué DOT" (FeatureGrid es compartido con Nosotros/Retail/Servicios, así
+     que el rediseño se scopea solo a esta sección en vez de tocar el componente). Antes eran
+     3 cajas planas idénticas — ahora cada una tiene: acento de color propio (barra superior
+     que se extiende al hover) y un lift + sombra al pasar el mouse. */
+  .why-panel :global(.feature-grid) {
+    gap: 1.5rem !important;
+  }
+
+  .why-panel :global(.feature) {
+    position: relative;
+    overflow: hidden;
+    background: var(--dot-light) !important;
+    border: 1px solid color-mix(in srgb, var(--dot-dark) 10%, transparent) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: clamp(1.75rem, 3vw, 2.25rem) !important;
+    transition: transform 0.35s var(--ease-out), border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  }
+  .why-panel :global(.feature:hover) {
+    transform: translateY(-6px);
+    border-color: var(--card-why-accent, var(--dot-micelio)) !important;
+    box-shadow: 0 20px 44px -16px color-mix(in srgb, var(--dot-dark) 22%, transparent);
+  }
+  .why-panel :global(.feature:nth-child(1)) {
+    --card-why-accent: var(--dot-micelio);
+  }
+  .why-panel :global(.feature:nth-child(2)) {
+    --card-why-accent: var(--dot-moss);
+  }
+  .why-panel :global(.feature:nth-child(3)) {
+    --card-why-accent: var(--dot-sage);
+  }
+
+  /* Barra de acento superior — oculta a 30% de su ancho en reposo, se extiende completa al
+     hover (mismo lenguaje de "revelar algo al interactuar" que el resto del sitio). */
+  .why-panel :global(.feature::before) {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--card-why-accent, var(--dot-micelio));
+    transform: scaleX(0.3);
+    transform-origin: left center;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .why-panel :global(.feature:hover::before) {
+    transform: scaleX(1);
+  }
+
+  .why-panel :global(.feature h3) {
+    position: relative;
+    color: var(--dot-dark) !important;
+    margin-top: 0.75rem;
+  }
+  .why-panel :global(.feature p) {
+    position: relative;
+    color: color-mix(in srgb, var(--dot-dark) 72%, transparent) !important;
+  }
+
+  /* CTA final — card negra sólida (opacidad máxima, sin transparencia) con borde micelio
+     resplandeciente (glow permanente, no solo al hover), título en micelio y cuerpo en
+     blanco (CTASection es compartido con Nosotros/Retail/Servicios/etc., por eso el scope
+     acá y no en el componente). */
+  .final-cta :global(.cta-panel) {
+    background: var(--dot-dark) !important;
+    border: 1px solid var(--dot-micelio) !important;
+    box-shadow: 0 0 36px color-mix(in srgb, var(--dot-micelio) 40%, transparent) !important;
+    /* Más ancha que el --content-max (720px) por defecto — el párrafo es largo y a ese
+       ancho quedaba en demasiadas líneas; con más espacio horizontal se lee en menos. */
+    max-width: 56rem !important;
+  }
+  .final-cta :global(.cta-panel h2) {
+    color: var(--dot-micelio) !important;
+  }
+  .final-cta :global(.cta-panel p) {
+    color: var(--dot-light) !important;
   }
 </style>

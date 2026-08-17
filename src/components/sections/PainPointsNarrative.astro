@@ -220,7 +220,9 @@ const parsedItems = items.map((item, i) => {
 
   gsap.registerPlugin(ScrollTrigger, TextPlugin, MorphSVGPlugin);
 
-  const MS_PER_CHAR = 0.035; // ~35ms por carácter, igual escala que las pausas entre frases
+  const MS_PER_CHAR = 0.06; // ~60ms "por carácter" (escala de scroll, no tiempo real) — más
+  // alto que las pausas entre frases a propósito: así el tipeo en sí se revela más lento al
+  // scrollear, no solo la sección completa (eso ya lo maneja SCROLL_SLOWDOWN más abajo).
 
   function initPainPointsNarrative() {
     const section = document.querySelector<HTMLElement>('[data-pain-narrative]');
@@ -321,32 +323,73 @@ const parsedItems = items.map((item, i) => {
     gsap.set(itemLayers, { autoAlpha: 0, y: 50 });
     gsap.set(svgLayer, { autoAlpha: 0 });
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: '+=950%',
-        pin: true,
-        scrub: 0.5,
-      },
+    // El párrafo está centrado (`text-align:left` + caja de ancho fijo, centrada por el flex
+    // del layer — ver CSS) para que tipear NO haga que el bloque se vaya agrandando y
+    // recentrando letra a letra (eso es lo que se veía como un "acomodo" molesto). El ancho
+    // final de cada frase se mide UNA vez acá, con un clon oculto que hereda la misma
+    // tipografía (clamp() responsivo incluido), y se fija en `typeEl` justo antes de que
+    // empiece a tipearse esa frase — así la caja ya tiene su tamaño definitivo desde el primer
+    // carácter y el texto solo crece hacia la derecha dentro de ella.
+    const measurerEl = typeEl.cloneNode(false) as HTMLElement;
+    measurerEl.removeAttribute('data-pain-typewriter');
+    Object.assign(measurerEl.style, {
+      position: 'absolute',
+      visibility: 'hidden',
+      whiteSpace: 'nowrap',
+      maxWidth: 'none',
+      height: '0',
+      overflow: 'hidden',
+      pointerEvents: 'none',
     });
+    typeEl.insertAdjacentElement('afterend', measurerEl);
+
+    function measureWidth(text: string) {
+      measurerEl.textContent = text;
+      return Math.ceil(measurerEl.getBoundingClientRect().width) + 4;
+    }
+
+    const widthPhrase1 = measureWidth(phrase1);
+    const widthPhrase2Full = measureWidth(phrase2Prefix + phrase2Highlight);
+    const widthPhrase2Suffix = measureWidth(phrase2Suffix);
+    const widthPhrase3 = measureWidth(phrase3);
+    measurerEl.remove();
+
+    // El scroll se sentía muy rápido durante el manifiesto tipeado y los puntos de dolor
+    // (fases 1, 2 y 2.5) — se leen de un vistazo y ya se pasó a la siguiente. De ahí en
+    // adelante (fase 3: nace el isotipo "dot"; fase 4: zoom + iris + cierre) el ritmo estaba
+    // bien y no debía cambiar. Como todo esto es UN solo timeline con scrub (un único tramo
+    // de scroll mapeado linealmente a su duración total), no se puede variar la velocidad a
+    // mitad de camino directamente — el truco es armar las fases 1/2/2.5 en un timeline
+    // aparte (`earlyTl`), aplicarle un `timeScale` menor a 1 (que ESTIRA su duración dentro
+    // del padre sin tocar ninguno de los valores de arriba) y compensar el `end` del
+    // ScrollTrigger con la misma proporción, para que el pixel-budget de la fase 3/4 quede
+    // exactamente igual que antes.
+    const SCROLL_SLOWDOWN = 1.8; // 1 = sin cambio; más alto = manifiesto + dolor más lentos
+
+    const earlyTl = gsap.timeline();
 
     // Fase 1: manifiesto tipeado — `phrase1` y `phrase2` se reemplazan en el mismo lugar.
-    tl.set(mainEl, { autoAlpha: 1, color: 'var(--dot-moss)' }, 0)
+    earlyTl
+      .set(typeEl, { width: widthPhrase1 }, 0)
+      .set(mainEl, { autoAlpha: 1, color: 'var(--dot-moss)' }, 0)
       .to(mainEl, { text: phrase1, duration: phrase1.length * MS_PER_CHAR, ease: 'none' })
       .to(mainEl, { autoAlpha: 0, duration: 0.4, ease: 'none' }, '+=1.0')
       .set(mainEl, { text: '', autoAlpha: 1, color: 'var(--dot-dark)' })
+      .set(typeEl, { width: widthPhrase2Full })
       // `phrase2`, parte A: prefijo (negro) + frase resaltada (verde micelio) tipeados en
       // línea, uno justo después del otro, para que se lean como una sola oración.
       .to(mainEl, { text: phrase2Prefix, duration: phrase2Prefix.length * MS_PER_CHAR, ease: 'none' })
       .to(highlightEl, { text: phrase2Highlight, duration: phrase2Highlight.length * MS_PER_CHAR, ease: 'none' })
-      // Pausa para leer la oración completa. Luego SOLO la frase resaltada "crece" hasta
-      // desaparecer (mismo lenguaje visual que el zoom del isotipo más adelante), arrastrando
-      // al resto de la línea con ella en el mismo momento.
-      .to(highlightEl, { scale: 14, autoAlpha: 0, duration: 1.2, ease: 'power2.in' }, '+=0.8')
-      .to(mainEl, { autoAlpha: 0, duration: 0.6, ease: 'none' }, '<')
+      // Pausa para leer la oración completa. Primero se retira el prefijo (negro) solo,
+      // dejando "Y tú al medio:" (verde) sola en pantalla unos segundos; recién después esa
+      // frase "crece" hasta desaparecer por completo (mismo lenguaje visual que el zoom del
+      // isotipo más adelante) — un quiebre de ritmo en dos pasos en vez de que ambas se vayan
+      // juntas de golpe.
+      .to(mainEl, { autoAlpha: 0, duration: 0.6, ease: 'none' }, '+=0.8')
+      .to(highlightEl, { scale: 14, autoAlpha: 0, duration: 1.2, ease: 'power2.in' }, '+=1.5')
       .set(highlightEl, { scale: 1, text: '' })
       .set(mainEl, { text: '', autoAlpha: 1 })
+      .set(typeEl, { width: widthPhrase2Suffix })
       // `phrase2`, parte B: el resto de la oración, tipeada de cero en el mismo lugar.
       .to(mainEl, { text: phrase2Suffix, duration: phrase2Suffix.length * MS_PER_CHAR, ease: 'none' })
       // El manifiesto se retira hacia arriba para dar paso a la secuencia de dolor.
@@ -354,7 +397,8 @@ const parsedItems = items.map((item, i) => {
 
     // Fase 2: puntos de dolor, uno a la vez — entra desde abajo, se lee, sale hacia arriba.
     itemLayers.forEach((layer) => {
-      tl.to(layer, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' }, '+=0.3')
+      earlyTl
+        .to(layer, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' }, '+=0.3')
         .to(layer, { y: -50, autoAlpha: 0, duration: 0.5, ease: 'power2.in' }, '+=1.2');
     });
 
@@ -362,11 +406,38 @@ const parsedItems = items.map((item, i) => {
     // punto de dolor (06 · Soporte) y antes del cierre. El texto se limpia MIENTRAS la capa
     // sigue invisible (autoAlpha:0 de la fase anterior) — si se limpiara después de hacer
     // fade-in, el `phrase2` que quedó en el DOM alcanzaría a verse un instante antes de vaciarse.
-    tl.set(mainEl, { text: '', autoAlpha: 1, color: 'var(--dot-moss)' }, '+=0.3')
+    earlyTl
+      .set(mainEl, { text: '', autoAlpha: 1, color: 'var(--dot-moss)' }, '+=0.3')
+      .set(typeEl, { width: widthPhrase3 })
       .set(typeLayer, { y: 50 })
       .to(typeLayer, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' })
       .to(mainEl, { text: phrase3, duration: phrase3.length * MS_PER_CHAR, ease: 'none' })
       .to(typeLayer, { y: -50, autoAlpha: 0, duration: 0.5, ease: 'none' }, '+=1.0');
+
+    // Duración "real" de las fases 1/2/2.5 ANTES de estirarlas — GSAP la calcula sola a
+    // partir de las duraciones de arriba, sin importar el largo de las frases del idioma
+    // que sea. Recién después se aplica el timeScale que las alarga en el padre.
+    const earlyDuration = earlyTl.duration();
+    earlyTl.timeScale(1 / SCROLL_SLOWDOWN);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: () => {
+          // "950%" era el tramo de scroll ya afinado para la duración ORIGINAL (sin estirar).
+          // Se reescala en la misma proporción en que creció la duración total, así el
+          // pixel-budget de la fase 3/4 (el isotipo en adelante) queda intacto.
+          const totalDuration = tl.duration();
+          const originalTotalDuration = totalDuration - earlyDuration * (SCROLL_SLOWDOWN - 1);
+          return `+=${950 * (totalDuration / originalTotalDuration)}%`;
+        },
+        pin: true,
+        scrub: 0.5,
+      },
+    });
+
+    tl.add(earlyTl);
 
     // Fase 3: cierre — el isotipo nace del mismo centro, morpheando desde 3 esferas a D-O-T.
     tl.set(svgLayer, { autoAlpha: 1 }, '+=0.3')
@@ -495,7 +566,11 @@ const parsedItems = items.map((item, i) => {
 
   .pain-narrative__typewriter {
     max-width: 56rem;
-    text-align: center;
+    /* Ancho fijado por JS al valor final de cada frase, antes de empezar a tipearla (ver
+       script) — con text-align:left el texto crece hacia la derecha dentro de esa caja ya
+       del tamaño definitivo, en vez de que la caja (y el flex que la centra) se vayan
+       agrandando y recentrando letra a letra. */
+    text-align: left;
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: clamp(1.96rem, 5.04vw, 3.36rem);
@@ -510,11 +585,12 @@ const parsedItems = items.map((item, i) => {
     opacity: 0;
   }
 
-  /* Frase resaltada dentro de `phrase2` — siempre verde micelio, tipeada inline junto al
-     resto y luego escalada hasta desaparecer (ver Fase 1 en el script). */
+  /* Frase resaltada dentro de `phrase2` ("Y tú al medio:") — mismo verde que `phrase1` (el
+     texto anterior), tipeada inline junto al resto y luego escalada hasta desaparecer (ver
+     Fase 1 en el script). */
   .pain-narrative__typewriter-highlight {
     display: inline-block;
-    color: var(--dot-micelio);
+    color: var(--dot-moss);
     transform-origin: center center;
   }
 
@@ -564,7 +640,7 @@ const parsedItems = items.map((item, i) => {
     font-size: var(--text-sm);
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--dot-dark);
+    color: var(--dot-moss);
     margin: 0 0 var(--space-sm);
   }
 
@@ -582,9 +658,9 @@ const parsedItems = items.map((item, i) => {
     margin-top: var(--space-sm);
     padding: 0.4rem 1rem;
     border-radius: var(--radius-full);
-    background: color-mix(in srgb, var(--dot-sage) 30%, transparent);
-    border: 1px solid color-mix(in srgb, var(--dot-moss) 30%, transparent);
-    color: var(--dot-dark);
+    background: transparent;
+    border: 1px solid var(--dot-moss);
+    color: var(--dot-moss);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
   }

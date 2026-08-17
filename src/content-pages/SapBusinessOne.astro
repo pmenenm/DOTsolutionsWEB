@@ -1,19 +1,19 @@
 ---
+// src/content-pages/SapBusinessOne.astro
+// Modelo de scroll híbrido: los primeros 4 paneles (Hero, Diagnóstico, Módulos,
+// Proceso de selección) van en el riel horizontal pineado de
+// SapHorizontalScroll.astro; a partir de ahí (Add-ons en adelante) la página
+// sigue en scroll vertical normal, como cualquier otra sección del sitio.
+// "Beneficios" e "Industrias" siguen fuera de la página a pedido explícito —
+// sus componentes no se tocaron, solo dejaron de usarse acá.
 import Layout from '../layouts/Layout.astro';
-import ProductHero from '../components/sections/ProductHero.astro';
-import SectionHeading from '../components/sections/SectionHeading.astro';
-import PainBento from '../components/sections/PainBento.astro';
-import ProductModulesGrid from '../components/sections/ProductModulesGrid.astro';
+import SapHorizontalScroll from '../components/sections/SapHorizontalScroll.astro';
 import ClientLogos from '../components/sections/ClientLogos.astro';
-import ProcessTimelineAnimated from '../components/sections/ProcessTimelineAnimated.astro';
-import BenefitsList from '../components/sections/BenefitsList.astro';
 import ProductAddonsCTA from '../components/sections/ProductAddonsCTA.astro';
-import ProductIndustriesStrip from '../components/sections/ProductIndustriesStrip.astro';
 import ProductUpsellBanner from '../components/sections/ProductUpsellBanner.astro';
 import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
-import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -29,61 +29,10 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
 ---
 
 <Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/sap-business-one">
-  <ProductHero
-    line1={s.hero.line1}
-    line2={s.hero.line2}
-    line3={s.hero.line3}
-    line4={s.hero.line4}
-    subtitle={s.hero.subtitle}
-    paragraph={s.hero.paragraph}
-    cta={s.hero.cta}
-    ctaHref={contactHref}
-    backgroundImage="/images/background_1.jpg"
-    titleLogo="/logos/logos dot/sapone.png"
-    stats={s.heroStats}
-  />
-
-  <section class="section">
-    <div class="container">
-      <div class="diagnostic-heading">
-        <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} align="center" />
-      </div>
-      <div class="section-body">
-        <PainBento items={s.bento.items} />
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <ProductModulesGrid eyebrow={s.platform.eyebrow} title={s.platform.title} modules={s.platform.modules} />
-    </div>
-  </section>
+  <SapHorizontalScroll s={s} contactHref={contactHref} />
 
   <section class="section logos-section">
     <ClientLogos title={t.common.clientsTitle} />
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="glass-panel process-panel">
-        <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
-        <div class="section-body narrow">
-          <ProcessTimelineAnimated steps={s.process.steps} />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section benefits-section">
-    <img class="benefits-bg" src={withBase('/images/background_3.jpg')} alt="" aria-hidden="true" />
-    <div class="benefits-bg-overlay" aria-hidden="true"></div>
-    <div class="container benefits-content">
-      <SectionHeading title={s.benefits.title} />
-      <div class="section-body narrow">
-        <BenefitsList items={s.benefits.items} />
-      </div>
-    </div>
   </section>
 
   <section class="section">
@@ -96,12 +45,6 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
         cta={s.addons.cta}
         ctaHref={addonsHref}
       />
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <ProductIndustriesStrip eyebrow={s.industries.eyebrow} title={s.industries.title} items={s.industries.items} />
     </div>
   </section>
 
@@ -126,20 +69,24 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
   .section {
     padding-block: var(--space-lg);
   }
-  .section-body {
-    margin-top: var(--space-lg);
-  }
-  .section-body.narrow {
-    max-width: var(--content-max);
-  }
-
-  .process-panel {
-    padding: clamp(2rem, 4vw, 3rem);
-    border: none;
+  .logos-section {
+    padding-block: var(--space-md) var(--space-lg);
   }
 
   :global(.product-hero-copy .subtitle) {
     color: #6fa8f0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  :global(.product-hero-copy .paragraph) {
+    font-size: 0.92rem !important;
+  }
+
+  /* Baja todo el bloque de contenido del hero un 20% de su propia altura —
+     el hero está anclado abajo (align-items:flex-end) porque tiene foto de
+     fondo, así que esto lo acerca más al borde inferior real de la pantalla. */
+  :global(.product-hero-grid) {
+    transform: translateY(20%) !important;
   }
 
   :global(.product-hero-stats .value) {
@@ -166,7 +113,6 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
   }
   :global(.bento-card),
   :global(.module-card),
-  :global(.benefit-card),
   :global(.upsell) {
     border-radius: var(--radius-md);
   }
@@ -197,21 +143,6 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
     background: color-mix(in srgb, #6fa8f0 95%, transparent) !important;
   }
 
-  /* Beneficios — mismo celeste que el resto de la página en ícono y borde,
-     y crecen (card + ícono) al hacer hover, además de iluminarse el borde. */
-  :global(.benefit-card) {
-    --card-accent: #6fa8f0 !important;
-  }
-  :global(.benefit-card:hover) {
-    transform: translateY(-4px) scale(1.03) !important;
-  }
-  :global(.benefit-check) {
-    transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast) !important;
-  }
-  :global(.benefit-card:hover .benefit-check) {
-    transform: scale(1.15) !important;
-  }
-
   :global(.module-card h3) {
     display: inline-block;
     color: var(--dot-light) !important;
@@ -221,79 +152,5 @@ const compareHref = getRelativeLocaleUrl(lang, 'business-one-vs-s4hana');
   :global(.module-card:hover h3) {
     color: #6fa8f0 !important;
     transform: scale(1.08);
-  }
-
-
-  .logos-section {
-    padding-block: var(--space-md) var(--space-lg);
-  }
-
-  /* Background fotográfico en Beneficios — overlay oscuro para que el texto
-     blanco con acentos verdes (BenefitsList) siga legible encima. */
-  .benefits-section {
-    position: relative;
-    overflow: hidden;
-  }
-  .benefits-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-  }
-  /* Se funde con las secciones vecinas: opaca (dot-dark) en los bordes
-     superior/inferior, y solo un tinte suave para legibilidad en el medio
-     donde la foto queda a la vista. */
-  .benefits-bg-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-      to bottom,
-      var(--dot-dark) 0%,
-      color-mix(in srgb, var(--dot-dark) 45%, transparent) 20%,
-      color-mix(in srgb, var(--dot-dark) 45%, transparent) 80%,
-      var(--dot-dark) 100%
-    );
-  }
-  .benefits-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Título "El diagnóstico" — más grande, más peso, y un degradé animado
-     en loop lento que recorre blanco -> verde micelio -> blanco. */
-  .diagnostic-heading :global(.title) {
-    max-width: 26ch;
-    margin-inline: auto;
-    padding-bottom: 0.5em !important;
-    line-height: 1.4 !important;
-    font-size: clamp(2.5rem, 5.2vw, 3.75rem);
-    font-weight: 600;
-    background: linear-gradient(
-      90deg,
-      var(--dot-light) 0%,
-      var(--dot-light) 35%,
-      var(--dot-micelio) 50%,
-      var(--dot-light) 65%,
-      var(--dot-light) 100%
-    );
-    background-size: 250% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: diagnostic-gradient-loop 6s linear infinite;
-  }
-  @keyframes diagnostic-gradient-loop {
-    to {
-      background-position: -250% 0;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .diagnostic-heading :global(.title) {
-      animation: none;
-      background-position: 50% 0;
-    }
   }
 </style>

@@ -1,0 +1,545 @@
+---
+// src/components/sections/SapHorizontalScroll.astro
+// Scroll híbrido para la página de SAP Business One: los primeros 4 paneles
+// (Hero, Diagnóstico, Módulos, Proceso de selección) viven en un riel
+// horizontal pineado; al terminar el panel 4, el pin se suelta solo y el
+// resto de la página (Add-ons, S/4HANA, cierre) sigue en scroll vertical
+// normal — eso vive afuera de este componente, en SapBusinessOne.astro.
+//
+// Mecánica (GSAP ScrollTrigger + matchMedia):
+//   - `.sap-h-container` es a la vez el `trigger` Y el elemento pineado
+//     (`pin:true` sobre el propio trigger, no un target aparte) — con un
+//     `end` calculado dinámicamente (`scrollWidth - innerWidth` del riel),
+//     GSAP arma el espaciador de scroll automático con el largo exacto que
+//     hace falta para recorrer los 4 paneles, sin adivinar una altura fija.
+//   - El riel se desplaza en píxeles reales (`x`, no `xPercent`) exactamente
+//     lo que sobra de ancho — funciona aunque algún panel no sea 100vw
+//     clavado.
+//   - `gsap.matchMedia()` con corte en 1024px: el pin horizontal solo se
+//     arma en desktop; en mobile/tablet el riel cae a layout vertical por
+//     CSS y no se monta ninguna animación.
+//   - Barra de progreso fija abajo, actualizada en el `onUpdate` del tween.
+interface Props {
+  s: any;
+  contactHref: string;
+}
+
+const { s, contactHref } = Astro.props;
+
+import ProductHero from './ProductHero.astro';
+import SectionHeading from './SectionHeading.astro';
+import PainBento from './PainBento.astro';
+import ProductModulesGrid from './ProductModulesGrid.astro';
+import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
+---
+
+<div class="sap-h-container" data-sap-h-container>
+  <div class="sap-h-track" data-sap-h-track>
+    <!-- Panel 01 — Hero & autoridad (SAP Gold Partner) -->
+    <section class="sap-h-panel sap-h-panel--hero">
+      <ProductHero
+        line1={s.hero.line1}
+        line2={s.hero.line2}
+        line3={s.hero.line3}
+        line4={s.hero.line4}
+        subtitle={s.hero.subtitle}
+        paragraph={s.hero.paragraph}
+        cta={s.hero.cta}
+        ctaHref={contactHref}
+        backgroundImage="/images/background_1.jpg"
+        titleLogo="/logos/logos dot/sapone.png"
+        stats={s.heroStats}
+      />
+    </section>
+
+    <!-- Panel 02 — Diagnóstico & fricción operativa -->
+    <section class="sap-h-panel sap-h-panel--problem">
+      <div class="sap-h-inner sap-h-inner--6xl" data-sap-h-reveal>
+        <div class="diagnostic-heading">
+          <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} align="left" />
+        </div>
+        <div class="sap-h-body problem-grid">
+          <PainBento items={s.bento.items} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 03 — Módulos de la plataforma -->
+    <section class="sap-h-panel sap-h-panel--modules">
+      <div class="sap-h-inner sap-h-inner--6xl" data-sap-h-reveal>
+        <ProductModulesGrid eyebrow={s.platform.eyebrow} title={s.platform.title} modules={s.platform.modules} />
+      </div>
+    </section>
+
+    <!-- Panel 04 — Proceso de selección y consultoría -->
+    <section class="sap-h-panel">
+      <div class="sap-h-inner sap-h-inner--5xl" data-sap-h-reveal>
+        <div class="glass-panel process-panel">
+          <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} align="center" />
+          <div class="sap-h-body narrow">
+            <ProcessTimelineAnimated steps={s.process.steps} />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="sap-h-progress" data-sap-h-progress aria-hidden="true">
+    <div class="sap-h-progress-bar" data-sap-h-progress-bar></div>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initSapHorizontalScroll() {
+    const containerEl = document.querySelector<HTMLElement>('[data-sap-h-container]');
+    const trackEl = document.querySelector<HTMLElement>('[data-sap-h-track]');
+    const progressBar = document.querySelector<HTMLElement>('[data-sap-h-progress-bar]');
+    if (!containerEl || !trackEl) return;
+
+    const mm = gsap.matchMedia();
+
+    // Desktop (>1024px): scroll vertical hijackeado -> desplazamiento horizontal.
+    // El pin se suelta solo apenas se termina el ancho del riel (panel 4
+    // incluido) — de ahí en adelante sigue como scroll vertical normal.
+    mm.add('(min-width: 1025px)', () => {
+      const panels = gsap.utils.toArray<HTMLElement>('.sap-h-panel', trackEl);
+
+      // Antes el riel se movía 1:1 con el scroll (una sola tween lineal) —
+      // las 4 secciones pasaban de largo sin dar tiempo a leerlas. Ahora es
+      // un timeline con un tramo de PAUSA (hold: mismo x, sin movimiento)
+      // en cada panel, intercalado con el tramo de MOVIMIENTO hacia el
+      // siguiente — el scroll total necesario para recorrer el riel crece
+      // (hay que "gastar" scroll también en las pausas), pero el usuario
+      // percibe que cada sección se queda quieta un momento antes de pasar
+      // a la próxima. HOLD_RATIO controla cuánto dura la pausa en relación
+      // al movimiento (1.3 = la pausa dura un 30% más que el desplazamiento).
+      const HOLD_RATIO = 1.3;
+      // Cada tramo de MOVIMIENTO (duration:1) representa un desplazamiento
+      // de moveDistance/transitions píxeles; el scroll total necesario es
+      // ese mismo "precio por unidad de duración" multiplicado por la
+      // duración completa del timeline (movimientos + pausas), así que las
+      // pausas quedan con la misma proporción de scroll real que su
+      // duración relativa a un movimiento.
+      const totalScroll = () => {
+        const moveDistance = trackEl.scrollWidth - window.innerWidth;
+        const transitions = Math.max(panels.length - 1, 1);
+        const totalDuration = transitions + (transitions + 1) * HOLD_RATIO;
+        return moveDistance * (totalDuration / transitions);
+      };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerEl,
+          pin: true,
+          scrub: 1,
+          start: 'top top',
+          end: () => `+=${totalScroll()}`,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (progressBar) progressBar.style.width = `${self.progress * 100}%`;
+          },
+        },
+      });
+
+      // Pausa inicial sobre el panel 1 antes de arrancar el primer desplazamiento.
+      tl.to(trackEl, { x: '+=0', ease: 'none', duration: HOLD_RATIO });
+      panels.slice(1).forEach((panel) => {
+        tl.to(trackEl, { x: () => -panel.offsetLeft, ease: 'power1.inOut', duration: 1 });
+        tl.to(trackEl, { x: '+=0', ease: 'none', duration: HOLD_RATIO });
+      });
+
+      // Transición de entrada por panel (02, 03, 04) — patrón oficial de GSAP
+      // para animar contenido DENTRO de un contenedor con scroll horizontal:
+      // `containerAnimation` hace que el trigger se evalúe según la posición
+      // horizontal del panel dentro del riel (no el scroll vertical real).
+      // Cada bloque entra con fade + escala + leve subida, y termina de
+      // asentarse justo antes de quedar centrado en pantalla.
+      const revealEls = gsap.utils.toArray<HTMLElement>('[data-sap-h-reveal]');
+      revealEls.forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 56, scale: 0.92 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              containerAnimation: tl,
+              start: 'left 88%',
+              end: 'left 42%',
+              scrub: true,
+            },
+          }
+        );
+      });
+
+      // Cleanup al salir del breakpoint (matchMedia lo llama automático).
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+        gsap.set(trackEl, { clearProps: 'transform' });
+        gsap.set(revealEls, { clearProps: 'opacity,transform' });
+        if (progressBar) progressBar.style.width = '0%';
+      };
+    });
+
+    // Mobile/tablet (≤1024px): layout vertical estándar, sin pin ni transform
+    // — el riel vuelve a apilarse por CSS (ver media query abajo).
+    mm.add('(max-width: 1024px)', () => {
+      return () => {};
+    });
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => mm.revert(),
+      { once: true }
+    );
+  }
+
+  document.addEventListener('astro:page-load', initSapHorizontalScroll);
+</script>
+
+<style>
+  .sap-h-container {
+    position: relative;
+  }
+
+  .sap-h-inner--6xl {
+    max-width: 72rem;
+    margin-inline: auto;
+  }
+  .sap-h-inner--5xl {
+    /* Un poco más ancho que el 60rem original —le da lugar al texto de la
+       sección "Cómo trabajamos" (30% más grande, ver más abajo) sin que
+       cada paso del timeline tenga que envolver en más líneas de las que
+       tenía antes. */
+    max-width: 72rem;
+    margin-inline: auto;
+  }
+
+  .sap-h-body {
+    margin-top: var(--space-lg);
+  }
+  .sap-h-body.narrow {
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
+
+  .process-panel {
+    padding: clamp(1.95rem, 3.9vw, 2.925rem);
+    border: none;
+  }
+
+  /* Sin encabezado propio del grid (title/eyebrow vacíos en el markup de
+     arriba) — el título ya lo puso el SectionHeading de este panel. */
+  .problem-grid :global(.modules-heading) {
+    display: none;
+  }
+
+  /* Panel de diagnóstico compacto: grid uniforme (no el bento asimétrico
+     por defecto, pensado para un ancho de página normal) con alturas
+     fijas, para que las 4 cards de dolor quepan sin desbordar el panel. */
+  .problem-grid :global(.bento) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
+  }
+  .problem-grid :global(.bento-card) {
+    grid-column: span 1 !important;
+    min-height: 150px !important;
+    padding: 1.25rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+  /* PainBento fue pensado para un ancho de página normal: a partir de 900px
+     agranda MUCHO el texto de las cards 1 y 4 (span 2, hasta 3.25rem) para
+     que luzcan como bloques destacados de un ancho completo. Acá las 4
+     cards son del mismo tamaño (span 1, ~150px de alto) — sin este reset
+     esas dos cards quedaban con un texto gigante e ilegible apretado en una
+     caja chica. Se define un solo tamaño, igual para las 4. */
+  .problem-grid :global(.bento-card h3) {
+    font-size: 1.05rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.4rem !important;
+    padding-right: 2rem !important;
+    max-width: none !important;
+  }
+  .problem-grid :global(.bento-card p) {
+    font-size: 0.825rem !important;
+    line-height: 1.5 !important;
+    max-width: none !important;
+  }
+  .problem-grid :global(.bento-icon) {
+    top: 0.35rem !important;
+    right: 0.75rem !important;
+  }
+  .problem-grid :global(.bento-icon svg) {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+
+  /* Título "El diagnóstico" — degradé animado blanco -> celeste SAP -> blanco. */
+  .diagnostic-heading :global(.title) {
+    max-width: 34ch;
+    padding-bottom: 0.5em !important;
+    line-height: 1.3 !important;
+    /* Mismo tamaño que el título de "Cómo trabajamos" y el de "La
+       plataforma" (clamp(2.325rem, 4.06vw, 3.38rem)). */
+    font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
+    font-weight: 600;
+    background: linear-gradient(
+      90deg,
+      var(--dot-light) 0%,
+      var(--dot-light) 35%,
+      #6fa8f0 50%,
+      var(--dot-light) 65%,
+      var(--dot-light) 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: sap-h-gradient-loop 6s linear infinite;
+  }
+  .diagnostic-heading :global(.eyebrow) {
+    font-size: 0.75rem !important;
+  }
+  @keyframes sap-h-gradient-loop {
+    to {
+      background-position: -250% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .diagnostic-heading :global(.title) {
+      animation: none;
+      background-position: 50% 0;
+    }
+  }
+
+  /* ---------- Panel de módulos — versión compacta de ProductModulesGrid. ---------- */
+  /* Mismo tamaño que el título de "Cómo trabajamos" (.process-panel .title
+     más abajo, clamp(2.325rem, 4.06vw, 3.38rem) tras su ajuste +30%). */
+  .sap-h-panel--modules :global(.modules-heading .title) {
+    font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
+  }
+  .sap-h-panel--modules :global(.modules-heading) {
+    margin-bottom: 0 !important;
+  }
+  .sap-h-panel--modules :global(.modules-grid) {
+    margin-top: 1.25rem !important;
+    gap: 0.75rem !important;
+  }
+  .sap-h-panel--modules :global(.module-card) {
+    padding: 1rem !important;
+  }
+  .sap-h-panel--modules :global(.module-icon) {
+    margin-bottom: 0.5rem !important;
+  }
+  .sap-h-panel--modules :global(.module-icon svg) {
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+  }
+  .sap-h-panel--modules :global(.module-card h3) {
+    font-size: 0.9375rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .sap-h-panel--modules :global(.module-card p) {
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* ---------- Panel de proceso — timeline horizontal compacto. El
+     componente original apila los pasos en columna con gaps grandes
+     (pensado para scroll vertical normal) y no cabe en un panel de 100vh;
+     acá se reordena en fila (marcador arriba, texto abajo) para que se lea
+     de un vistazo y sume al lenguaje "horizontal" del resto de la página. ---------- */
+  .process-panel :global(.heading .title) {
+    font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
+  }
+  .process-panel :global(.heading .subtitle) {
+    font-size: 1.17rem !important;
+    margin-top: 0.455rem !important;
+  }
+  .sap-h-body.narrow {
+    margin-top: 1.95rem !important;
+  }
+  .sap-h-body.narrow :global(.process-timeline) {
+    max-width: none !important;
+  }
+  .sap-h-body.narrow :global(.timeline-track) {
+    left: 0 !important;
+    right: 0 !important;
+    top: 1.235rem !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 2.6px !important;
+  }
+  .sap-h-body.narrow :global(.timeline-fill) {
+    width: 0% !important;
+    height: 100% !important;
+    transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .sap-h-body.narrow :global(.process-timeline.is-visible .timeline-fill) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .sap-h-body.narrow :global(.timeline-steps) {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 1.3rem !important;
+  }
+  .sap-h-body.narrow :global(.timeline-step) {
+    flex: 1 !important;
+    min-width: 0 !important;
+    gap: 0.65rem !important;
+    padding-left: 0 !important;
+    padding-top: 3.25rem !important;
+    flex-direction: column !important;
+  }
+  .sap-h-body.narrow :global(.step-marker) {
+    left: 0 !important;
+    top: 0 !important;
+    width: 2.47rem !important;
+    height: 2.47rem !important;
+    font-size: 0.91rem !important;
+  }
+  .sap-h-body.narrow :global(.step-copy h3) {
+    font-size: 1.219rem !important;
+    line-height: 1.3 !important;
+  }
+  .sap-h-body.narrow :global(.step-copy p) {
+    font-size: 0.975rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* ---------- Barra de progreso — más presencia visual + marcas de los
+     4 paneles (siempre son 4, así que las marcas van fijas al 25/50/75%). ---------- */
+  .sap-h-progress {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--dot-light) 22%, transparent) 0,
+      color-mix(in srgb, var(--dot-light) 22%, transparent) 1px,
+      transparent 1px,
+      transparent 25%
+    ), color-mix(in srgb, var(--dot-light) 10%, transparent);
+    z-index: var(--z-overlay);
+  }
+  .sap-h-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #6fa8f0;
+    box-shadow: 0 0 14px color-mix(in srgb, #6fa8f0 70%, transparent);
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Desktop (1025px+): scroll horizontal pineado. ---------- */
+  @media (min-width: 1025px) {
+    .sap-h-container {
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sap-h-track {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      will-change: transform;
+    }
+    .sap-h-panel {
+      width: 100vw;
+      height: 100%;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: clamp(2rem, 4vw, 4rem);
+      overflow: hidden;
+    }
+    .sap-h-panel--hero {
+      padding-inline: 0;
+    }
+    /* Título a la izquierda, cards a la derecha — layout de 2 columnas en
+       vez del apilado vertical por defecto (heading centrado arriba, grid
+       de cards abajo). */
+    .sap-h-panel--modules :global(.modules) {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 2.3fr;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .sap-h-panel--modules :global(.modules-heading) {
+      text-align: left !important;
+      margin-inline: 0 !important;
+      max-width: none !important;
+    }
+    .sap-h-panel--modules :global(.modules-heading .eyebrow) {
+      justify-content: flex-start !important;
+    }
+    /* 2x3 en vez de 3x2 — la columna de cards ahora comparte el ancho del
+       panel con la columna del título, así que necesita menos columnas
+       para que cada card no quede demasiado angosta. */
+    .sap-h-panel--modules :global(.modules-grid) {
+      grid-template-columns: repeat(2, 1fr) !important;
+      margin-top: 0 !important;
+    }
+
+    /* Estado inicial de la transición de entrada por panel — invisible hasta
+       que el JS (containerAnimation) lo revela al entrar en cámara. Solo en
+       desktop: en mobile no hay pin ni JS, así que el contenido debe verse
+       siempre. */
+    [data-sap-h-reveal] {
+      opacity: 0;
+    }
+
+    /* El hero (ProductHero con foto de fondo) usa la tipografía pensada
+       para una página normal de ancho completo — acá, comprimido en un
+       panel de 100vh dentro del riel horizontal, se reduce todo un escalón
+       para que se lea cómodo junto al resto de los paneles. */
+    .sap-h-panel--hero :global(.product-hero-copy h1) {
+      font-size: clamp(1.5rem, 2.6vw, 2.15rem) !important;
+    }
+    .sap-h-panel--hero :global(.top-logo) {
+      height: 1.75rem !important;
+    }
+    .sap-h-panel--hero :global(.title-logo) {
+      height: clamp(1.75rem, 4vw, 2.5rem) !important;
+    }
+    .sap-h-panel--hero :global(.product-hero-actions .cta),
+    .sap-h-panel--hero :global(.product-hero-actions .cta-secondary) {
+      padding: 0.8rem 1.75rem !important;
+      font-size: 0.875rem !important;
+    }
+    .sap-h-panel--hero :global(.product-hero-stats .value) {
+      font-size: clamp(1.25rem, 2vw, 1.625rem) !important;
+    }
+  }
+
+  /* ---------- Mobile/tablet (≤1024px): layout vertical estándar. ---------- */
+  @media (max-width: 1024px) {
+    .sap-h-progress {
+      display: none;
+    }
+    .sap-h-panel {
+      padding-block: var(--space-lg);
+      padding-inline: var(--container-pad);
+    }
+    .sap-h-panel--hero {
+      padding-inline: 0;
+    }
+    .problem-grid :global(.bento) {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
