@@ -12,7 +12,9 @@ interface Stat {
 interface Props {
   line1: string;
   line2: string;
-  line3: string;
+  /** Opcional — sin line3, el título queda en 2 líneas (line1 + line2, con
+      el glow de cierre en line2 en vez de line3). */
+  line3?: string;
   /** Línea opcional adicional — cuando se pasa, el título se reparte en 4
       líneas en vez de 3 y el glow de cierre se mueve a esta última. */
   line4?: string;
@@ -80,22 +82,28 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
       {topLogo && <img class="top-logo" src={withBase(topLogo)} alt="" />}
       <h1>
         <span class="line-mask"><span class="line-inner">{line1}</span></span>
-        <span class="line-mask"><span class="line-inner">{line2}</span></span>
-        {line4 ? (
+        {line3 ? (
           <>
-            <span class="line-mask"><span class="line-inner">{line3}</span></span>
-            <span class="line-mask">
-              <span class="line-inner">
-                {titleLogo ? (
-                  <img class="title-logo" src={withBase(titleLogo)} alt={line4} />
-                ) : (
-                  <span class="sap-glow">{line4}</span>
-                )}
-              </span>
-            </span>
+            <span class="line-mask"><span class="line-inner">{line2}</span></span>
+            {line4 ? (
+              <>
+                <span class="line-mask"><span class="line-inner">{line3}</span></span>
+                <span class="line-mask">
+                  <span class="line-inner">
+                    {titleLogo ? (
+                      <img class="title-logo" src={withBase(titleLogo)} alt={line4} />
+                    ) : (
+                      <span class="sap-glow">{line4}</span>
+                    )}
+                  </span>
+                </span>
+              </>
+            ) : (
+              <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line3}</span></span></span>
+            )}
           </>
         ) : (
-          <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line3}</span></span></span>
+          <span class="line-mask"><span class="line-inner"><span class="sap-glow">{line2}</span></span></span>
         )}
       </h1>
       <p class="subtitle">{subtitle}</p>

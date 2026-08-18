@@ -589,9 +589,9 @@ const industriesItems = t.home.industries.items.map((item) => ({
     left: 0;
     right: 0;
     width: 100%;
-    background-color: var(--dot-light);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+    background-color: var(--dot-dark);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
     opacity: 0;
     transform: translateY(-8px);
     pointer-events: none;
@@ -626,13 +626,13 @@ const industriesItems = t.home.industries.items.map((item) => ({
     margin-left: auto;
     padding: 0.85rem 1.5rem;
     border-radius: var(--radius-sm);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     text-decoration: none;
     transition: border-color var(--transition-fast), background var(--transition-fast);
   }
   .mega-top-sap:hover {
     border-color: var(--dot-micelio);
-    background: color-mix(in srgb, var(--dot-micelio) 6%, transparent);
+    background: color-mix(in srgb, var(--dot-micelio) 10%, transparent);
   }
   .mega-top-sap-copy {
     display: flex;
@@ -650,20 +650,20 @@ const industriesItems = t.home.industries.items.map((item) => ({
     font-family: var(--font-body);
     font-weight: 600;
     font-size: var(--text-xl);
-    color: var(--dot-dark);
+    color: var(--dot-light);
     margin-bottom: 0.35rem;
   }
   .mega-top-tagline {
     font-family: var(--font-body);
     font-weight: 300;
     font-size: var(--text-base);
-    color: var(--dot-gray);
+    color: color-mix(in srgb, var(--dot-light) 70%, var(--dot-dark) 30%);
     max-width: 42ch;
   }
 
   .mega-divider {
     border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-block: var(--space-md);
   }
 
@@ -695,7 +695,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
   }
   .mega-card:hover {
     border-color: var(--dot-micelio);
-    background: color-mix(in srgb, var(--dot-micelio) 6%, transparent);
+    background: color-mix(in srgb, var(--dot-micelio) 10%, transparent);
     transform: translateY(-3px);
   }
 
@@ -737,7 +737,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
     font-family: var(--font-body);
     font-weight: 600;
     font-size: var(--text-sm);
-    color: var(--dot-dark);
+    color: var(--dot-light);
     margin-bottom: 0.3rem;
   }
   .mega-desc {
@@ -745,7 +745,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
     font-size: 0.75rem;
     font-weight: 300;
     line-height: 1.4;
-    color: var(--dot-gray);
+    color: color-mix(in srgb, var(--dot-light) 70%, var(--dot-dark) 30%);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -755,14 +755,14 @@ const industriesItems = t.home.industries.items.map((item) => ({
     margin-top: 0.5rem;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--dot-dark);
+    color: var(--dot-light);
     text-decoration: underline;
     text-decoration-color: transparent;
     transition: text-decoration-color var(--transition-fast), color var(--transition-fast);
   }
   .mega-card:hover .mega-more {
     text-decoration-color: var(--dot-micelio);
-    color: var(--dot-moss);
+    color: var(--dot-micelio);
   }
 
   .mega-bottom {
@@ -773,14 +773,14 @@ const industriesItems = t.home.industries.items.map((item) => ({
   .mega-bottom-link {
     font-size: var(--text-sm);
     font-weight: 500;
-    color: var(--dot-dark);
+    color: var(--dot-light);
     text-decoration: underline;
     text-decoration-color: transparent;
     transition: text-decoration-color var(--transition-fast), color var(--transition-fast);
   }
   .mega-bottom-link:hover {
     text-decoration-color: var(--dot-micelio);
-    color: var(--dot-moss);
+    color: var(--dot-micelio);
   }
 
   @media (max-width: 1150px) {

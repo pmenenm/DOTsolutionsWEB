@@ -6,12 +6,15 @@
 // con peso, no como una fila más de una lista.
 interface Props {
   items: string[];
+  /** Cards más chicas y ajustadas — para cuando el componente vive dentro
+      de un panel de scroll horizontal (100vh) junto a un título. */
+  compact?: boolean;
 }
 
-const { items } = Astro.props;
+const { items, compact = false } = Astro.props;
 ---
 
-<div class="benefits-grid" id="benefits-list">
+<div class:list={['benefits-grid', { 'benefits-grid--compact': compact }]} id="benefits-list">
   {items.map((item, i) => (
     <div class="benefit-card" style={`transition-delay: ${(i * 0.1).toFixed(2)}s`}>
       <svg class="benefit-check" viewBox="0 0 24 24" aria-hidden="true">
@@ -142,5 +145,23 @@ const { items } = Astro.props;
     .benefits-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  /* ---------- Variante compacta — panel de scroll horizontal (100vh): cards
+     más ajustadas, texto un escalón más chico. ---------- */
+  .benefits-grid--compact {
+    gap: 0.85rem;
+    max-width: none;
+  }
+  .benefits-grid--compact .benefit-card {
+    padding: 1.1rem;
+  }
+  .benefits-grid--compact .benefit-check {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .benefits-grid--compact .benefit-card p {
+    font-size: 1rem;
+    line-height: 1.4;
   }
 </style>

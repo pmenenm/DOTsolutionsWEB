@@ -6,6 +6,7 @@ import PainBento from '../components/sections/PainBento.astro';
 import ProcessTimelineAnimated from '../components/sections/ProcessTimelineAnimated.astro';
 import BenefitsList from '../components/sections/BenefitsList.astro';
 import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
+import ProductHorizontalScroll from '../components/sections/ProductHorizontalScroll.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
 
@@ -20,103 +21,200 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 ---
 
 <Layout title={`${s.metaTitle} — DOT Solutions`} description={s.metaDescription} lang={lang} path="/hostdot">
-  <ProductHero
-    line1={s.hero.line1}
-    line2={s.hero.line2}
-    line3={s.hero.line3}
-    subtitle={s.hero.subtitle}
-    paragraph={s.hero.paragraph}
-    cta={s.hero.cta}
-    ctaHref={contactHref}
-    ctaSecondary={s.hero.ctaSecondary}
-    ctaSecondaryHref="https://hosting.dotsolutions.app/index.php"
-    logo="/logos/isotipos/hostdotiso.svg"
-  />
+  <ProductHorizontalScroll>
+    <!-- Panel 01 — Hero -->
+    <section class="h-panel h-panel--hero">
+      <ProductHero
+        line1={s.hero.line1}
+        line2={s.hero.line2}
+        line3={s.hero.line3}
+        subtitle={s.hero.subtitle}
+        paragraph={s.hero.paragraph}
+        cta={s.hero.cta}
+        ctaHref={contactHref}
+        ctaSecondary={s.hero.ctaSecondary}
+        ctaSecondaryHref="https://hosting.dotsolutions.app/index.php"
+        logo="/logos/isotipos/hostdotiso.svg"
+      />
+    </section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} />
-      <div class="section-body">
-        <PainBento items={s.bento.items} />
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="glass-panel process-panel">
-        <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} />
-        <div class="section-body narrow">
-          <ProcessTimelineAnimated steps={s.process.steps} />
+    <!-- Panel 02 — Diagnóstico -->
+    <section class="h-panel">
+      <div class="h-inner" data-h-reveal>
+        <div class="panel-heading">
+          <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} align="left" />
+        </div>
+        <div class="h-body">
+          <PainBento items={s.bento.items} compact />
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeading title={s.benefits.title} />
-      <div class="section-body narrow">
-        <BenefitsList items={s.benefits.items} />
+    <!-- Panel 03 — Cómo funciona -->
+    <section class="h-panel">
+      <div class="h-inner" data-h-reveal>
+        <div class="glass-panel process-panel">
+          <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} align="center" />
+          <div class="h-body narrow">
+            <ProcessTimelineAnimated steps={s.process.steps} compact />
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- Panel 04 — Beneficios -->
+    <section class="h-panel">
+      <div class="h-inner" data-h-reveal>
+        <div class="panel-heading">
+          <SectionHeading title={s.benefits.title} align="left" />
+        </div>
+        <div class="h-body">
+          <BenefitsList items={s.benefits.items} compact />
+        </div>
+      </div>
+    </section>
+  </ProductHorizontalScroll>
 
   <AuthorityCTA title={s.authority.title} stats={s.authority.stats} cta={s.authority.cta} ctaHref={contactHref} />
 </Layout>
 
 <style>
-  .section {
-    padding-block: var(--space-lg);
+  .h-inner {
+    max-width: 72rem;
+    margin-inline: auto;
   }
-  .section-body {
+  .h-panel--hero :global(.subtitle) {
+    color: var(--dot-light) !important;
+    margin-top: var(--space-md) !important;
+  }
+  .h-panel--hero :global(.paragraph) {
+    margin-top: var(--space-sm) !important;
+  }
+  .h-panel--hero :global(.product-hero-actions) {
+    margin-top: var(--space-lg) !important;
+  }
+  .h-body {
     margin-top: var(--space-lg);
   }
-  .section-body.narrow {
+  .h-body.narrow {
     max-width: var(--content-max);
+    margin-inline: auto;
   }
+
   .process-panel {
-    padding: clamp(2rem, 4vw, 3rem);
+    padding: clamp(1.95rem, 3.9vw, 2.925rem);
     border: none;
   }
 
-  /* Las 3 líneas del hero ("Infraestructura cloud" / "de alto rendimiento
-     para" / "negocios exigentes") son más largas que el resto de los
-     productos — el max-width por defecto del h1 (14ch en desktop) las
-     quebraba a más de 3 líneas. Ancho ajustado solo para esta página. */
-  :global(.product-hero-grid:not(.no-visual) .product-hero-copy h1) {
-    max-width: 26ch !important;
+  .panel-heading :global(.title),
+  .process-panel :global(.heading .title) {
+    background: linear-gradient(
+      90deg,
+      var(--dot-light) 0%,
+      var(--dot-light) 35%,
+      var(--dot-micelio) 50%,
+      var(--dot-light) 65%,
+      var(--dot-light) 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: h-gradient-loop 6s linear infinite;
+  }
+  @keyframes h-gradient-loop {
+    to {
+      background-position: -250% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panel-heading :global(.title),
+    .process-panel :global(.heading .title) {
+      animation: none;
+      background-position: 50% 0;
+    }
   }
 
-  /* Los textos de esta página se sentían "burdos" (todo grande) — bajamos
-     un escalón el tamaño de cada bloque compartido (título de sección,
-     cards del diagnóstico, beneficios, subtítulo/párrafo del hero, stats
-     finales), solo en Hostdot. */
-  :global(.product-hero-copy .subtitle) {
-    font-size: var(--text-sm) !important;
+  @media (min-width: 1025px) {
+    .h-panel--hero {
+      padding-inline: 0;
+      justify-content: flex-start;
+    }
+    .h-panel--hero :global(.container.product-hero-grid) {
+      max-width: none !important;
+      margin-inline: 0 !important;
+    }
+    .panel-heading :global(.title),
+    .process-panel :global(.heading .title) {
+      font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
+    }
+    .process-panel :global(.heading .subtitle) {
+      font-size: 1.17rem !important;
+      margin-top: 0.455rem !important;
+    }
+    .h-body.narrow {
+      margin-top: 1.95rem !important;
+    }
+
+    .h-panel--hero :global(.product-hero-copy h1) {
+      font-size: clamp(2.2rem, 3.8vw, 3.1rem) !important;
+      max-width: 46ch !important;
+    }
+    .h-panel--hero :global(.subtitle) {
+      font-size: 1.3rem !important;
+    }
+    .h-panel--hero :global(.paragraph) {
+      font-size: 1.1rem !important;
+    }
+    .h-panel--hero :global(.product-hero-actions .cta),
+    .h-panel--hero :global(.product-hero-actions .cta-secondary) {
+      padding: 0.8rem 1.75rem !important;
+      font-size: 0.875rem !important;
+    }
+
+    .h-panel--hero :global(.product-hero-grid:not(.no-visual)) {
+      grid-template-columns: 1fr auto !important;
+    }
+
+    .h-panel--hero :global(.visual-panel) {
+      max-width: 16rem !important;
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+    .h-panel--hero :global(.visual-panel::before) {
+      display: none !important;
+    }
+    .h-panel--hero :global(.visual-panel img) {
+      animation: hero-logo-orbit 7s ease-in-out infinite;
+    }
+    @keyframes hero-logo-orbit {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+      25% {
+        transform: translate(10px, -16px) scale(1.08) rotate(3deg);
+      }
+      50% {
+        transform: translate(-6px, -6px) scale(0.94) rotate(-2deg);
+      }
+      75% {
+        transform: translate(-12px, -14px) scale(1.05) rotate(2deg);
+      }
+      100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .h-panel--hero :global(.visual-panel img) {
+        animation: none;
+      }
+    }
   }
-  :global(.product-hero-copy .paragraph) {
-    font-size: var(--text-xs) !important;
-  }
-  :global(.heading .title) {
-    font-size: clamp(1.5rem, 3.2vw, 2.25rem) !important;
-  }
-  :global(.bento-card h3) {
-    font-size: clamp(1.0625rem, 1.7vw, 1.3rem) !important;
-  }
-  :global(.bento-card p) {
-    font-size: var(--text-sm) !important;
-  }
-  :global(.benefit-card p) {
-    font-size: var(--text-sm) !important;
-  }
-  :global(.authority .value) {
-    font-size: clamp(1.75rem, 3.6vw, 2.5rem) !important;
-  }
-  :global(.authority .label) {
-    font-size: var(--text-sm) !important;
-  }
-  :global(.authority .sub) {
-    font-size: var(--text-xs) !important;
+
+  @media (max-width: 1024px) {
+    .h-panel--hero {
+      padding-inline: 0;
+    }
   }
 </style>

@@ -31,21 +31,21 @@
           "title": "RetailPro Prism",
           "category": "Retail omnicanal",
           "desc": "Gestión retail escalable para maximizar ventas y eficiencia.",
-          "logo": "/logos/retailpro.png",
+          "logo": "/logos/retailpro-white.png",
           "href": "retail-pro-prism"
         },
         {
           "title": "TCPOS",
           "category": "Punto de venta",
           "desc": "Punto de venta ágil que mejora la experiencia del cliente.",
-          "logo": "/logos/tcpos.png",
+          "logo": "/logos/tcpos-white.png",
           "href": "tc-pos"
         },
         {
           "title": "Loyalty",
           "category": "Fidelización",
           "desc": "Fideliza clientes y aumenta la recurrencia con datos accionables.",
-          "logo": "/logos/isotipos/loyaltyiso.svg",
+          "logo": "/logos/isotipos/loyaltyiso-white.svg",
           "href": "loyalty"
         },
         {

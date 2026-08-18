@@ -31,21 +31,21 @@
           "title": "RetailPro Prism",
           "category": "Omnichannel retail",
           "desc": "Scalable retail management to maximize sales and efficiency.",
-          "logo": "/logos/retailpro.png",
+          "logo": "/logos/retailpro-white.png",
           "href": "retail-pro-prism"
         },
         {
           "title": "TCPOS",
           "category": "Point of sale",
           "desc": "Agile point of sale that improves the customer experience.",
-          "logo": "/logos/tcpos.png",
+          "logo": "/logos/tcpos-white.png",
           "href": "tc-pos"
         },
         {
           "title": "Loyalty",
           "category": "Loyalty",
           "desc": "Build customer loyalty and increase recurrence with actionable data.",
-          "logo": "/logos/isotipos/loyaltyiso.svg",
+          "logo": "/logos/isotipos/loyaltyiso-white.svg",
           "href": "loyalty"
         },
         {
