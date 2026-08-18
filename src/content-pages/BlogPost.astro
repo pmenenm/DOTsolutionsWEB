@@ -5,10 +5,12 @@
 // título), y "Sigue explorando" al final con los otros posts reales.
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/sections/BlogCard.astro';
+import EcosystemRadialMap from '../components/sections/EcosystemRadialMap.astro';
+import StatBar from '../components/sections/StatBar.astro';
 import { withBase } from '../utils/paths';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
-import { categoryColor, formatBlogDate } from '../utils/blog';
+import { categoryColor, categoryAccentOnDark, formatBlogDate, postImage, postImagePosition } from '../utils/blog';
 
 interface Props {
   lang: Lang;
@@ -25,43 +27,198 @@ if (!post) {
 }
 
 const color = categoryColor(post.category);
+const colorOnDark = categoryAccentOnDark(post.category);
 const blogHref = getRelativeLocaleUrl(lang, 'blog');
 const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+let h2Count = 0;
+
+// Diagramas embebidos en el cuerpo de posts específicos — mismo componente
+// "hub & spoke" que Retail/Gastronomía (EcosystemRadialMap), reutilizado con
+// hideHeader porque el post ya trae su propio h2 justo antes del bloque.
+const DIAGRAM_PRESETS: Record<string, { coreLogo: string; coreLabel: string; coreSublabel: string; pieces: any[] }> = {
+  'retail-ecosystem': {
+    coreLogo: '/logos/sap.png',
+    coreLabel: 'SAP Business One',
+    coreSublabel: lang === 'en' ? 'ERP core' : 'Núcleo ERP',
+    pieces: [
+      {
+        name: 'RetailPro Prism',
+        category: lang === 'en' ? 'Omnichannel POS' : 'POS omnicanal',
+        logo: '/logos/logos dot/retail.png',
+        desc: lang === 'en' ? 'In-store, kiosks and e-commerce on one platform.' : 'Tienda física, kioscos y e-commerce en una sola plataforma.',
+        href: getRelativeLocaleUrl(lang, 'retail-pro-prism'),
+      },
+      {
+        name: 'Mobile One',
+        category: lang === 'en' ? 'Mobile sales' : 'Venta móvil',
+        logo: '/logos/logos dot/mobineone.png',
+        desc: lang === 'en' ? 'Sell and charge next to the customer, no register needed.' : 'Vende y cobra junto al cliente, sin depender de la caja.',
+        href: getRelativeLocaleUrl(lang, 'mobile-one'),
+      },
+      {
+        name: 'BeFlow',
+        category: lang === 'en' ? 'Order orchestration' : 'Orquestación de pedidos',
+        desc: lang === 'en' ? 'Orchestrates orders from every channel against real stock.' : 'Orquesta pedidos de todos los canales contra el stock real.',
+      },
+      {
+        name: 'BiPyxis',
+        category: 'Business Intelligence',
+        logo: '/logos/logos dot/bipyxis.png',
+        desc: lang === 'en' ? 'Real-time margin and sales visibility per store.' : 'Visibilidad de margen y ventas por tienda, en tiempo real.',
+        href: getRelativeLocaleUrl(lang, 'bipyxis'),
+      },
+      {
+        name: 'Loyalty',
+        category: lang === 'en' ? 'Loyalty program' : 'Fidelización',
+        logo: '/logos/logos dot/loyalty.png',
+        desc: lang === 'en' ? 'Points and redemption at every point of sale.' : 'Puntos y canje en cada punto de venta, físico o digital.',
+        href: getRelativeLocaleUrl(lang, 'loyalty'),
+      },
+      {
+        name: 'DTE.',
+        category: lang === 'en' ? 'Electronic invoicing' : 'Facturación electrónica',
+        logo: '/logos/logos dot/dte.png',
+        desc: lang === 'en' ? 'SII compliance built into the POS and the ERP.' : 'Cumplimiento SII integrado al POS y al ERP.',
+        href: getRelativeLocaleUrl(lang, 'dte-facturacion-electronica'),
+      },
+      {
+        name: lang === 'en' ? 'Infrastructure' : 'Infraestructura',
+        category: lang === 'en' ? 'Platform & support' : 'Plataforma y soporte',
+        desc: lang === 'en' ? 'Agnostic cloud infrastructure and support for the full stack.' : 'Infraestructura agnóstica, cloud y soporte del stack completo.',
+        href: getRelativeLocaleUrl(lang, 'hostdot'),
+      },
+    ],
+  },
+};
 ---
 
 <Layout title={`${post.title} — DOT Solutions`} description={post.excerpt} lang={lang} path={`/blog/${slug}`}>
-  <article class="post" style={`--post-accent: ${color}`}>
+  <article class="post" style={`--post-accent: ${color}; --post-accent-dark: ${colorOnDark}`}>
     <div class="grid-texture" aria-hidden="true"></div>
 
-    <div class="container post-header">
+    <div class="container post-hero-wrap">
       <a href={blogHref} class="back-link" data-reveal>
         <span class="arrow" aria-hidden="true">←</span>
         {b.backToList}
       </a>
-      <p class="eyebrow" data-reveal>
-        <span class="dot"></span>
-        {post.category}
-      </p>
-      <h1 data-reveal>{post.title}</h1>
-      <p class="meta" data-reveal>{b.publishedLabel} {formatBlogDate(post.date, lang)}</p>
-    </div>
 
-    <div class="container">
-      <div class="post-cover" data-reveal>
-        <img src={withBase(`/blog/${post.slug}.jpg`)} alt="" />
+      <div class="post-hero-card" data-reveal>
+        <div class="post-hero-media">
+          <img src={withBase(postImage(post.slug))} alt="" style={`object-position: ${postImagePosition(post.slug)}`} />
+        </div>
+        <div class="post-hero-text">
+          <p class="eyebrow">
+            <span class="dot"></span>
+            {post.category}
+          </p>
+          <p class="meta">{b.publishedLabel} {formatBlogDate(post.date, lang)}</p>
+          <h1>{post.title}</h1>
+        </div>
       </div>
     </div>
 
     <div class="container post-body-wrap">
       <div class="post-body">
         {post.body.map((block) => {
-          if (block.type === 'h2') return <h2 data-reveal>{block.text}</h2>;
-          if (block.type === 'list') return (
-            <ul class="post-list" data-reveal>
-              {block.items?.map((item) => <li>{item}</li>)}
-            </ul>
-          );
+          if (block.type === 'h2') {
+            h2Count += 1;
+            return (
+              <div class="post-h2-row" data-reveal>
+                <span class="post-h2-index">{String(h2Count).padStart(2, '0')}</span>
+                <h2>{block.text}</h2>
+              </div>
+            );
+          }
+          if (block.type === 'list') {
+            const items = (block.items ?? []) as string[];
+            const isSpec = items.length > 0 && items.every((i) => i.includes(' — '));
+            const isFlow = !isSpec && items.length > 0 && items.every((i) => i.includes(' → '));
+
+            if (isSpec) return (
+              <div class="spec-grid" data-reveal>
+                {items.map((item, i) => {
+                  const [name, category] = item.split(' — ');
+                  return (
+                    <div class="spec-card">
+                      <span class="spec-index">{String(i + 1).padStart(2, '0')}</span>
+                      <p class="spec-name">{name}</p>
+                      <p class="spec-category">{category}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+
+            if (isFlow) return (
+              <div class="flow-list" data-reveal>
+                {items.map((item) => {
+                  const [condition, solution] = item.split(' → ');
+                  return (
+                    <div class="flow-row">
+                      <span class="flow-condition">{condition}</span>
+                      <span class="flow-arrow" aria-hidden="true">→</span>
+                      <span class="flow-solution">{solution?.replace(/\.$/, '')}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+
+            return (
+              <ul class="post-list" data-reveal>
+                {items.map((item) => <li>{item}</li>)}
+              </ul>
+            );
+          }
           if (block.type === 'callout') return <div class="post-callout" data-reveal>{block.text}</div>;
+          if (block.type === 'compare') {
+            const cmp = block as any;
+            const left = cmp.left as { title: string; text: string } | undefined;
+            const right = cmp.right as { title: string; text: string } | undefined;
+            if (!left || !right) return null;
+            return (
+              <div class="compare-block" data-reveal>
+                <div class="compare-side">
+                  <h3>{left.title}</h3>
+                  <p>{left.text}</p>
+                </div>
+                <div class="compare-badge">
+                  <span>{cmp.mode === 'vs' ? 'VS' : '→'}</span>
+                </div>
+                <div class="compare-side compare-side--b">
+                  <h3>{right.title}</h3>
+                  <p>{right.text}</p>
+                </div>
+              </div>
+            );
+          }
+          if (block.type === 'stats') return (
+            <div class="post-stats-break" data-reveal>
+              <StatBar stats={(block.items ?? []) as any[]} />
+            </div>
+          );
+          if (block.type === 'diagram') {
+            const diagramId = (block as any).diagram as string | undefined;
+            const preset = diagramId && DIAGRAM_PRESETS[diagramId];
+            if (!preset) return null;
+            return (
+              <div class="post-diagram-break" data-reveal>
+                <EcosystemRadialMap
+                  hideHeader
+                  eyebrow=""
+                  titleHighlight=""
+                  titleRest=""
+                  subtitle=""
+                  pieces={preset.pieces}
+                  coreLogo={preset.coreLogo}
+                  coreLabel={preset.coreLabel}
+                  coreSublabel={preset.coreSublabel}
+                  radiusMin={260}
+                  radiusMax={360}
+                />
+              </div>
+            );
+          }
           return <p data-reveal>{block.text}</p>;
         })}
       </div>
@@ -69,7 +226,7 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
   </article>
 
   {related.length > 0 && (
-    <section class="section theme-light">
+    <section class="section related-section">
       <div class="container">
         <h2 class="related-title">{b.relatedTitle}</h2>
         <div class="related-grid">
@@ -96,13 +253,12 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
       linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     background-size: 64px 64px;
-    -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 60%, transparent);
-    mask-image: linear-gradient(180deg, transparent, #000 15%, #000 60%, transparent);
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 10%, #000 92%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 10%, #000 92%, transparent);
   }
 
-  .post-header {
+  .post-hero-wrap {
     position: relative;
-    max-width: 46rem;
   }
   .back-link {
     display: inline-flex;
@@ -110,20 +266,46 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     gap: 0.5rem;
     font-size: var(--text-sm);
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--dot-micelio);
     text-decoration: none;
     margin-bottom: var(--space-md);
-    transition: color var(--transition-fast);
+    transition: opacity var(--transition-fast);
   }
   .back-link:hover {
-    color: var(--post-accent);
+    opacity: 0.75;
+  }
+
+  /* Misma card clara que las del stack de /blog (news-card): mismo
+     border-radius, mismo shadow — para que la página de detalle se lea
+     como continuación directa de la card desde la que se llegó. */
+  .post-hero-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--dot-light);
+    border-radius: 2.5rem;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+  }
+
+  .post-hero-media {
+    position: relative;
+    aspect-ratio: 21 / 9;
+  }
+  .post-hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-hero-text {
+    padding: 2.5rem;
   }
 
   .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     font-weight: 600;
     color: var(--post-accent);
     text-transform: uppercase;
@@ -137,63 +319,115 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     background: var(--post-accent);
   }
 
-  .post-header h1 {
+  .meta {
+    font-size: var(--text-base);
+    color: color-mix(in srgb, var(--dot-dark) 75%, var(--dot-light) 25%);
+    text-transform: capitalize;
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-hero-text h1 {
     font-family: var(--font-heading);
     font-weight: 500;
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: clamp(2.1rem, 4.8vw, 3.4rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
+    color: var(--dot-dark);
   }
 
-  .meta {
-    margin-top: var(--space-sm);
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    text-transform: capitalize;
-  }
-
-  .post-cover {
-    position: relative;
-    margin-top: var(--space-lg);
-    aspect-ratio: 21 / 9;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
-  }
-  .post-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  @media (min-width: 900px) {
+    /* Alto fijo en el CARD (no en la media) + columnas "stretch" (default):
+       ambas columnas quedan exactamente a esa altura, así la foto llega al
+       ras arriba y abajo (height:100% de una columna ya fija) sin dejar
+       franjas de fondo claro — y el texto se centra dentro de esa misma
+       altura con flex. Antes el alto vivía en la media sola y el texto
+       podía terminar más alto que la foto, dejando un hueco. */
+    .post-hero-card {
+      grid-template-columns: 1fr 1fr;
+      /* min-height, no height: un alto fijo recortaba el texto en posts con
+         título largo (quedaba centrado dentro de una caja más baja que su
+         propio contenido, con overflow:hidden del card). Con un mínimo, la
+         fila crece si el texto lo necesita — la foto (height:100%) crece
+         con ella y sigue al ras, sin huecos — y se mantiene igual en todos
+         los posts salvo que el título realmente lo requiera. */
+      min-height: 26rem;
+    }
+    .post-hero-media {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+    .post-hero-text {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3.5rem;
+    }
   }
 
   .post-body-wrap {
     position: relative;
-  }
-  .post-body {
-    max-width: 46rem;
     margin-top: var(--space-lg);
   }
-  .post-body p {
-    font-size: var(--text-base);
-    line-height: 1.75;
-    color: var(--text-secondary);
+  .post-body {
+    margin-top: var(--space-lg);
   }
-  .post-body p + p,
-  .post-body p + h2,
-  .post-body h2 + p,
-  .post-body p + ul,
-  .post-body ul + p,
-  .post-body p + .post-callout,
-  .post-body .post-callout + p {
+  .post-body > .post-h2-row,
+  .post-body > .post-list,
+  .post-body > .spec-grid,
+  .post-body > .flow-list {
+    max-width: 46rem;
+  }
+  .post-body p {
+    font-size: var(--text-lg);
+    line-height: 1.75;
+    /* Texto de lectura real, no metadata secundaria: --text-secondary (gris
+       medio, ~4.9:1 sobre --dot-dark) se sentía apagado. Este tono queda
+       cerca de --text-primary sin ser blanco puro, holgado sobre AA. */
+    color: color-mix(in srgb, var(--dot-light) 88%, var(--dot-dark) 12%);
+  }
+  /* Diagrama y stats embebidos — a diferencia del texto (columna de 46rem), ocupan el
+     ancho completo del container para que tengan espacio real, igual que en
+     Retail/Gastronomía. */
+  .post-diagram-break,
+  .post-stats-break {
+    margin-block: var(--space-lg);
+  }
+  /* El radio pedido (radiusMin/Max) queda limitado por min(w,h) del
+     contenedor — sin más alto que el default, el ancho extra no se nota. */
+  @media (min-width: 900px) {
+    .post-diagram-break :global(.radial-map) {
+      min-height: 44rem;
+    }
+  }
+
+  .post-body > * + * {
     margin-top: var(--space-md);
   }
 
-  .post-body h2 {
-    margin-top: var(--space-lg);
+  /* Encabezado de sección — índice mono ("01", "02"...) como acento en vez de
+     colorear el propio h2: lectura más de spec técnica que de artículo de blog. */
+  .post-h2-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: var(--space-xl) !important;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--post-accent-dark) 35%, transparent);
+  }
+  .post-h2-index {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--post-accent-dark);
+  }
+  .post-h2-row h2 {
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: clamp(1.25rem, 2.4vw, 1.625rem);
-    color: var(--post-accent);
+    font-size: clamp(1.375rem, 2.6vw, 1.875rem);
+    color: var(--text-primary);
   }
 
   .post-list {
@@ -209,7 +443,7 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     padding-left: 1.5rem;
     font-size: var(--text-base);
     line-height: 1.6;
-    color: var(--text-secondary);
+    color: color-mix(in srgb, var(--dot-light) 85%, var(--dot-dark) 15%);
   }
   .post-list li::before {
     content: '';
@@ -219,18 +453,161 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--post-accent);
-    box-shadow: 0 0 8px var(--post-accent);
+    background: var(--post-accent-dark);
+    box-shadow: 0 0 8px var(--post-accent-dark);
+  }
+
+  /* "Las ocho piezas" — grilla tipo spec sheet/motherboard: celdas separadas por
+     líneas de 1px (el gap coloreado hace de divisor), índice mono por celda. */
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: color-mix(in srgb, var(--dot-light) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .spec-card {
+    position: relative;
+    padding: 1.1rem 1.1rem 1.4rem;
+    background: var(--dot-dark);
+    transition: background var(--transition-fast);
+  }
+  .spec-card:hover {
+    background: color-mix(in srgb, var(--post-accent-dark) 12%, var(--dot-dark));
+  }
+  .spec-index {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--post-accent-dark);
+    margin-bottom: 0.5rem;
+  }
+  .spec-name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .spec-category {
+    margin-top: 0.25rem;
+    font-size: var(--text-xs);
+    color: color-mix(in srgb, var(--dot-light) 68%, var(--dot-dark) 32%);
+  }
+  @media (min-width: 640px) {
+    .spec-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* "Cómo se arma" — condición → solución como filas tipo terminal, con la
+     solución en mono, para que se lea como un mapeo directo, no una lista más. */
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 0.85rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
+    border-left: 3px solid var(--post-accent-dark);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: color-mix(in srgb, var(--dot-light) 3%, transparent);
+    transition: background var(--transition-fast);
+  }
+  .flow-row:hover {
+    background: color-mix(in srgb, var(--post-accent-dark) 12%, transparent);
+  }
+  .flow-condition {
+    font-size: var(--text-sm);
+    color: color-mix(in srgb, var(--dot-light) 82%, var(--dot-dark) 18%);
+  }
+  .flow-arrow {
+    font-family: var(--font-mono);
+    color: var(--post-accent-dark);
+  }
+  .flow-solution {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* Comparación de dos alternativas (producto vs. producto, o problema →
+     solución) — dos paneles con una insignia central ("VS" o "→"). A
+     diferencia del texto (columna de 46rem), ocupa el ancho completo para
+     que cada lado tenga espacio real para su párrafo. */
+  .compare-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .compare-side {
+    padding: 1.5rem 1.75rem;
+    background: color-mix(in srgb, var(--dot-light) 4%, var(--dot-dark) 96%);
+  }
+  .compare-side--b {
+    background: color-mix(in srgb, var(--post-accent-dark) 8%, var(--dot-dark) 92%);
+  }
+  .compare-side h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--post-accent-dark);
+    margin-bottom: 0.5rem;
+  }
+  .compare-side p {
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--dot-light) 85%, var(--dot-dark) 15%);
+  }
+  .compare-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: var(--dot-dark);
+  }
+  .compare-badge span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--post-accent-dark);
+    background: var(--dot-dark);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--post-accent-dark) 40%, transparent);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    color: var(--post-accent-dark);
+  }
+  @media (min-width: 700px) {
+    .compare-block {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+    }
   }
 
   /* Dato destacado — mismo lenguaje de card con borde/glow que el resto del sitio, para
      que resalte del cuerpo de texto normal sin salirse del sistema visual. */
   .post-callout {
-    padding: 1.25rem 1.5rem;
-    border: 1px solid var(--post-accent);
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--post-accent-dark);
     border-radius: var(--radius-md);
-    box-shadow: 0 0 26px color-mix(in srgb, var(--post-accent) 25%, transparent);
-    font-size: var(--text-sm);
+    box-shadow: 0 0 26px color-mix(in srgb, var(--post-accent-dark) 25%, transparent);
+    font-size: var(--text-lg);
     font-weight: 500;
     line-height: 1.6;
     color: var(--text-primary);
@@ -239,11 +616,19 @@ const related = b.posts.filter((p) => p.slug !== post.slug).slice(0, 2);
   .section {
     padding-block: var(--space-lg);
   }
+  /* Explícitamente oscura con tokens --dot-* directos, no --text-primary/
+     --bg-primary (semánticos, se invierten con .theme-light): esta sección
+     vive dentro de la misma página oscura que el artículo de arriba, así
+     que depender de una variable que "podría" invertirse era justo la causa
+     del texto negro sobre fondo negro que se reportó acá. */
+  .related-section {
+    background: var(--dot-dark);
+  }
   .related-title {
     font-family: var(--font-heading);
     font-weight: 500;
     font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--text-primary);
+    color: var(--dot-light);
     margin-bottom: var(--space-md);
   }
   .related-grid {

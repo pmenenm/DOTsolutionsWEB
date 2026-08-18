@@ -166,7 +166,9 @@
     "email": "contacto@dotsolutions.io",
     "address": "Av. del Valle Nte. 928, office 503, Huechuraba, Santiago",
     "rights": "All rights reserved.",
-    "motto": "We drive efficiency. We transform your business."
+    "motto": "We drive efficiency. We transform your business.",
+    "partnerBadgeTitle": "SAP Business One Gold Partner",
+    "partnerBadgeVerify": "Verifiable on SAP Partner Finder"
   },
   "about": {
     "metaTitle": "About us",
@@ -1792,9 +1794,8 @@
           "href": "loyalty"
         },
         {
-          "name": "Hostdot",
+          "name": "Infrastructure",
           "category": "Platform & Cybersecurity",
-          "logo": "/logos/logos dot/hostdot.png",
           "desc": "Agnostic infrastructure, cloud and full-stack support. Adapts to any platform.",
           "href": "hostdot"
         },
@@ -2379,7 +2380,10 @@
     "metaTitle": "Insights",
     "metaDescription": "Ideas, guides and perspectives from DOT Solutions on SAP Business One, retail, hospitality and the technology that keeps your business running.",
     "eyebrow": "Events & news",
-    "title": ["The latest in", "news"],
+    "title": [
+      "The latest in",
+      "news"
+    ],
     "subtitle": "Events, news and guides from our team on ERP, retail and hospitality.",
     "viewAll": "View all insights",
     "stackTitle": "The latest from DOT",
@@ -2400,15 +2404,19 @@
             "text": "Choosing an ERP isn't about picking «the biggest one», but the one that fits how your company operates today and where it wants to go. In practice, the decision between SAP Business One and SAP S/4HANA comes down to three variables: the size and complexity of your operation, transaction volume and growth projection."
           },
           {
-            "type": "p",
-            "text": "SAP Business One is built for small and mid-sized companies that need to integrate finance, sales, inventory, purchasing and production on a single platform, with a fast implementation and a predictable total cost. It's the core that most retail and hospitality businesses build their operation on."
+            "type": "compare",
+            "mode": "vs",
+            "left": {
+              "title": "SAP Business One",
+              "text": "Built for small and mid-sized companies that need to integrate finance, sales, inventory, purchasing and production on a single platform, with a fast implementation and a predictable total cost. It's the core that most retail and hospitality businesses build their operation on."
+            },
+            "right": {
+              "title": "SAP S/4HANA",
+              "text": "Comes into play when the organization reaches a scale and complexity, multiple entities, very high transaction volume, processes that demand real-time analytics, that justify an enterprise platform. It isn't «the better version» of Business One: it's a tool for a different problem."
+            }
           },
           {
-            "type": "p",
-            "text": "SAP S/4HANA comes into play when the organization reaches a scale and complexity, multiple entities, very high transaction volume, processes that demand real-time analytics, that justify an enterprise platform. It isn't «the better version» of Business One: it's a tool for a different problem."
-          },
-          {
-            "type": "p",
+            "type": "callout",
             "text": "Our advice is simple: don't over-size. A well-implemented Business One supports years of growth, and migrating to S/4HANA makes sense when the business genuinely calls for it."
           }
         ]
@@ -2425,15 +2433,36 @@
             "text": "Multichannel isn't the same as unified. Many retailers sell in-store, on e-commerce and on marketplaces, but each channel lives in its own system: stock drifts out of sync, the customer is duplicated and financial reconciliation becomes a monthly headache."
           },
           {
-            "type": "p",
-            "text": "Unified commerce solves this by putting a single core, SAP Business One, beneath every channel. Point of sale, the online store, mobile sales and loyalty all read and write against the same source of truth: one inventory, one customer, one set of books."
+            "type": "compare",
+            "mode": "arrow",
+            "left": {
+              "title": "Multichannel",
+              "text": "Each channel lives in its own system: stock drifts out of sync, the customer is duplicated and financial reconciliation becomes a monthly headache."
+            },
+            "right": {
+              "title": "Unified commerce",
+              "text": "A single core, SAP Business One, beneath every channel. Point of sale, the online store, mobile sales and loyalty all read and write against the same source of truth: one inventory, one customer, one set of books."
+            }
+          },
+          {
+            "type": "h2",
+            "text": "The payoff, in the operation"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Reliable stock promises",
+              "Ship-from-nearest-store",
+              "Consistent prices and promotions across channels",
+              "Financial close without parallel spreadsheets"
+            ]
           },
           {
             "type": "p",
-            "text": "The operational payoff is concrete: reliable stock promises, ship-from-nearest-store, consistent prices and promotions across channels, and a financial close without parallel spreadsheets. The customer experiences one brand, not five disconnected systems."
+            "text": "The customer experiences one brand, not five disconnected systems."
           },
           {
-            "type": "p",
+            "type": "callout",
             "text": "You don't have to replace everything at once. The usual path is to consolidate the ERP core and POS first, then add e-commerce, mobile sales and loyalty on top of that base. Every channel you integrate adds value without breaking what already works."
           }
         ]
@@ -2450,15 +2479,19 @@
             "text": "In Chile, issuing electronic tax documents (DTE), invoices, receipts, credit and debit notes, isn't optional: it's how the tax authority (SII) requires companies to operate. The question is no longer «whether» to invoice electronically, but how integrated and reliable that process is inside your operation."
           },
           {
-            "type": "p",
-            "text": "The risk of solving it with isolated tools is friction: documents issued outside the ERP, folios that fall out of sync, and manual reconciliation between what was sold and what was declared. Every manual step is an opportunity for error before the SII."
+            "type": "compare",
+            "mode": "arrow",
+            "left": {
+              "title": "Isolated tools",
+              "text": "Documents issued outside the ERP, folios that fall out of sync, and manual reconciliation between what was sold and what was declared. Every manual step is an opportunity for error before the SII."
+            },
+            "right": {
+              "title": "DTE inside the ERP",
+              "text": "The document is generated automatically from the sale, at the point of sale or in Business One, and reaches the customer and the SII with no manual intervention, full traceability and folios that always reconcile."
+            }
           },
           {
-            "type": "p",
-            "text": "The alternative is for electronic invoicing to live inside the ERP. When the DTE is generated automatically from the sale, at the point of sale or in Business One, the document reaches the customer and the SII with no manual intervention, full traceability and folios that always reconcile."
-          },
-          {
-            "type": "p",
+            "type": "callout",
             "text": "For a high-volume retail or hospitality operation, that automation is the difference between a calm tax close and a race against the clock every month. It's also the foundation to scale: more stores and more channels without adding administrative work."
           }
         ]
@@ -2587,6 +2620,10 @@
             "text": "Every line is a native integration: data flows between the pieces on its own, with no re-typing."
           },
           {
+            "type": "diagram",
+            "diagram": "retail-ecosystem"
+          },
+          {
             "type": "h2",
             "text": "How you build it"
           },
@@ -2612,7 +2649,7 @@
             ]
           },
           {
-            "type": "p",
+            "type": "callout",
             "text": "Already have an ERP? The ecosystem is built on SAP Business One, but it also integrates with whatever your company already uses."
           },
           {
@@ -2628,8 +2665,23 @@
             ]
           },
           {
-            "type": "p",
-            "text": "DOT Solutions has been implementing this ecosystem for more than 16 years, with over 300 clients across 8 countries in Latin America."
+            "type": "stats",
+            "items": [
+              {
+                "value": 16,
+                "suffix": "+",
+                "label": "years implementing the ecosystem"
+              },
+              {
+                "value": 300,
+                "suffix": "+",
+                "label": "clients across Latin America"
+              },
+              {
+                "value": 8,
+                "label": "countries"
+              }
+            ]
           }
         ]
       }

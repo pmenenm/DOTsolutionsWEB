@@ -6,10 +6,9 @@
 // efecto de apilado. Sin PageHero genérico a propósito: esta página se apoya en el mismo
 // sistema visual pero con una composición propia, más de revista que de landing.
 import Layout from '../layouts/Layout.astro';
-import CTASection from '../components/sections/CTASection.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
-import { categoryColor, formatBlogDate } from '../utils/blog';
+import { categoryColor, formatBlogDate, postImage } from '../utils/blog';
 import { withBase } from '../utils/paths';
 
 interface Props {
@@ -27,26 +26,20 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 
 <Layout title={`${b.metaTitle} — DOT Solutions`} description={b.metaDescription} lang={lang} path="/blog">
   <section class="blog-hero">
-    <video
-      class="blog-hero-video"
-      src={withBase('/video1.mp4')}
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-      aria-hidden="true"
-    />
-    <div class="blog-hero-overlay" aria-hidden="true"></div>
+    <div class="container">
+      <h1 class="news-stack-title" data-reveal>{b.stackTitle}</h1>
 
-    <ul class="category-legend" data-reveal>
-      {categories.map((c) => (
-        <li style={`--legend-color: ${categoryColor(c)}`}>
-          <span class="legend-dot"></span>
-          {c}
-        </li>
-      ))}
-    </ul>
+      <p class="news-stack-subtitle" data-reveal>{b.subtitle}</p>
+
+      <ul class="category-legend" data-reveal>
+        {categories.map((c) => (
+          <li>
+            <span class="legend-dot"></span>
+            {c}
+          </li>
+        ))}
+      </ul>
+    </div>
   </section>
 
   <!-- Stack de tarjetas tipo archivador: todas fijas al mismo `top` (position:sticky, CSS
@@ -54,9 +47,6 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
        la anterior en vez de asomar un borde de las de más atrás. -->
   <section class="news-stack-section">
     <div class="container">
-      <h2 class="news-stack-title" data-reveal>{b.stackTitle}</h2>
-      <p class="news-stack-subtitle" data-reveal>{b.subtitle}</p>
-
       <div class="news-stack">
         {posts.map((post, i) => (
           <a
@@ -66,15 +56,15 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
             style={`z-index: ${i + 1}; --card-accent: ${categoryColor(post.category)};`}
           >
             <div class="news-card-media">
-              <img src={withBase(`/blog/${post.slug}.jpg`)} alt="" loading="lazy" />
+              <img src={withBase(postImage(post.slug))} alt="" loading="lazy" />
             </div>
             <div class="news-card-body">
               <div class="news-card-top">
                 <p class="news-card-date">{formatBlogDate(post.date, lang)}</p>
                 <h3>{post.title}</h3>
+                <p class="news-card-excerpt">{post.excerpt}</p>
               </div>
               <div class="news-card-bottom">
-                <p class="news-card-excerpt">{post.excerpt}</p>
                 <span class="news-card-cta">
                   {b.readMore}
                   <span class="arrow" aria-hidden="true">→</span>
@@ -83,67 +73,58 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
             </div>
           </a>
         ))}
+
+        <!-- Última card del stack — sin foto, mensaje de cierre. Mismo mecanismo de
+             sticky/z-index que las anteriores, pero invertida (oscura + glow micelio
+             permanente) para que se lea como el cierre, no como un post más. -->
+        <div class="news-card news-card--cta" data-reveal style={`z-index: ${posts.length + 1};`}>
+          <div class="news-card-body">
+            <div class="news-card-top">
+              <h3>{t.common.ctaTitle}</h3>
+              <p class="news-card-excerpt">{t.common.ctaBody}</p>
+            </div>
+            <div class="news-card-bottom">
+              <a href={contactHref} class="news-card-cta">
+                {t.common.ctaButton}
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
-
-  <CTASection
-    title={t.common.ctaTitle}
-    body={t.common.ctaBody}
-    button={t.common.ctaButton}
-    href={contactHref}
-  />
 </Layout>
 
 <style>
   .blog-hero {
     position: relative;
-    min-height: 34rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background: var(--dot-dark);
-    padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
+    padding-block: var(--space-md) var(--space-sm);
     overflow: hidden;
   }
-  .blog-hero-video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
+  .blog-hero .container {
+    padding-top: 6rem;
   }
-  .blog-hero-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    /* El último tramo llega a opacidad total (var(--dot-dark) sólido) ANTES del borde
-       inferior del video —no al 78% como antes—, así el fondo queda completamente cubierto
-       por el mismo color plano de la sección siguiente antes de que el video corte, sin
-       salto visible en el límite entre ambas. */
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--dot-dark) 55%, transparent) 0%,
-      color-mix(in srgb, var(--dot-dark) 32%, transparent) 40%,
-      var(--dot-dark) 85%,
-      var(--dot-dark) 100%
-    );
-  }
-  /* Leyenda de categorías — abajo a la derecha del hero, no junto al título.
-     Cada punto usa el mismo color que su badge en las cards de abajo, para
-     que se lea de inmediato como un sistema. */
-  .category-legend {
-    position: absolute;
+  .blog-hero .news-stack-title {
+    position: relative;
     z-index: 1;
-    right: var(--container-pad);
-    bottom: var(--space-lg);
+  }
+  /* Leyenda de categorías — justo debajo del título, centrada, con margen
+     propio para que el título respire antes de la leyenda. Cada punto usa
+     el mismo color micelio, para que se lea de inmediato como un sistema. */
+  .category-legend {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: center;
     gap: var(--space-md);
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: var(--space-sm) auto 0;
     max-width: 60%;
   }
   .category-legend li {
@@ -151,15 +132,15 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     align-items: center;
     gap: 0.5rem;
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--text-primary);
   }
   .legend-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--legend-color);
-    box-shadow: 0 0 12px var(--legend-color);
+    background: var(--dot-micelio);
+    box-shadow: 0 0 12px var(--dot-micelio);
   }
 
   /* Stack de tarjetas tipo archivador — fondo oscuro, cards claras (colores invertidos a
@@ -169,18 +150,18 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
      más atrás — sin necesitar JS. */
   .news-stack-section {
     background: var(--dot-dark);
-    padding-block: var(--space-xl);
+    padding-block: var(--space-lg) var(--space-xl);
   }
   .news-stack-title {
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-size: clamp(2.6rem, 5.85vw, 3.9rem);
     color: var(--dot-light);
     text-align: center;
   }
   .news-stack-subtitle {
     margin-top: var(--space-sm);
-    margin-bottom: var(--space-xl);
+    margin-bottom: 0;
     font-size: var(--text-lg);
     font-weight: 300;
     line-height: 1.5;
@@ -255,25 +236,24 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     color: var(--dot-dark);
   }
 
-  /* Bloque inferior — descripción y CTA en fila a md+ (`items-end` para que ambos queden
-     alineados contra el borde inferior de la card), apilados en mobile. */
-  .news-card-bottom {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: end;
-    gap: 1.5rem;
-    padding-top: 2rem;
-  }
+  /* Descripción pegada debajo del título (no junto al CTA) — el bloque de abajo queda
+     libre para que el botón "Leer artículo completo" ocupe todo ese ancho. */
   .news-card-excerpt {
-    font-size: var(--text-sm);
+    margin-top: 0.75rem;
+    font-size: calc(var(--text-sm) * 1.44);
     line-height: 1.6;
     color: color-mix(in srgb, var(--dot-dark) 65%, transparent);
+  }
+
+  .news-card-bottom {
+    padding-top: 1.5rem;
   }
 
   .news-card-cta {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 1.25rem;
     background: color-mix(in srgb, var(--dot-dark) 6%, var(--dot-light) 94%);
     border: 1px solid color-mix(in srgb, var(--dot-dark) 12%, transparent);
@@ -294,12 +274,6 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     transform: translateX(4px);
   }
 
-  @media (min-width: 768px) {
-    .news-card-bottom {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
   @media (min-width: 1024px) {
     .news-card {
       grid-template-columns: repeat(2, 1fr);
@@ -311,5 +285,43 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     .news-card-body {
       padding: 3.5rem;
     }
+  }
+
+  /* Última card del stack — sin foto (una sola columna siempre), invertida respecto a las
+     demás (oscura, no clara) con glow micelio permanente en el borde, no solo al hover. */
+  .news-card--cta {
+    grid-template-columns: 1fr !important;
+    min-height: 0 !important;
+    background: var(--dot-dark) !important;
+    border: 2px solid var(--dot-micelio);
+    box-shadow: 0 0 50px color-mix(in srgb, var(--dot-micelio) 35%, transparent);
+  }
+  .news-card--cta .news-card-body {
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 40rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .news-card--cta .news-card-top h3 {
+    color: var(--dot-micelio) !important;
+  }
+  .news-card--cta .news-card-bottom {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
+  }
+  .news-card--cta .news-card-excerpt {
+    color: color-mix(in srgb, var(--dot-light) 85%, transparent) !important;
+  }
+  .news-card--cta .news-card-cta {
+    justify-content: center;
+    width: fit-content;
+    background: var(--dot-micelio) !important;
+    border-color: var(--dot-micelio) !important;
+    color: var(--dot-dark) !important;
+  }
+  .news-card--cta .news-card-cta .arrow {
+    color: var(--dot-dark) !important;
   }
 </style>

@@ -28,9 +28,24 @@ interface Props {
   coreLogo: string;
   coreLabel: string;
   coreSublabel: string;
+  hideHeader?: boolean;
+  radiusMin?: number;
+  radiusMax?: number;
 }
 
-const { eyebrow, titleHighlight, titleRest, subtitle, pieces, coreLogo, coreLabel, coreSublabel } = Astro.props;
+const {
+  eyebrow,
+  titleHighlight,
+  titleRest,
+  subtitle,
+  pieces,
+  coreLogo,
+  coreLabel,
+  coreSublabel,
+  hideHeader = false,
+  radiusMin = 190,
+  radiusMax = 280,
+} = Astro.props;
 
 const nodes = pieces.map((piece, i) => ({ ...piece, index: i }));
 
@@ -51,18 +66,20 @@ const hoverRules = nodes
 ---
 
 <div class="ecosystem-radial">
-  <div class="container radial-header glass-panel">
-    <p class="radial-eyebrow">
-      <span class="dot"></span>
-      {eyebrow}
-    </p>
-    <h2 class="radial-title">
-      <span class="radial-title-highlight">{titleHighlight}</span>{titleRest}
-    </h2>
-    <p class="radial-subtitle">{subtitle}</p>
-  </div>
+  {!hideHeader && (
+    <div class="container radial-header glass-panel">
+      <p class="radial-eyebrow">
+        <span class="dot"></span>
+        {eyebrow}
+      </p>
+      <h2 class="radial-title">
+        <span class="radial-title-highlight">{titleHighlight}</span>{titleRest}
+      </h2>
+      <p class="radial-subtitle">{subtitle}</p>
+    </div>
+  )}
 
-  <div class="container radial-map" data-radial-map>
+  <div class="container radial-map" data-radial-map data-radius-min={radiusMin} data-radius-max={radiusMax}>
     <svg class="radial-svg" data-radial-svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       {nodes.map((n) => (
         <path id={`eco-path-${n.index}`} class="eco-path" data-index={n.index} d="M 0 0" fill="none" />
@@ -125,9 +142,13 @@ const hoverRules = nodes
       const cx = w / 2;
       const cy = h / 2;
       const n = nodeEls.length;
-      // Radio holgado (clamp 260–380px) proporcional al lado más corto del
-      // contenedor, para que nunca choque contra el borde ni se aplaste.
-      const radius = Math.max(190, Math.min(280, Math.min(w, h) * 0.42));
+      // Radio holgado, proporcional al lado más corto del contenedor, para
+      // que nunca choque contra el borde ni se aplaste. Rango configurable
+      // por instancia vía data-radius-min/max (ej. cuando el diagrama va
+      // embebido en un post y necesita más aire que en Retail/Gastronomía).
+      const radiusMin = Number(map.dataset.radiusMin) || 190;
+      const radiusMax = Number(map.dataset.radiusMax) || 280;
+      const radius = Math.max(radiusMin, Math.min(radiusMax, Math.min(w, h) * 0.42));
 
       // Estas 4 caen cerca de los extremos horizontales del círculo (los
       // ángulos con mayor |cos|) — se empujan un poco más lejos sobre su
@@ -311,7 +332,6 @@ const hoverRules = nodes
   .eco-node[data-name="AyHungry"] .eco-node-logo img,
   .eco-node[data-name="Smart Order"] .eco-node-logo img,
   .eco-node[data-name="TCPOS"] .eco-node-logo img,
-  .eco-node[data-name="Hostdot"] .eco-node-logo img,
   .eco-node[data-name="Mobile One"] .eco-node-logo img {
     transform: scale(1.5);
   }
@@ -323,7 +343,8 @@ const hoverRules = nodes
   .eco-node-wordmark {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: var(--text-lg);
+    font-size: var(--text-sm);
+    line-height: 1.2;
     color: var(--text-primary);
   }
 
