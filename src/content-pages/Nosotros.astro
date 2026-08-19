@@ -53,22 +53,20 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
   path="/nosotros"
 >
   <!-- ============ ACTO 1 — HERO + "QUIÉNES SOMOS" (pestaña desde el hero) ============ -->
-  <!-- Un único stage pineado: el video ocupa toda la pantalla y, sin soltar el scroll, un
-       panel claro entra como pestaña desde el borde derecho hasta cubrir ~58% del ancho.
-       Recién con el panel en su lugar arranca el tipeo (GSAP TextPlugin), todo dentro del
-       mismo tramo de scrub — la sección "sale" literalmente del hero, no es un bloque aparte
+  <!-- Un único stage pineado: el fondo (background_1 + logoweb) ocupa toda la pantalla y,
+       sin soltar el scroll, un panel claro entra como pestaña desde el borde derecho hasta
+       cubrir ~70% del ancho. El logo vive corrido a la izquierda en desktop (no centrado)
+       para que quede en pantalla dividida con el fondo una vez que la pestaña termina de
+       cubrir el resto — si quedara centrado, la pestaña lo taparía apenas entrara. Recién
+       con el panel en su lugar arranca el tipeo (GSAP TextPlugin), todo dentro del mismo
+       tramo de scrub — la sección "sale" literalmente del hero, no es un bloque aparte
        debajo. Pineado + scrub sólo en desktop (≥1024px); en mobile el panel es un bloque
-       estático de flujo normal debajo del video, con el tipeo disparado al entrar en vista. -->
+       estático de flujo normal debajo del fondo, con el tipeo disparado al entrar en vista. -->
   <section class="hero-stage" data-hero-stage>
-    <video
-      class="video-hero-media"
-      src={withBase('/video1.mp4')}
-      autoplay
-      muted
-      loop
-      playsinline
-    />
-    <div class="video-hero-overlay" aria-hidden="true"></div>
+    <img class="hero-bg-image" src={withBase('/images/background_1.jpg')} alt="" />
+    <div class="hero-bg-overlay" aria-hidden="true"></div>
+    <img class="hero-logo hero-logo--full" data-hero-logo-full src={withBase('/logoweb.png')} alt="DOT Solutions" />
+    <img class="hero-logo hero-logo--dot" data-hero-logo-dot src={withBase('/dot.svg')} alt="" aria-hidden="true" />
 
     <div class="who-we-are-panel" data-who-panel>
       <div class="who-we-are-inner">
@@ -174,6 +172,8 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
       const section = document.querySelector<HTMLElement>('[data-hero-stage]');
       const panel = document.querySelector<HTMLElement>('[data-who-panel]');
       const typeEl = document.querySelector<HTMLElement>('[data-typewriter]');
+      const logoFull = document.querySelector<HTMLElement>('[data-hero-logo-full]');
+      const logoDot = document.querySelector<HTMLElement>('[data-hero-logo-dot]');
       if (!section || !panel || !typeEl) return () => {};
 
       const text = typeEl.dataset.typewriterText ?? '';
@@ -185,8 +185,24 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
         typeEl.textContent = '';
         gsap.set(panel, { xPercent: 100 });
 
+        // El isotipo "dot.svg" tiene una proporción muy distinta al wordmark
+        // completo (marca ~cuadrada vs wordmark ancho) — igualarlos por
+        // ancho los dejaría con alturas muy distintas, así que se iguala la
+        // ALTURA ya renderizada del wordmark y se deja el ancho en auto.
+        if (logoFull && logoDot) {
+          gsap.set(logoFull, { left: '50%' });
+          const fullHeight = logoFull.getBoundingClientRect().height;
+          // x2.25 = x1.5 (más grande que el wordmark) x1.5 (segundo +50%
+          // pedido después) — compuestos, no dos +50% independientes.
+          if (fullHeight) gsap.set(logoDot, { height: fullHeight * 2.25, width: 'auto' });
+        }
+
         if (reduced) {
           gsap.set(panel, { xPercent: 0 });
+          if (logoFull && logoDot) {
+            gsap.set(logoFull, { opacity: 0 });
+            gsap.set(logoDot, { opacity: 1 });
+          }
           typeEl.textContent = text;
           return () => {};
         }
@@ -202,16 +218,31 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
           },
         });
 
-        tl.to(panel, { xPercent: 0, ease: 'power3.out', duration: 1.2 }).to(
+        tl.to(panel, { xPercent: 0, ease: 'power3.out', duration: 1.2 }, 0);
+
+        if (logoFull && logoDot) {
+          // El wordmark se desliza del centro hacia la posición final de la
+          // izquierda (mismo punto donde ya vive "dot.svg", en reposo con
+          // opacity:0) y recién ahí cruzan en opacidad — no es un fundido en
+          // el mismo lugar, es un desplazamiento que termina en un cambio de
+          // isotipo.
+          tl.to(logoFull, { left: '25%', ease: 'power3.out', duration: 1.2 }, 0)
+            .to(logoFull, { opacity: 0, duration: 0.5, ease: 'power1.out' }, 0.6)
+            .to(logoDot, { opacity: 1, duration: 0.5, ease: 'power1.out' }, 0.6);
+        }
+
+        tl.to(
           typeEl,
           { text, duration: Math.max(text.length * MS_PER_CHAR, 1.5), ease: 'none' },
-          '>-0.2'
+          1.0
         );
 
         return () => {
           tl.scrollTrigger?.kill();
           tl.kill();
           gsap.set(panel, { clearProps: 'all' });
+          if (logoFull) gsap.set(logoFull, { clearProps: 'all' });
+          if (logoDot) gsap.set(logoDot, { clearProps: 'all' });
         };
       });
 
@@ -322,7 +353,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
       const cards = gsap.utils.toArray<HTMLElement>('[data-member-card]', trackEl);
       const mm = gsap.matchMedia();
 
-      mm.add('(min-width: 1025px)', () => {
+      mm.add('(min-width: 1024px)', () => {
         // `.team-hz-track` no fija `overflow`, así que queda en su valor por
         // defecto (visible) — y en ese caso `scrollWidth` NO cuenta el
         // padding-right final (los navegadores sólo lo reflejan cuando el
@@ -385,7 +416,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
         };
       });
 
-      mm.add('(max-width: 1024px)', () => () => {});
+      mm.add('(max-width: 1023px)', () => () => {});
 
       return () => mm.revert();
     }
@@ -398,7 +429,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
 
       const mm = gsap.matchMedia();
 
-      mm.add('(min-width: 1025px) and (hover: hover)', () => {
+      mm.add('(min-width: 1024px) and (hover: hover)', () => {
         const setX = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });
         const setY = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3.out' });
 
@@ -425,7 +456,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
         };
       });
 
-      mm.add('(max-width: 1024px), (hover: none)', () => () => {});
+      mm.add('(max-width: 1023px), (hover: none)', () => () => {});
 
       return () => mm.revert();
     }
@@ -639,7 +670,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     overflow: hidden;
     background: #000;
   }
-  .video-hero-media {
+  .hero-bg-image {
     position: relative;
     display: block;
     width: 100%;
@@ -650,7 +681,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
   }
   /* Nítido en toda la sección; sólo el último tramo inferior se funde con
      el fondo (--dot-dark) para dar paso a la sección siguiente sin corte. */
-  .video-hero-overlay {
+  .hero-bg-overlay {
     position: absolute;
     inset: 0;
     height: 70vh;
@@ -660,6 +691,29 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
       transparent 60%,
       var(--dot-dark) 100%
     );
+  }
+
+  /* Logo: centrado en mobile (el panel va debajo, en flujo normal, no hay
+     nada que tape). En desktop hay DOS logos superpuestos en el mismo punto
+     de referencia (mismo top/left/transform, así que cambiar sólo `left`
+     los mueve juntos sin saltos): el wordmark completo arranca centrado en
+     toda la pantalla y el script lo anima hacia la izquierda a medida que
+     la pestaña entra, cruzando en opacidad con el isotipo "dot.svg" (que
+     ya vive fijo en la posición final) — ver initHeroWhoWeAre. */
+  .hero-logo {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+  }
+  .hero-logo--full {
+    width: min(77vw, 28rem);
+  }
+  .hero-logo--dot {
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* Panel "Quiénes somos" — en mobile es un bloque claro normal debajo del
@@ -710,14 +764,26 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
       height: 100vh;
       height: 100svh;
     }
-    .video-hero-media {
+    .hero-bg-image {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
     }
-    .video-hero-overlay {
+    .hero-bg-overlay {
       height: 100%;
+    }
+    .hero-logo--full {
+      /* Arranca centrado en toda la pantalla — el script anima `left` hacia
+         la izquierda a medida que la pestaña entra (ver initHeroWhoWeAre). */
+      width: min(33.6vw, 27.3rem);
+    }
+    .hero-logo--dot {
+      /* 25% = centro exacto de la mitad izquierda de la pantalla (la
+         pestaña ocupa el otro 50%) — el script hace fade in/out entre este
+         isotipo y el wordmark completo en este mismo punto, y agranda su
+         altura un 50% extra sobre la del wordmark (ver initHeroWhoWeAre). */
+      left: 25%;
     }
     /* Pestaña técnica: borde de acento en Verde Raíz + textura de puntos
        sutil, para que se sienta como un panel de interfaz, no una card
@@ -725,7 +791,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     .who-we-are-panel {
       position: absolute;
       inset: 0 0 0 auto;
-      width: min(70%, 55rem);
+      width: 50%;
       height: 100%;
       display: flex;
       align-items: center;
@@ -1282,6 +1348,43 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     }
     50% {
       box-shadow: 0 0 70px color-mix(in srgb, var(--dot-micelio) 65%, transparent);
+    }
+  }
+
+  /* ---------- Ajustes responsivos ---------- */
+  /* --space-xl/--space-2xl (128px/192px) son fijos en toda la escala del
+     sitio — en desktop dan el "respiro" buscado, pero en mobile esa misma
+     cifra fija come 15-25% del alto de viewport como puro padding vacío
+     antes de cada sección. Se reduce sólo acá (secciones de esta página),
+     no se toca el token global. */
+  @media (max-width: 640px) {
+    .mission-section,
+    .how-we-work-section {
+      padding-block: var(--space-lg);
+    }
+    .gallery-section {
+      padding-block: var(--space-lg) 0;
+    }
+    .closing-section {
+      padding-block: var(--space-xl);
+    }
+    /* La imagen de fondo del hero, encuadrada para pantallas anchas, recorta
+       bastante los costados en un box angosto y alto — bajar la altura
+       acerca su relación de aspecto a la de la imagen real y muestra más
+       ancho (menos zoom), en vez de forzar el mismo 70vh que en tablet. */
+    .hero-bg-image,
+    .hero-bg-overlay {
+      height: 55vh;
+    }
+  }
+
+  /* El trail de logos sólo reacciona al mouse (hover:hover + pointer:fine,
+     ver el script) — en touch no hay cursor que mover, así que la
+     instrucción quedaría mostrando un gesto que ese dispositivo no puede
+     hacer. Se oculta ahí y el titular queda solo, que ya se sostiene solo. */
+  @media (hover: none) {
+    .clients-trail-subtitle {
+      display: none;
     }
   }
 </style>

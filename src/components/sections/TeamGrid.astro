@@ -225,7 +225,7 @@ function initials(name: string) {
     height: 1.5rem;
   }
 
-  @media (min-width: 1025px) and (hover: hover) {
+  @media (min-width: 1024px) and (hover: hover) {
     .member-card {
       cursor: none;
     }
@@ -278,8 +278,8 @@ function initials(name: string) {
     color: var(--text-secondary);
   }
 
-  /* ---------- Desktop (1025px+): filmstrip horizontal pineado. ---------- */
-  @media (min-width: 1025px) {
+  /* ---------- Desktop (1024px+): filmstrip horizontal pineado. ---------- */
+  @media (min-width: 1024px) {
     .team-hz-container {
       position: relative;
       height: 46rem;
@@ -351,6 +351,15 @@ function initials(name: string) {
       background: var(--dot-micelio);
       box-shadow: 0 0 10px color-mix(in srgb, var(--dot-micelio) 70%, transparent);
       transition: width 0.1s linear;
+    }
+  }
+
+  /* --space-xl (128px) de aire arriba se siente correcto en el filmstrip
+     desktop, pero en mobile (grid vertical normal) es un cuarto de pantalla
+     de padding vacío antes del título. */
+  @media (max-width: 640px) {
+    .team-hz {
+      padding-block: var(--space-lg) 0;
     }
   }
 </style>
