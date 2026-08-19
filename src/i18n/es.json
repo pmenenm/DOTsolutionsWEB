@@ -82,6 +82,20 @@
           "desc": "DTE eficiente que optimiza el control y la gestión financiera.",
           "logo": "/logos/isotipos/dteiso.svg",
           "href": "dte-facturacion-electronica"
+        },
+        {
+          "title": "ChefCloud",
+          "category": "Delivery & Agregadores",
+          "desc": "Conecta Rappi, PedidosYa y Uber Eats directo al punto de venta y a la comanda de cocina.",
+          "logo": "/logos/isotipos/chefcloudiso.svg",
+          "href": "chefcloud"
+        },
+        {
+          "title": "AyHungry",
+          "category": "Atención & Reservas",
+          "desc": "Pedidos anticipados, reservas y gestión de mesas desde el celular del cliente.",
+          "logo": "/logos/isotipos/ayhungryiso.svg",
+          "href": "ayhungry"
         }
       ]
     },
@@ -168,7 +182,9 @@
     "rights": "Todos los derechos reservados.",
     "motto": "Impulsamos eficiencia. Transformamos tu negocio.",
     "partnerBadgeTitle": "Partner Gold de SAP Business One",
-    "partnerBadgeVerify": "Verificable en SAP Partner Finder"
+    "partnerBadgeVerify": "Verificable en SAP Partner Finder",
+    "hardwareBadgeTitle": "Terminal POS AXIS-J64",
+    "hardwareBadgeSubtitle": "Hardware certificado para tu punto de venta"
   },
   "about": {
     "metaTitle": "Quiénes somos",
@@ -2878,5 +2894,293 @@
         ]
       }
     ]
+  },
+  "chefcloud": {
+    "metaTitle": "ChefCloud",
+    "metaDescription": "ChefCloud conecta Rappi, PedidosYa, Uber Eats y más directo al punto de venta y a la comanda de cocina, sin tablets extra ni transcripción manual.",
+    "hero": {
+      "line1": "El delivery,",
+      "line2": "directo a",
+      "line3": "la cocina",
+      "subtitle": "Rappi, PedidosYa, Uber Eats y más entran al mismo punto de venta y a la misma comanda.",
+      "paragraph": "Sin tablets extra y sin que nadie transcriba pedidos a mano — para cadenas, dark kitchens y restaurantes con salón y delivery.",
+      "cta": "Hablar con un experto"
+    },
+    "bento": {
+      "eyebrow": "El diagnóstico",
+      "title": "De tablets sueltas a una sola comanda",
+      "items": [
+        {
+          "title": "¿Cada agregador de delivery llega con su propia tablet?",
+          "desc": "Alguien acepta el pedido a mano, lo retipea en el punto de venta y lo canta a cocina — tres pasos manuales por cada pedido."
+        },
+        {
+          "title": "¿Se cometen errores de transcripción entre plataformas?",
+          "desc": "ChefCloud conecta cada agregador directo al punto de venta: cero tablets extra, cero retipeo."
+        },
+        {
+          "title": "¿Cierras caja por separado para cada canal de delivery?",
+          "desc": "Ventas de delivery y de salón se consolidan en el mismo cierre de caja, sin reconciliaciones cruzadas."
+        },
+        {
+          "title": "¿La carta y los precios varían entre plataformas y se te escapa el control?",
+          "desc": "Carta y precios administrados por canal desde un solo lugar, sin planillas paralelas."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "Cómo funciona",
+      "intro": "ChefCloud conecta los agregadores de delivery directo a tu punto de venta, para que cada pedido llegue a cocina como si lo hubiera tomado un mesero.",
+      "title": "Del agregador a la comanda",
+      "steps": [
+        {
+          "title": "Conexión",
+          "desc": "Se integran los agregadores (Rappi, PedidosYa, Uber Eats y más) al punto de venta que ya usás."
+        },
+        {
+          "title": "Carta y precios",
+          "desc": "Se configura la carta y el precio por canal, sin duplicar catálogos."
+        },
+        {
+          "title": "Operación",
+          "desc": "Los pedidos entran auto-aceptados, se imprimen en cocina y cierran caja junto con el resto de la venta."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Beneficios que se notan en el turno de mayor presión.",
+      "items": [
+        "Cero tablets extra: los pedidos entran directo a tu sistema, no a pantallas separadas por app.",
+        "Auto-aceptación de pedidos, sin confirmar uno por uno.",
+        "Impresión automática en cocina, en el mismo formato que el resto de la comanda.",
+        "Un solo cierre de caja para delivery y salón, sin reconciliar canal por canal."
+      ]
+    },
+    "authority": {
+      "title": "La confiabilidad detrás de cada integración de delivery.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Clientes activos y satisfechos.",
+          "sub": "Operando con soluciones DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Años de experiencia en retail.",
+          "sub": "Implementaciones en toda LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Profesionales especializados.",
+          "sub": "Soporte técnico y formación continua."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Años de experiencia en SAP.",
+          "sub": "Metodología probada de implementación."
+        }
+      ],
+      "cta": "Hablar con un experto"
+    }
+  },
+  "ayhungry": {
+    "metaTitle": "AyHungry",
+    "metaDescription": "AyHungry digitaliza la atención y las reservas: pedidos anticipados, gestión de mesas y atención desde el celular del cliente, con análisis de sentimiento.",
+    "hero": {
+      "line1": "Sin filas.",
+      "line2": "Sin esperas.",
+      "line3": "Sin cliente molesto.",
+      "subtitle": "Pedidos anticipados, reservas y gestión de mesas, con atención desde el celular del cliente.",
+      "paragraph": "La fila no es solo incomodidad: es venta que no ocurre. AyHungry digitaliza la atención y suma análisis de sentimiento de cada visita.",
+      "cta": "Hablar con un experto"
+    },
+    "bento": {
+      "eyebrow": "El diagnóstico",
+      "title": "La espera deja de ser el problema",
+      "items": [
+        {
+          "title": "¿La hora punta se traduce en fila y en venta perdida?",
+          "desc": "El cuello de botella no es la cocina: es el tiempo entre decidir y pedir. AyHungry pone el pedido en el celular del cliente."
+        },
+        {
+          "title": "¿Se pierden reservas o llegan sin confirmación?",
+          "desc": "Reservas con confirmación y gestión de mesas integradas al mismo flujo de atención."
+        },
+        {
+          "title": "¿No sabés cómo se sintió el cliente después de la visita?",
+          "desc": "Análisis de sentimiento por visita, para detectar fricciones antes de que se conviertan en una mala reseña."
+        },
+        {
+          "title": "¿Tenés personal amarrado a tomar pedidos en la fila?",
+          "desc": "Pedidos anticipados y autoatención liberan personal para la operación, no para la fila."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "Cómo funciona",
+      "intro": "AyHungry digitaliza la experiencia completa del cliente: carta, mesas, pedido, pago y sentimiento, desde su propio celular.",
+      "title": "Tres pasos, sin fila de por medio",
+      "steps": [
+        {
+          "title": "Carta y mesas",
+          "desc": "Se digitaliza la carta y se configura la gestión de mesas y reservas."
+        },
+        {
+          "title": "Canales",
+          "desc": "El cliente pide, reserva y paga desde su celular, con estado del pedido en tiempo real."
+        },
+        {
+          "title": "Operación",
+          "desc": "Menos personal amarrado a la fila, con análisis de sentimiento por cada visita."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Beneficios donde más se nota: la hora punta.",
+      "items": [
+        "Pedidos anticipados y pago en la mesa, sin esperar al mesero.",
+        "Reservas con confirmación y gestión de mesas integradas.",
+        "Análisis de sentimiento por visita, no solo por encuesta.",
+        "Menos personal amarrado a la fila, más foco en la operación."
+      ]
+    },
+    "authority": {
+      "title": "+300 empresas ya operan con DOT.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Clientes activos y satisfechos.",
+          "sub": "Operando con soluciones DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Años de experiencia en retail.",
+          "sub": "Implementaciones en toda LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Profesionales especializados.",
+          "sub": "Soporte técnico y formación continua."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Años de experiencia en SAP.",
+          "sub": "Metodología probada de implementación."
+        }
+      ],
+      "cta": "Hablar con un experto"
+    }
+  },
+  "axisJ64": {
+    "metaTitle": "Terminal POS AXIS-J64",
+    "metaDescription": "Terminal POS AXIS-J64: hardware industrial para puntos de venta de alto tráfico, certificado y validado con SAP Business One, RetailPro y más.",
+    "hero": {
+      "line1": "Velocidad industrial",
+      "line2": "para tu punto",
+      "line3": "de venta",
+      "subtitle": "Terminal POS AXIS-J64: el hardware que tu software de gestión estaba esperando.",
+      "paragraph": "Diseñado para aguantar el ritmo de tu negocio, certificado y validado con SAP, RetailPro y tu software de punto de venta.",
+      "cta": "Quiero renovar mis cajas"
+    },
+    "bento": {
+      "eyebrow": "El diagnóstico",
+      "title": "Hardware que no se queda corto en hora punta",
+      "items": [
+        {
+          "title": "¿Tus cajas se traban justo en el momento de mayor venta?",
+          "desc": "Procesador Quad-Core Intel Celeron J6412 y 8GB de RAM DDR4, pensados para sostener el ritmo de la hora punta."
+        },
+        {
+          "title": "¿El punto de venta tarda en abrir o en emitir el documento?",
+          "desc": "SSD M.2 de 256GB y Windows 10 Pro preinstalado, listos para operar desde el primer encendido."
+        },
+        {
+          "title": "¿No sabés si el hardware es compatible con tu software actual?",
+          "desc": "Validado con SAP Business One, RetailPro y otros sistemas de punto de venta que ya usás."
+        },
+        {
+          "title": "¿Tus periféricos actuales quedan fuera al cambiar de equipo?",
+          "desc": "2 puertos COM, LAN, USB y lector MSR integrado, compatibles con tus periféricos existentes."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "Por qué DOT",
+      "intro": "AXIS-J64 llega certificado, probado y con el respaldo de una empresa con más de 16 años implementando tecnología en retail y gastronomía.",
+      "title": "Respaldo, no solo hardware",
+      "steps": [
+        {
+          "title": "Certificado y probado",
+          "desc": "Validado con SAP Business One, RetailPro y otro software de punto de venta antes de llegar a tu local."
+        },
+        {
+          "title": "Soporte local",
+          "desc": "Respaldo de una empresa tecnológica establecida, con equipo propio de soporte técnico."
+        },
+        {
+          "title": "Compatible con lo que ya tenés",
+          "desc": "Se integra con tus periféricos y tu plataforma actual, sin obligarte a cambiar todo el equipo."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Especificaciones técnicas.",
+      "items": [
+        "Procesador Quad-Core Intel Celeron J6412.",
+        "8GB de RAM DDR4 y SSD M.2 de 256GB.",
+        "Pantalla táctil capacitiva de 15\", con lector MSR integrado.",
+        "2 puertos COM, LAN, USB y Windows 10 Pro preinstalado."
+      ]
+    },
+    "authority": {
+      "title": "El hardware POS con el respaldo de 20 años de DOT Solutions.",
+      "stats": [
+        {
+          "value": 20,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Años en implementaciones.",
+          "sub": "Trayectoria en integración de hardware y software de punto de venta."
+        },
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Clientes soportados.",
+          "sub": "Operando con soluciones DOT Solutions."
+        },
+        {
+          "value": 3,
+          "prefix": "+",
+          "suffix": "k",
+          "label": "Puntos de venta operativos.",
+          "sub": "Terminales activas en producción en toda LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Expertos certificados.",
+          "sub": "Equipo técnico dedicado a soporte y despliegue."
+        }
+      ],
+      "cta": "Hablar con un experto"
+    }
   }
 }

@@ -82,6 +82,20 @@
           "desc": "Efficient e-invoicing that streamlines financial control and management.",
           "logo": "/logos/isotipos/dteiso.svg",
           "href": "dte-facturacion-electronica"
+        },
+        {
+          "title": "ChefCloud",
+          "category": "Delivery & Aggregators",
+          "desc": "Connects Rappi, PedidosYa and Uber Eats straight to the point of sale and kitchen ticket.",
+          "logo": "/logos/isotipos/chefcloudiso.svg",
+          "href": "chefcloud"
+        },
+        {
+          "title": "AyHungry",
+          "category": "Service & Reservations",
+          "desc": "Pre-orders, reservations and table management from the customer's own phone.",
+          "logo": "/logos/isotipos/ayhungryiso.svg",
+          "href": "ayhungry"
         }
       ]
     },
@@ -168,7 +182,9 @@
     "rights": "All rights reserved.",
     "motto": "We drive efficiency. We transform your business.",
     "partnerBadgeTitle": "SAP Business One Gold Partner",
-    "partnerBadgeVerify": "Verifiable on SAP Partner Finder"
+    "partnerBadgeVerify": "Verifiable on SAP Partner Finder",
+    "hardwareBadgeTitle": "Terminal POS AXIS-J64",
+    "hardwareBadgeSubtitle": "Certified hardware for your point of sale"
   },
   "about": {
     "metaTitle": "About us",
@@ -2878,5 +2894,293 @@
         ]
       }
     ]
+  },
+  "chefcloud": {
+    "metaTitle": "ChefCloud",
+    "metaDescription": "ChefCloud connects Rappi, PedidosYa, Uber Eats and more directly to the point of sale and kitchen ticket, no extra tablets and no manual transcription.",
+    "hero": {
+      "line1": "Delivery,",
+      "line2": "straight to",
+      "line3": "the kitchen",
+      "subtitle": "Rappi, PedidosYa, Uber Eats and more enter the same point of sale and the same kitchen ticket.",
+      "paragraph": "No extra tablets and no one re-typing orders by hand — built for chains, dark kitchens and restaurants running dine-in and delivery.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "From loose tablets to a single ticket",
+      "items": [
+        {
+          "title": "Does every delivery aggregator show up with its own tablet?",
+          "desc": "Someone accepts the order by hand, re-types it into the point of sale and calls it out to the kitchen — three manual steps per order."
+        },
+        {
+          "title": "Are transcription errors slipping in between platforms?",
+          "desc": "ChefCloud connects each aggregator straight to the point of sale: zero extra tablets, zero re-typing."
+        },
+        {
+          "title": "Do you close the register separately for each delivery channel?",
+          "desc": "Delivery and dine-in sales settle in the same register close, with no cross-channel reconciliation."
+        },
+        {
+          "title": "Do menus and prices drift between platforms without you noticing?",
+          "desc": "Menu and pricing managed per channel from a single place, no parallel spreadsheets."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "ChefCloud connects delivery aggregators straight to your point of sale, so every order reaches the kitchen as if a waiter had taken it.",
+      "title": "From the aggregator to the ticket",
+      "steps": [
+        {
+          "title": "Connection",
+          "desc": "Aggregators (Rappi, PedidosYa, Uber Eats and more) are integrated with the point of sale you already use."
+        },
+        {
+          "title": "Menu and pricing",
+          "desc": "Menu and price are configured per channel, with no duplicated catalogs."
+        },
+        {
+          "title": "Operation",
+          "desc": "Orders arrive auto-accepted, print in the kitchen and close out with the rest of the day's sales."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits you feel during the busiest shift.",
+      "items": [
+        "Zero extra tablets: orders land directly in your system, not on separate per-app screens.",
+        "Auto-acceptance of orders, no confirming one by one.",
+        "Automatic kitchen printing, in the same format as the rest of the ticket.",
+        "A single register close for delivery and dine-in, no per-channel reconciliation."
+      ]
+    },
+    "authority": {
+      "title": "The reliability behind every delivery integration.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "ayhungry": {
+    "metaTitle": "AyHungry",
+    "metaDescription": "AyHungry digitizes service and reservations: pre-orders, table management and service from the customer's own phone, with sentiment analysis.",
+    "hero": {
+      "line1": "No lines.",
+      "line2": "No waiting.",
+      "line3": "No frustrated customers.",
+      "subtitle": "Pre-orders, reservations and table management, with service from the customer's own phone.",
+      "paragraph": "The line isn't just discomfort — it's sales that never happen. AyHungry digitizes service and adds sentiment analysis for every visit.",
+      "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "The wait stops being the problem",
+      "items": [
+        {
+          "title": "Does peak hour turn into a line and lost sales?",
+          "desc": "The bottleneck isn't the kitchen — it's the time between deciding and ordering. AyHungry puts the order on the customer's phone."
+        },
+        {
+          "title": "Do reservations get lost or show up unconfirmed?",
+          "desc": "Confirmed reservations and table management, integrated into the same service flow."
+        },
+        {
+          "title": "Do you have no idea how the customer felt after the visit?",
+          "desc": "Sentiment analysis per visit, catching friction before it turns into a bad review."
+        },
+        {
+          "title": "Is staff tied up taking orders in line?",
+          "desc": "Pre-orders and self-service free up staff for the operation, not the line."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "AyHungry digitizes the full customer experience: menu, tables, order, payment and sentiment, all from their own phone.",
+      "title": "Three steps, no line involved",
+      "steps": [
+        {
+          "title": "Menu and tables",
+          "desc": "The menu is digitized and table management and reservations are configured."
+        },
+        {
+          "title": "Channels",
+          "desc": "Customers order, book and pay from their phone, with real-time order status."
+        },
+        {
+          "title": "Operation",
+          "desc": "Less staff tied to the line, with sentiment analysis on every visit."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Benefits that show up right at peak hour.",
+      "items": [
+        "Pre-orders and table payment, no waiting on a waiter.",
+        "Confirmed reservations with integrated table management.",
+        "Sentiment analysis per visit, not just per survey.",
+        "Less staff tied to the line, more focus on the operation."
+      ]
+    },
+    "authority": {
+      "title": "+300 companies already run on DOT.",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Active, satisfied clients.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of retail experience.",
+          "sub": "Deployments across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Specialized professionals.",
+          "sub": "Technical support and ongoing training."
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years of SAP experience.",
+          "sub": "A proven implementation methodology."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
+  },
+  "axisJ64": {
+    "metaTitle": "Terminal POS AXIS-J64",
+    "metaDescription": "AXIS-J64 POS Terminal: industrial-grade hardware for high-traffic points of sale, certified and validated with SAP Business One, RetailPro and more.",
+    "hero": {
+      "line1": "Industrial speed",
+      "line2": "for your point",
+      "line3": "of sale",
+      "subtitle": "AXIS-J64 POS Terminal: the hardware your management software was waiting for.",
+      "paragraph": "Built to keep pace with your business, certified and validated with SAP, RetailPro and your point-of-sale software.",
+      "cta": "I want to upgrade my registers"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "Hardware that doesn't slow down at peak hour",
+      "items": [
+        {
+          "title": "Do your registers freeze right when sales peak?",
+          "desc": "Quad-Core Intel Celeron J6412 processor and 8GB DDR4 RAM, built to hold up during peak hour."
+        },
+        {
+          "title": "Is the point of sale slow to boot or to print the receipt?",
+          "desc": "256GB M.2 SSD and Windows 10 Pro preinstalled, ready to operate from the first power-on."
+        },
+        {
+          "title": "Not sure if the hardware is compatible with your current software?",
+          "desc": "Validated with SAP Business One, RetailPro and other point-of-sale systems you already use."
+        },
+        {
+          "title": "Do your current peripherals get left behind when you switch hardware?",
+          "desc": "2 COM ports, LAN, USB and a built-in MSR reader, compatible with your existing peripherals."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "Why DOT",
+      "intro": "AXIS-J64 arrives certified, tested and backed by a company with over 16 years implementing technology in retail and food service.",
+      "title": "Backing, not just hardware",
+      "steps": [
+        {
+          "title": "Certified and tested",
+          "desc": "Validated with SAP Business One, RetailPro and other point-of-sale software before it reaches your store."
+        },
+        {
+          "title": "Local support",
+          "desc": "Backed by an established technology company, with its own technical support team."
+        },
+        {
+          "title": "Compatible with what you already have",
+          "desc": "Integrates with your peripherals and your current platform, with no need to replace all your equipment."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Technical specifications.",
+      "items": [
+        "Quad-Core Intel Celeron J6412 processor.",
+        "8GB DDR4 RAM and 256GB M.2 SSD.",
+        "15\" capacitive touch screen, with a built-in MSR reader.",
+        "2 COM ports, LAN, USB and Windows 10 Pro preinstalled."
+      ]
+    },
+    "authority": {
+      "title": "The POS hardware backed by 20 years of DOT Solutions.",
+      "stats": [
+        {
+          "value": 20,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Years in deployments.",
+          "sub": "Track record integrating point-of-sale hardware and software."
+        },
+        {
+          "value": 300,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Clients supported.",
+          "sub": "Running on DOT Solutions."
+        },
+        {
+          "value": 3,
+          "prefix": "+",
+          "suffix": "k",
+          "label": "Active points of sale.",
+          "sub": "Terminals running in production across LATAM."
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "suffix": "",
+          "label": "Certified experts.",
+          "sub": "Technical team dedicated to support and rollout."
+        }
+      ],
+      "cta": "Talk to an expert"
+    }
   }
 }
