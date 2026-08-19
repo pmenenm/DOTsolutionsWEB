@@ -172,52 +172,197 @@
   },
   "about": {
     "metaTitle": "About us",
-    "metaDescription": "The team behind DOT Solutions: a SAP partner in Latin America that implements and supports the technology that runs your business. Retail & hospitality specialists.",
+    "metaDescription": "DOT Solutions' philosophy, pillars and team: the strategic partner who designs your business's operating infrastructure, not just software.",
     "hero": {
-      "eyebrow": "About us",
-      "title": "The team behind your operation",
-      "subtitle": "We're a technology partner, not a license reseller. We implement SAP Business One and the ecosystem your business needs to operate — and we support you end to end."
+      "tag": "Living infrastructure",
+      "title": "We turn complexity into clarity. Data into decisions, and processes into growth.",
+      "manifesto": "We're not a company that implements software; we're the partner who designs the operating infrastructure to grow with control, efficiency and a vision for the future. We represent Quiet Luxury: interfaces that don't shout, systems that don't fail, and a consultative service that respects our clients' time. We make complexity invisible, leaving only the results in view."
     },
-    "office": {
-      "eyebrow": "Our home · Santiago, Chile",
-      "caption": "One team that designs, implements and supports — all from one place.",
-      "alt": "The DOT Solutions team working at the Santiago office"
+    "whoWeAre": {
+      "title": "Who we are",
+      "text": "We are not a company that implements software; we are the partner who designs the operational infrastructure to grow with control, efficiency, and vision for the future."
     },
-    "mission": {
-      "eyebrow": "Our mission",
-      "title": "We drive efficiency. We transform your business.",
-      "body": "We turn technology into results: we streamline operations and enable smart decisions with ERP, point of sale, BI, loyalty and invoicing integrated into a single platform. We don't sell software; we design and implement the architecture your company needs to grow.",
-      "points": [
-        "One team that designs, implements and supports end to end",
-        "Retail & hospitality specialists, SAP partner for any industry",
-        "Presence and support across Latin America"
-      ]
-    },
-    "values": {
-      "eyebrow": "How we work",
-      "title": "A partner, not a vendor",
+    "pillars": {
+      "eyebrow": "The 4 pillars",
+      "title": "DOT's conceptual architecture",
       "items": [
         {
-          "title": "Certified experts",
-          "desc": "Certified specialists in every functional area, with years implementing SAP."
+          "name": "The Concrete",
+          "concept": "Architecture",
+          "tag": "Structure & stability",
+          "desc": "The corporate weight. The robust technical infrastructure (backend) that supports the real volume of your operations without wavering."
         },
         {
-          "title": "Tailored solutions",
-          "desc": "Built around your operation's real needs, not generic templates."
+          "name": "The Root",
+          "concept": "Integration",
+          "tag": "Direction & distribution",
+          "desc": "Just as mycelium distributes nutrients through the forest, our solutions (APIs, databases) connect isolated systems so information flows without friction."
         },
         {
-          "title": "End-to-end support",
-          "desc": "Design, implementation and support from start to finish, day to day."
+          "name": "The Forest",
+          "concept": "Ecosystem",
+          "tag": "Scalability & resilience",
+          "desc": "A lone tree is vulnerable; a forest is a resilient system. We don't offer isolated patches — we offer an integrated ecosystem that grows alongside your business."
         },
         {
-          "title": "Measurable results",
-          "desc": "Efficiency, control and profitability you can actually verify."
+          "name": "The Light",
+          "concept": "Clarity",
+          "tag": "Decision & frontier",
+          "desc": "The bioluminescent flash. Dashboards and advanced analytics that let leaders see with absolute clarity in a sea of data."
         }
       ]
     },
+    "persona": {
+      "eyebrow": "Strategic personality",
+      "title": "If DOT were a person:",
+      "quote": "It wouldn't be the programmer locked in an office. Nor the salesperson promising magic. It would be the strategic advisor who walks into a boardroom, listens carefully, identifies the real problem, and designs the most efficient path to solve it.",
+      "speakTitle": "How we speak",
+      "speak": [
+        {
+          "trait": "Direct",
+          "desc": "We get to the point. No detours, no unnecessary complexity."
+        },
+        {
+          "trait": "Strategic",
+          "desc": "We talk about real business impact, not technical features."
+        },
+        {
+          "trait": "Sophisticated",
+          "desc": "Authority conveyed through sobriety, never through ostentation."
+        },
+        {
+          "trait": "Human",
+          "desc": "Technology is complex; our communication isn't."
+        }
+      ],
+      "neverTitle": "How we never speak",
+      "never": [
+        {
+          "trait": "Arrogant",
+          "desc": "Zero jargon just to appear knowledgeable."
+        },
+        {
+          "trait": "Informal",
+          "desc": "Closeness never replaces professional rigor."
+        },
+        {
+          "trait": "Generic",
+          "desc": "Every message must deliver real value."
+        },
+        {
+          "trait": "Exaggerated",
+          "desc": "We don't promise magic; we deliver technical precision."
+        }
+      ]
+    },
+    "mission": {
+      "title": "Our mission",
+      "tagline": "We drive efficiency. We transform your business.",
+      "body": "We turn technology into results: we optimize operations and enable smart decisions with ERP, point of sale, BI, loyalty, and billing integrated into a single platform. We do not sell software; we design and implement the architecture your company needs to grow.",
+      "facts": [
+        "One team that designs, implements, and supports end to end",
+        "Specialists in retail and hospitality, SAP Business One Gold Partner",
+        "Presence and support across Latin America"
+      ]
+    },
+    "archetypes": {
+      "eyebrow": "The team behind the infrastructure",
+      "title": "Four archetypes. One multidisciplinary team.",
+      "items": [
+        {
+          "name": "The empathetic partner",
+          "desc": "We understand operational challenges because we work alongside those who live them. We listen before proposing; we understand before intervening."
+        },
+        {
+          "name": "The approachable expert",
+          "desc": "Deep technical knowledge, but true sophistication lies in making the complex understandable."
+        },
+        {
+          "name": "The strategic provocateur",
+          "desc": "Growth requires questioning the status quo. We don't avoid difficult conversations or uncomfortable questions."
+        },
+        {
+          "name": "The team with soul",
+          "desc": "Technology is still just a tool. Relationships are what build trust."
+        }
+      ]
+    },
+    "gallery": {
+      "eyebrow": "News & experience",
+      "title": "The evolution of our projects in images",
+      "items": [
+        {
+          "src": "/images/novedades/NOV1.jpg",
+          "title": "Retail Pro Implementation",
+          "date": "August 2026"
+        },
+        {
+          "src": "/images/novedades/NOV2.jpg",
+          "title": "SAP Business One Ecosystem",
+          "date": "July 2026"
+        },
+        {
+          "src": "/images/novedades/NOV3.jpeg",
+          "title": "BI Data Architecture",
+          "date": "June 2026"
+        },
+        {
+          "src": "/images/novedades/NOV4.jpg",
+          "title": "Connected Gastronomy Operation",
+          "date": "May 2026"
+        },
+        {
+          "src": "/images/novedades/novedad2.jpeg",
+          "title": "Cloud Infrastructure & APIs",
+          "date": "April 2026"
+        },
+        {
+          "src": "/images/novedades/novedad3.jpeg",
+          "title": "LATAM Operational Transformation",
+          "date": "March 2026"
+        },
+        {
+          "src": "/images/novedades/novedad4.jpeg",
+          "title": "DOT Culture & Team",
+          "date": "February 2026"
+        },
+        {
+          "src": "/images/novedades/novedad6.jpeg",
+          "title": "New Add-on Launches",
+          "date": "January 2026"
+        }
+      ]
+    },
+    "howWeWork": {
+      "title": "How we work",
+      "tagline": "A partner, not a vendor",
+      "items": [
+        {
+          "name": "Certified experts",
+          "desc": "Certified specialists in every functional area, with years implementing SAP."
+        },
+        {
+          "name": "Tailored solutions",
+          "desc": "Adapted to your operation's real needs, not generic templates."
+        },
+        {
+          "name": "End-to-end support",
+          "desc": "Design, implementation, and support from start to finish, day to day."
+        },
+        {
+          "name": "Measurable results",
+          "desc": "Efficiency, control, and profitability you can verify."
+        }
+      ]
+    },
+    "closing": {
+      "message": "Let's talk about your operation",
+      "button": "Design my company's infrastructure",
+      "subtitle": "Tell us your challenges and we'll show you how we can help you operate better."
+    },
     "team": {
       "eyebrow": "Our team",
-      "title": "The people behind DOT",
+      "title": "The team behind your operation",
       "members": [
         {
           "name": "Héctor Vera",
@@ -256,20 +401,67 @@
     "presence": {
       "eyebrow": "Where we are",
       "title": "Presence across Latin America",
-      "subtitle": "We implement and support in 8 countries across the region, headquartered in Santiago, Chile.",
-      "officeLabel": "Headquarters",
-      "office": "Av. del Valle Nte. 928, office 503, Huechuraba, Santiago, Chile",
-      "photoAlt": "Meeting room at DOT Solutions headquarters, overlooking Santiago"
+      "subtitle": "We support and implement in 8 countries across the region, headquartered in Santiago, Chile.",
+      "core": {
+        "name": "Chile",
+        "flag": "🇨🇱"
+      },
+      "coreLabel": "Headquarters",
+      "nodes": [
+        {
+          "name": "Peru",
+          "flag": "🇵🇪"
+        },
+        {
+          "name": "Colombia",
+          "flag": "🇨🇴"
+        },
+        {
+          "name": "Mexico",
+          "flag": "🇲🇽"
+        },
+        {
+          "name": "Panama",
+          "flag": "🇵🇦"
+        },
+        {
+          "name": "Argentina",
+          "flag": "🇦🇷"
+        }
+      ]
     },
     "credibility": {
       "eyebrow": "Our track record",
       "title": "Years of experience that translate into trust",
-      "partner": "SAP partner in Latin America"
+      "subtitle": "SAP Partner in Latin America",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "label": "Active, satisfied clients"
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "label": "Years of experience in retail"
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "label": "Specialized professionals"
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "label": "Years of experience with SAP"
+        }
+      ],
+      "closing": "+300 companies already run on DOT"
     },
-    "cta": {
-      "title": "Let's talk about your operation",
-      "body": "Tell us your challenges and we'll show you how we can help you operate better.",
-      "button": "Talk to an expert"
+    "clientsTrail": {
+      "tag": "Authority & operational experience",
+      "title": "+300 companies already run on DOT",
+      "subtitle": "Move your cursor to explore the network of connected operations across Latin America."
     }
   },
   "home": {

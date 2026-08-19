@@ -1,14 +1,14 @@
 ---
+// src/content-pages/Nosotros.astro
+// Reconstrucción completa en 5 actos narrativos, basada en el brandbook DOT
+// ("La ingeniería perfecta del mundo natural aplicada al software
+// empresarial"): Hero editorial con canvas de partículas + reveal de texto,
+// los 4 Pilares en scroll horizontal pineado, "Si DOT fuera una persona" +
+// código de voz, arquetipos + equipo real, y cierre de impacto.
 import Layout from '../layouts/Layout.astro';
-import PageHero from '../components/sections/PageHero.astro';
-import SectionHeading from '../components/sections/SectionHeading.astro';
-import HighlightPanel from '../components/sections/HighlightPanel.astro';
-import FeatureGrid from '../components/sections/FeatureGrid.astro';
 import TeamGrid from '../components/sections/TeamGrid.astro';
 import PresenceNetwork from '../components/sections/PresenceNetwork.astro';
 import StatBar from '../components/sections/StatBar.astro';
-import ClientLogos from '../components/sections/ClientLogos.astro';
-import CTASection from '../components/sections/CTASection.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations, type Lang } from '../i18n/utils';
 import { withBase } from '../utils/paths';
@@ -20,9 +20,30 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const about = t.about;
+const contactHref = getRelativeLocaleUrl(lang, 'contacto');
 
-const presenceCore = t.nav.countries.find((c) => c.name === 'Chile') ?? t.nav.countries[0];
-const presenceNodes = t.nav.countries.filter((c) => c !== presenceCore);
+// Selección real de logos de /public/clients/ (no placeholders) para el trail
+// del mouse — variedad de rubros e íconos reconocibles para que el efecto se
+// sienta representativo del portafolio real de clientes, no genérico.
+const CLIENT_TRAIL_FILES = [
+  'asics.png',
+  'bridgestone.png',
+  'calvin-klein.png',
+  'lacoste.png',
+  'levis.png',
+  'tommy-hilfiger.png',
+  'wrangler.png',
+  'havanna.png',
+  'groupe-seb.png',
+  'explora.png',
+  'superzoo.png',
+  'la-mar.png',
+  'tanta.png',
+  'dulce-luna.png',
+  'porvenir.png',
+  'sendero.png',
+];
+const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`));
 ---
 
 <Layout
@@ -31,228 +52,1236 @@ const presenceNodes = t.nav.countries.filter((c) => c !== presenceCore);
   lang={lang}
   path="/nosotros"
 >
-  <PageHero eyebrow={about.hero.eyebrow} title={about.hero.title} subtitle={about.hero.subtitle} image="/images/team-office.jpg" />
+  <!-- ============ ACTO 1 — HERO + "QUIÉNES SOMOS" (pestaña desde el hero) ============ -->
+  <!-- Un único stage pineado: el video ocupa toda la pantalla y, sin soltar el scroll, un
+       panel claro entra como pestaña desde el borde derecho hasta cubrir ~58% del ancho.
+       Recién con el panel en su lugar arranca el tipeo (GSAP TextPlugin), todo dentro del
+       mismo tramo de scrub — la sección "sale" literalmente del hero, no es un bloque aparte
+       debajo. Pineado + scrub sólo en desktop (≥1024px); en mobile el panel es un bloque
+       estático de flujo normal debajo del video, con el tipeo disparado al entrar en vista. -->
+  <section class="hero-stage" data-hero-stage>
+    <video
+      class="video-hero-media"
+      src={withBase('/video1.mp4')}
+      autoplay
+      muted
+      loop
+      playsinline
+    />
+    <div class="video-hero-overlay" aria-hidden="true"></div>
 
-  <section class="section">
-    <div class="container">
-      <figure class="office-photo" data-reveal>
-        <img src={withBase('/office/office-team.jpg')} alt={about.office.alt} loading="lazy" />
-        <figcaption>{about.office.caption}</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <HighlightPanel
-        eyebrow={about.mission.eyebrow}
-        title={about.mission.title}
-        body={about.mission.body}
-        points={about.mission.points}
-        image="/images/mycelium-roots.jpg"
-      />
-    </div>
-  </section>
-
-  <section class="section theme-light">
-    <div class="container values-panel">
-      <SectionHeading eyebrow={about.values.eyebrow} title={about.values.title} />
-      <div class="section-body">
-        <FeatureGrid items={about.values.items} cols={4} />
+    <div class="who-we-are-panel" data-who-panel>
+      <div class="who-we-are-inner">
+        <h2 class="who-we-are-title">{about.whoWeAre.title}</h2>
+        <p class="who-we-are-text" data-typewriter data-typewriter-text={about.whoWeAre.text}></p>
       </div>
     </div>
   </section>
+
+  <!-- ============ NUESTRA MISIÓN ============ -->
+  <!-- Mismo criterio que "Quiénes somos" (modo claro, título gigante peso medium,
+       alineado a la izquierda) pero con un tratamiento propio: sin pestaña ni tipeo,
+       acá la dinámica es una regla que se dibuja al hacer scroll (scaleX 0→1) más una
+       lista de datos duros con índice y riel vertical en Verde Raíz — refuerza el
+       carácter "infraestructura" de la marca en vez de repetir el mecanismo del Acto 2. -->
+  <section class="section mission-section">
+    <div class="container mission-inner">
+      <div class="mission-main">
+        <h2 class="mission-title" data-reveal>{about.mission.title}</h2>
+        <p class="mission-tagline" data-reveal>{about.mission.tagline}</p>
+        <span class="mission-rule" data-mission-rule aria-hidden="true"></span>
+        <p class="mission-body" data-reveal>{about.mission.body}</p>
+      </div>
+
+      <ul class="mission-facts">
+        {about.mission.facts.map((fact, i) => (
+          <li class="mission-fact" data-reveal>
+            <span class="mission-fact-index">0{i + 1}</span>
+            <p>{fact}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ NOVEDADES & EXPERIENCIA (galería horizontal pineada) ============ -->
+  <!-- Traducción del spec HorizontalGallerySection.jsx (React + Tailwind + GSAP) al stack
+       real del sitio (Astro + CSS + GSAP): el scroll vertical se convierte en desplazamiento
+       lateral de la tira de tarjetas mientras la sección queda pineada, misma matemática de
+       ScrollTrigger del spec (x: -(strip.scrollWidth - innerWidth), scrub, end atado al ancho
+       de la tira). Sólo en desktop (≥1024px); en mobile la tira es un scroll horizontal nativo
+       con snap, sin pin ni scroll-hijack. -->
+  <section class="gallery-section" data-gallery-section>
+    <div class="gallery-header">
+      <p class="gallery-tag">[ {about.gallery.eyebrow} ]</p>
+      <h2 class="gallery-title">{about.gallery.title}</h2>
+    </div>
+
+    <div class="gallery-wrapper" data-gallery-wrapper>
+      <div class="gallery-strip" data-gallery-strip>
+        {about.gallery.items.map((item) => (
+          <div class="gallery-card">
+            <img class="gallery-card-img" src={withBase(item.src)} alt={item.title} loading="lazy" />
+            <div class="gallery-card-overlay">
+              <p class="gallery-card-title">{item.title}</p>
+              <p class="gallery-card-date">{item.date}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO TRABAJAMOS ============ -->
+  <section class="section how-we-work-section">
+    <div class="container how-we-work-inner">
+      <h2 class="how-we-work-title" data-reveal>{about.howWeWork.title}</h2>
+      <p class="how-we-work-tagline" data-reveal>{about.howWeWork.tagline}</p>
+
+      <div class="how-we-work-grid">
+        {about.howWeWork.items.map((item, i) => (
+          <div class="how-we-work-card" data-reveal>
+            <span class="how-we-work-index">0{i + 1}</span>
+            <h3 class="how-we-work-name">{item.name}</h3>
+            <p class="how-we-work-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Un solo <script> para las 3 animaciones de la página (hero, regla de la
+       misión, galería) EN ESE ORDEN — a propósito: Astro compila cada bloque
+       <script> de un .astro como un módulo separado y NO garantiza que se
+       ejecuten en el mismo orden del código fuente (se comprobó en la práctica
+       que el bloque de la galería podía correr antes que el del hero). Como el
+       pin de la galería usa "start: 'top top'", si se mide ANTES de que el pin
+       del hero haya insertado su spacer, la medición queda corta (falta la
+       duración del pin del hero) y la galería arranca pineada superpuesta con
+       la sección "Nuestra misión" en vez de después de ella. Consolidar todo
+       en un único módulo elimina la ambigüedad: el orden de ejecución dentro
+       de un mismo script es siempre el del código. -->
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { TextPlugin } from 'gsap/TextPlugin';
+
+    gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+    const MS_PER_CHAR = 0.035;
+
+    function initHeroWhoWeAre() {
+      const section = document.querySelector<HTMLElement>('[data-hero-stage]');
+      const panel = document.querySelector<HTMLElement>('[data-who-panel]');
+      const typeEl = document.querySelector<HTMLElement>('[data-typewriter]');
+      if (!section || !panel || !typeEl) return () => {};
+
+      const text = typeEl.dataset.typewriterText ?? '';
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 1024px)', () => {
+        typeEl.textContent = '';
+        gsap.set(panel, { xPercent: 100 });
+
+        if (reduced) {
+          gsap.set(panel, { xPercent: 0 });
+          typeEl.textContent = text;
+          return () => {};
+        }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            scrub: 1,
+            start: 'top top',
+            end: '+=180%',
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.to(panel, { xPercent: 0, ease: 'power3.out', duration: 1.2 }).to(
+          typeEl,
+          { text, duration: Math.max(text.length * MS_PER_CHAR, 1.5), ease: 'none' },
+          '>-0.2'
+        );
+
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+          gsap.set(panel, { clearProps: 'all' });
+        };
+      });
+
+      mm.add('(max-width: 1023px)', () => {
+        gsap.set(panel, { clearProps: 'all' });
+
+        if (reduced) {
+          typeEl.textContent = text;
+          return () => {};
+        }
+
+        typeEl.textContent = '';
+        const tween = gsap.to(typeEl, {
+          text,
+          duration: Math.max(text.length * MS_PER_CHAR, 1.5),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: panel,
+            start: 'top 85%',
+            end: 'top 35%',
+            scrub: 0.5,
+          },
+        });
+
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        };
+      });
+
+      return () => mm.revert();
+    }
+
+    function initMissionRule() {
+      const rule = document.querySelector<HTMLElement>('[data-mission-rule]');
+      if (!rule) return () => {};
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        gsap.set(rule, { scaleX: 1 });
+        return () => {};
+      }
+
+      gsap.set(rule, { transformOrigin: 'left center' });
+      const tween = gsap.fromTo(
+        rule,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: rule, start: 'top 85%' },
+        }
+      );
+
+      return () => tween.scrollTrigger?.kill();
+    }
+
+    function initGallery() {
+      const section = document.querySelector<HTMLElement>('[data-gallery-section]');
+      const strip = document.querySelector<HTMLElement>('[data-gallery-strip]');
+      if (!section || !strip) return () => {};
+
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 1024px)', () => {
+        const getScrollLength = () => strip.scrollWidth - window.innerWidth;
+
+        const tween = gsap.to(strip, {
+          x: () => -getScrollLength(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            scrub: 1,
+            start: 'top top',
+            end: () => `+=${strip.scrollWidth}`,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          gsap.set(strip, { clearProps: 'transform' });
+        };
+      });
+
+      mm.add('(max-width: 1023px)', () => () => {});
+
+      return () => mm.revert();
+    }
+
+    // Migrado desde TeamGrid.astro (que tenía su propio <script> aparte) por
+    // la MISMA razón que consolidó hero/misión/galería acá arriba: su pin
+    // medía "top top" antes de que el spacer de la galería existiera todavía
+    // (orden de ejecución entre módulos <script> separados no es determinista
+    // en Astro), así que el filmstrip del equipo se pineaba de golpe muy
+    // temprano y quedaba superpuesto visualmente sobre la sección de arriba.
+    function initTeamHorizontalScroll() {
+      const section = document.querySelector<HTMLElement>('[data-team-hz]');
+      const containerEl = document.querySelector<HTMLElement>('[data-team-hz-container]');
+      const trackEl = document.querySelector<HTMLElement>('[data-team-hz-track]');
+      const progressBar = document.querySelector<HTMLElement>('[data-team-hz-progress-bar]');
+      const counterCurrent = document.querySelector<HTMLElement>('[data-team-hz-counter-current]');
+      if (!section || !containerEl || !trackEl) return () => {};
+
+      const cards = gsap.utils.toArray<HTMLElement>('[data-member-card]', trackEl);
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 1025px)', () => {
+        // `.team-hz-track` no fija `overflow`, así que queda en su valor por
+        // defecto (visible) — y en ese caso `scrollWidth` NO cuenta el
+        // padding-right final (los navegadores sólo lo reflejan cuando el
+        // propio elemento recorta su overflow). Sin este ajuste la tira se
+        // queda corta exactamente por ese padding y la última card termina
+        // pegada al borde del viewport (o cortada). Se suma a mano.
+        const getScrollLength = () => {
+          const paddingRight = parseFloat(getComputedStyle(trackEl).paddingRight) || 0;
+          return trackEl.scrollWidth - window.innerWidth + paddingRight;
+        };
+
+        const tween = gsap.to(trackEl, {
+          x: () => -getScrollLength(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerEl,
+            pin: true,
+            scrub: 0.6,
+            start: 'top top',
+            end: () => `+=${getScrollLength()}`,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              if (progressBar) progressBar.style.width = `${self.progress * 100}%`;
+              if (counterCurrent) {
+                const idx = Math.min(cards.length - 1, Math.floor(self.progress * cards.length));
+                counterCurrent.textContent = String(idx + 1).padStart(2, '0');
+              }
+            },
+          },
+        });
+
+        const cardTriggers = cards.map((card) =>
+          gsap.fromTo(
+            card,
+            { opacity: 0.2, scale: 0.88, y: 40 },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: card,
+                containerAnimation: tween,
+                start: 'left 92%',
+                end: 'left 55%',
+                scrub: true,
+              },
+            }
+          )
+        );
+
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          cardTriggers.forEach((t) => t.scrollTrigger?.kill());
+          gsap.set(trackEl, { clearProps: 'transform' });
+          gsap.set(cards, { clearProps: 'opacity,transform' });
+          if (progressBar) progressBar.style.width = '0%';
+          if (counterCurrent) counterCurrent.textContent = '01';
+        };
+      });
+
+      mm.add('(max-width: 1024px)', () => () => {});
+
+      return () => mm.revert();
+    }
+
+    // Migrado junto con initTeamHorizontalScroll — mismo componente/misma razón.
+    function initMemberCursor() {
+      const cursor = document.querySelector<HTMLElement>('[data-member-cursor]');
+      const cards = gsap.utils.toArray<HTMLElement>('[data-member-card]');
+      if (!cursor || !cards.length) return () => {};
+
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 1025px) and (hover: hover)', () => {
+        const setX = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });
+        const setY = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3.out' });
+
+        const onMove = (e: MouseEvent) => {
+          setX(e.clientX);
+          setY(e.clientY);
+        };
+        const onEnter = () => gsap.to(cursor, { autoAlpha: 1, scale: 1, duration: 0.25, ease: 'power2.out' });
+        const onLeave = () => gsap.to(cursor, { autoAlpha: 0, scale: 0.6, duration: 0.25, ease: 'power2.in' });
+
+        window.addEventListener('mousemove', onMove);
+        cards.forEach((card) => {
+          card.addEventListener('mouseenter', onEnter);
+          card.addEventListener('mouseleave', onLeave);
+        });
+
+        return () => {
+          window.removeEventListener('mousemove', onMove);
+          cards.forEach((card) => {
+            card.removeEventListener('mouseenter', onEnter);
+            card.removeEventListener('mouseleave', onLeave);
+          });
+          gsap.set(cursor, { autoAlpha: 0, scale: 0.6, clearProps: 'x,y' });
+        };
+      });
+
+      mm.add('(max-width: 1024px), (hover: none)', () => () => {});
+
+      return () => mm.revert();
+    }
+
+    // Migrado desde su propio <script> aparte — mismo motivo que hero/misión/
+    // galería/equipo: acá agrega un ScrollTrigger con pin propio (para que la
+    // sección se detenga un tramo y dé tiempo real a mover el mouse sobre el
+    // trail), y ese pin corre el mismo riesgo de medirse antes de que los
+    // spacers de las secciones anteriores existan si vive en un módulo aparte.
+    function initClientsTrail() {
+      const section = document.querySelector<HTMLElement>('[data-clients-trail]');
+      if (!section) return () => {};
+
+      const logos: string[] = JSON.parse(section.dataset.logos ?? '[]');
+      if (!logos.length) return () => {};
+
+      const mm = gsap.matchMedia();
+
+      mm.add('(hover: hover) and (pointer: fine)', () => {
+        // Pin simple (sin scrub, sin animar nada por scroll): sólo mantiene
+        // la sección quieta un tramo de scroll para dar tiempo real a mover
+        // el mouse y ver el trail, en vez de que la sección pase de largo.
+        const st = ScrollTrigger.create({
+          trigger: section,
+          start: 'top top',
+          end: '+=120%',
+          pin: true,
+        });
+
+        const GAP = 80; // distancia mínima (px) entre disparos consecutivos
+        const nextLogo = gsap.utils.wrap(logos);
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let lastX = 0;
+        let lastY = 0;
+        let index = 0;
+        let started = false;
+
+        function onMouseMove(e: MouseEvent) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (!started) {
+            // La primera posición conocida no debería disparar un salto
+            // gigante desde (0,0) — se toma como punto de partida real.
+            lastX = mouseX;
+            lastY = mouseY;
+            started = true;
+          }
+        }
+
+        function playAnimation(el: HTMLElement) {
+          // fromTo explícito, no `.from()`: la card arranca en opacity:0 por
+          // CSS (estado de reposo antes de ser disparada), así que un
+          // `.from()` capturaría ESE mismo 0 como valor "final" y la
+          // animación entera correría siempre invisible.
+          const tl = gsap.timeline({ onComplete: () => el.remove() });
+          tl.fromTo(
+            el,
+            { opacity: 0, scale: 0.2 },
+            { opacity: 1, scale: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' }
+          )
+            .to(el, { rotation: gsap.utils.random(-25, 25), duration: 0.4 }, '<')
+            .to(el, { y: '60vh', opacity: 0, ease: 'power2.in', duration: 1.2 }, 0.2);
+        }
+
+        function fire(x: number, y: number) {
+          const img = document.createElement('img');
+          img.src = nextLogo(index++);
+          img.className = 'clients-trail-img';
+          img.style.left = `${x}px`;
+          img.style.top = `${y}px`;
+          img.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(img);
+          playAnimation(img);
+        }
+
+        function tick() {
+          const dist = Math.hypot(mouseX - lastX, mouseY - lastY);
+          if (dist > GAP) {
+            fire(mouseX, mouseY);
+            lastX = mouseX;
+            lastY = mouseY;
+          }
+        }
+
+        section.addEventListener('mousemove', onMouseMove);
+        gsap.ticker.add(tick);
+
+        return () => {
+          st.kill();
+          section.removeEventListener('mousemove', onMouseMove);
+          gsap.ticker.remove(tick);
+          document.querySelectorAll('.clients-trail-img').forEach((el) => el.remove());
+        };
+      });
+
+      mm.add('(hover: none), (pointer: coarse)', () => () => {});
+
+      return () => mm.revert();
+    }
+
+    function initNosotrosAnimations() {
+      const cleanups = [
+        initHeroWhoWeAre(),
+        initMissionRule(),
+        initGallery(),
+        initTeamHorizontalScroll(),
+        initMemberCursor(),
+        initClientsTrail(),
+      ];
+      document.addEventListener(
+        'astro:before-swap',
+        () => cleanups.forEach((fn) => fn()),
+        { once: true }
+      );
+    }
+
+    document.addEventListener('astro:page-load', initNosotrosAnimations);
+  </script>
 
   <TeamGrid eyebrow={about.team.eyebrow} title={about.team.title} members={about.team.members} />
 
-  <section class="section">
-    <div class="container">
-      <SectionHeading eyebrow={about.presence.eyebrow} title={about.presence.title} subtitle={about.presence.subtitle} align="center" />
-
-      <div class="presence-network-wrap">
-        <PresenceNetwork core={presenceCore} coreLabel={about.presence.officeLabel} nodes={presenceNodes} />
+  <!-- ============ DÓNDE ESTAMOS (presencia regional) ============ -->
+  <section class="section presence-section">
+    <div class="container presence-grid">
+      <div class="presence-text">
+        <p class="act-eyebrow">
+          <span class="dot"></span>
+          {about.presence.eyebrow}
+        </p>
+        <h2 class="act-title">{about.presence.title}</h2>
+        <p class="presence-subtitle">{about.presence.subtitle}</p>
       </div>
-      <ul class="countries countries-mobile">
-        {t.nav.countries.map((c) => <li>{c.flag} {c.name}</li>)}
-      </ul>
 
-      <div class="presence">
-        <div class="presence-text" data-reveal>
-          <p class="office-label">{about.presence.officeLabel}</p>
-          <p class="office-address">{about.presence.office}</p>
+      <div class="presence-visual">
+        <div class="presence-desktop">
+          <PresenceNetwork core={about.presence.core} coreLabel={about.presence.coreLabel} nodes={about.presence.nodes} />
         </div>
-        <img class="presence-photo" src={withBase('/office/office-santiago.jpg')} alt={about.presence.photoAlt} loading="lazy" data-reveal />
+
+        <ul class="presence-mobile-list">
+          <li>
+            <span class="presence-mobile-flag" aria-hidden="true">{about.presence.core.flag}</span>
+            <span>{about.presence.core.name}</span>
+            <em>{about.presence.coreLabel}</em>
+          </li>
+          {about.presence.nodes.map((node) => (
+            <li>
+              <span class="presence-mobile-flag" aria-hidden="true">{node.flag}</span>
+              <span>{node.name}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   </section>
 
-  <section class="section theme-light">
-    <div class="container">
-      <SectionHeading eyebrow={about.credibility.eyebrow} title={about.credibility.title} align="center" />
-      <p class="partner-badge" data-reveal>{about.credibility.partner}</p>
+  <!-- ============ NUESTRO RESPALDO (stats de credibilidad) ============ -->
+  <section class="section credibility-section">
+    <div class="container credibility-grid">
+      <div class="credibility-text">
+        <p class="act-eyebrow">
+          <span class="dot"></span>
+          {about.credibility.eyebrow}
+        </p>
+        <h2 class="act-title">{about.credibility.title}</h2>
+        <p class="credibility-subtitle">{about.credibility.subtitle}</p>
+      </div>
+
       <div class="section-body">
-        <StatBar stats={t.common.stats} />
+        <StatBar stats={about.credibility.stats} />
       </div>
     </div>
   </section>
 
-  <ClientLogos title={t.common.clientsTitle} />
+  <!-- ============ CLIENTES (mouse image trail) ============ -->
+  <!-- Traducción del spec ClientsInteractiveTrail.jsx (React + Tailwind + GSAP) al stack
+       real (Astro + CSS + GSAP vanilla): mensaje central de prueba social + logos de
+       /public/clients/ que aparecen y caen en ráfaga siguiendo al cursor (gap mínimo entre
+       disparos vía gsap.ticker, ciclado infinito con gsap.utils.wrap). Sólo con hover real
+       (desktop/mouse, ver matchMedia) — en touch no hay cursor que perseguir, así que sólo
+       se muestra el mensaje central estático. -->
+  <section class="clients-trail" data-clients-trail data-logos={JSON.stringify(clientTrailLogos)}>
+    <div class="clients-trail-copy">
+      <p class="clients-trail-tag">[ {about.clientsTrail.tag} ]</p>
+      <h2 class="clients-trail-title">{about.clientsTrail.title}</h2>
+      <p class="clients-trail-subtitle">{about.clientsTrail.subtitle}</p>
+    </div>
+  </section>
 
-  <div class="container final-cta">
-    <CTASection
-      title={about.cta.title}
-      body={about.cta.body}
-      button={about.cta.button}
-      href={getRelativeLocaleUrl(lang, 'contacto')}
-    />
-  </div>
+  <!-- ============ ACTO 5 — CIERRE DE IMPACTO ============ -->
+  <section class="section closing-section">
+    <div class="container closing-inner">
+      <div class="closing-card">
+        <h2 class="closing-message" data-reveal>{about.closing.message}</h2>
+        <p class="closing-subtitle" data-reveal>{about.closing.subtitle}</p>
+        <a href={contactHref} class="closing-cta" data-reveal>
+          {t.common.ctaButton}
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
+  /* ---------- Acto 1 — Hero + "Quiénes somos" (pestaña desde el hero) ---------- */
+  .hero-stage {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  .video-hero-media {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(1.2);
+  }
+  /* Nítido en toda la sección; sólo el último tramo inferior se funde con
+     el fondo (--dot-dark) para dar paso a la sección siguiente sin corte. */
+  .video-hero-overlay {
+    position: absolute;
+    inset: 0;
+    height: 70vh;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 60%,
+      var(--dot-dark) 100%
+    );
+  }
+
+  /* Panel "Quiénes somos" — en mobile es un bloque claro normal debajo del
+     video; en desktop se convierte en la pestaña que entra desde la derecha
+     (ver @media más abajo y el script para el estado inicial/transform). */
+  .who-we-are-panel {
+    position: relative;
+    width: 100%;
+    background: var(--dot-light);
+    padding: var(--space-lg) var(--container-pad);
+  }
+  .who-we-are-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .who-we-are-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2.93rem, 7.8vw, 3.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+    text-align: left;
+  }
+  .who-we-are-text {
+    max-width: 32rem;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.37rem, 2.08vw, 1.63rem);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--dot-dark) 80%, transparent);
+  }
+  .who-we-are-text::after {
+    content: '|';
+    color: var(--dot-moss);
+    animation: who-we-are-cursor-blink 0.9s step-end infinite;
+  }
+  @keyframes who-we-are-cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-stage {
+      height: 100vh;
+      height: 100svh;
+    }
+    .video-hero-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .video-hero-overlay {
+      height: 100%;
+    }
+    /* Pestaña técnica: borde de acento en Verde Raíz + textura de puntos
+       sutil, para que se sienta como un panel de interfaz, no una card
+       genérica — entra desde la derecha vía transform (GSAP la controla). */
+    .who-we-are-panel {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: min(70%, 55rem);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: var(--space-2xl) var(--space-xl);
+      border-left: 2px solid var(--dot-moss);
+      background-color: var(--dot-light);
+      background-image: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--dot-dark) 10%, transparent) 1px,
+        transparent 1px
+      );
+      background-size: 24px 24px;
+      z-index: 2;
+    }
+    .who-we-are-title {
+      font-size: clamp(3.58rem, 4.68vw, 5.2rem);
+    }
+  }
+
+  /* ---------- Encabezado compartido por acto (eyebrow + título) ---------- */
+  .act-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dot-micelio);
+    justify-content: center;
+  }
+  .act-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+  }
+  .act-title {
+    margin-top: var(--space-sm);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
   .section {
     padding-block: var(--space-lg);
   }
-  .section-body {
-    margin-top: var(--space-lg);
-  }
 
-  .office-photo img {
-    width: 100%;
-    border-radius: var(--radius-lg);
-    aspect-ratio: 21/9;
-    object-fit: cover;
+  /* ---------- Nuestra misión (modo claro, sin pestaña ni tipeo) ---------- */
+  .mission-section {
+    background: var(--dot-light);
+    padding-block: var(--space-xl);
   }
-  .office-photo figcaption {
+  .mission-inner {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .mission-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2.93rem, 7.8vw, 3.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+    text-align: left;
+  }
+  .mission-tagline {
     margin-top: var(--space-sm);
-    color: var(--text-secondary);
-    font-size: var(--text-sm);
-    text-align: center;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    color: var(--dot-moss);
+    text-align: left;
+  }
+  .mission-rule {
+    display: block;
+    margin-top: var(--space-md);
+    width: 100%;
+    max-width: 12rem;
+    height: 2px;
+    background: var(--dot-moss);
+  }
+  .mission-body {
+    margin-top: var(--space-md);
+    max-width: 38rem;
+    text-align: left;
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--dot-dark) 80%, transparent);
   }
 
-  /* Diagrama de red (Chile + 7 países) — solo desktop; en mobile no hay espacio real para
-     que un hub-and-spoke se lea bien, así que se reemplaza por el listado simple de pills. */
-  .presence-network-wrap {
-    display: none;
-  }
-  .countries-mobile {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.6rem;
+  .mission-facts {
     list-style: none;
+    margin: 0;
     padding: 0;
-    margin-top: var(--space-lg);
+    padding-left: var(--space-md);
+    border-left: 2px solid color-mix(in srgb, var(--dot-moss) 35%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
   }
-  .countries-mobile li {
+  .mission-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .mission-fact-index {
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    padding: 0.4rem 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--dot-moss);
+  }
+  .mission-fact p {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    line-height: 1.35;
+    color: var(--dot-dark);
+  }
+
+  @media (min-width: 1024px) {
+    .mission-inner {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--space-xl);
+    }
+  }
+
+  /* ---------- Novedades & experiencia (galería horizontal) ---------- */
+  .gallery-section {
+    position: relative;
+    overflow: hidden;
+    background: var(--dot-light);
+    padding-block: var(--space-xl) 0;
+  }
+  .gallery-header {
+    padding-inline: var(--container-pad);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  .gallery-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dot-moss);
+  }
+  .gallery-title {
+    margin-top: var(--space-sm);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 4.5vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .gallery-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .gallery-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--space-md);
+    padding-inline: var(--container-pad);
+    padding-block: var(--space-md) var(--space-xl);
+    will-change: transform;
+  }
+
+  @media (max-width: 1023px) {
+    .gallery-strip {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .gallery-card {
+    position: relative;
+    flex-shrink: 0;
+    width: 75vw;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: #141414;
+    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s var(--ease-out);
+    scroll-snap-align: start;
+  }
+  .gallery-card:hover {
+    border-color: color-mix(in srgb, var(--dot-micelio) 60%, transparent);
+  }
+  .gallery-card-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .gallery-card:hover .gallery-card-img {
+    transform: scale(1.05);
+  }
+  .gallery-card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-md);
+    background: linear-gradient(180deg, transparent 45%, rgba(10, 11, 12, 0.92) 100%);
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-out);
+  }
+  .gallery-card:hover .gallery-card-overlay {
+    opacity: 1;
+  }
+  .gallery-card-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    color: var(--dot-light);
+  }
+  .gallery-card-date {
+    margin-top: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    color: var(--dot-micelio);
+  }
+
+  @media (min-width: 640px) {
+    .gallery-card {
+      width: 45vw;
+    }
   }
   @media (min-width: 900px) {
-    .presence-network-wrap {
-      display: block;
-      margin-block: var(--space-xl);
+    .gallery-card {
+      width: 32vw;
     }
-    .countries-mobile {
+  }
+  @media (min-width: 1024px) {
+    .gallery-card {
+      width: 26vw;
+    }
+  }
+
+  /* ---------- Cómo trabajamos (modo claro) ---------- */
+  .how-we-work-section {
+    background: var(--dot-light);
+    padding-block: var(--space-xl);
+  }
+  .how-we-work-title {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2.93rem, 7.8vw, 3.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--dot-dark);
+    text-align: left;
+  }
+  .how-we-work-tagline {
+    margin-top: var(--space-sm);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    color: var(--dot-moss);
+    text-align: left;
+  }
+  .how-we-work-grid {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  .how-we-work-card {
+    padding-top: var(--space-md);
+    border-top: 2px solid color-mix(in srgb, var(--dot-moss) 35%, transparent);
+  }
+  .how-we-work-index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--dot-moss);
+  }
+  .how-we-work-name {
+    margin-top: var(--space-sm);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.9vw, 1.5rem);
+    color: var(--dot-dark);
+  }
+  .how-we-work-desc {
+    margin-top: var(--space-sm);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--dot-dark) 78%, transparent);
+    max-width: 26rem;
+  }
+
+  @media (min-width: 700px) {
+    .how-we-work-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .how-we-work-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ---------- Dónde estamos (presencia regional) ---------- */
+  .presence-grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .presence-subtitle {
+    margin-top: var(--space-sm);
+    max-width: 40rem;
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--dot-light) 78%, transparent);
+  }
+  .presence-desktop {
+    display: none;
+  }
+  .presence-mobile-list {
+    margin-top: var(--space-lg);
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+  .presence-mobile-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+  }
+  .presence-mobile-flag {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .presence-mobile-list li em {
+    margin-left: auto;
+    font-style: normal;
+    font-size: var(--text-xs);
+    color: var(--dot-micelio);
+  }
+
+  /* Diagrama a la izquierda, texto a la derecha — el orden en el DOM se
+     mantiene con el texto primero (lectura natural en mobile, donde el
+     diagrama ni siquiera se muestra); a partir de 900px se reordena vía
+     grid para que el visual quede a la izquierda. */
+  @media (min-width: 900px) {
+    .presence-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+    .presence-text {
+      order: 2;
+    }
+    .presence-visual {
+      order: 1;
+    }
+    .presence-desktop {
+      display: block;
+    }
+    .presence-mobile-list {
       display: none;
     }
   }
 
-  .presence {
+  /* ---------- Nuestro respaldo (stats de credibilidad) ---------- */
+  .credibility-grid {
     display: grid;
     gap: var(--space-lg);
-    align-items: center;
-    margin-top: var(--space-lg);
   }
-  .office-label {
+  .credibility-subtitle {
+    margin-top: var(--space-sm);
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    color: var(--dot-micelio);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 500;
-  }
-  .office-address {
-    margin-top: var(--space-xs);
-    color: var(--text-secondary);
-  }
-  .presence-photo {
-    width: 100%;
-    border-radius: var(--radius-lg);
-    aspect-ratio: 4/3;
-    object-fit: cover;
-    border: 1px solid color-mix(in srgb, var(--dot-micelio) 25%, transparent);
-  }
-
-  /* Badge "Partner SAP en Latinoamérica" — glow micelio, mismo lenguaje que el resto de
-     las cards/pills ajustadas en Gastronomía y Retail. */
-  .partner-badge {
-    display: table;
-    margin-inline: auto;
-    margin-top: var(--space-md);
-    padding: 0.6rem 1.5rem;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--dot-micelio);
-    box-shadow: 0 0 22px color-mix(in srgb, var(--dot-micelio) 30%, transparent);
-    color: var(--dot-micelio);
     font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dot-micelio);
+  }
+  .credibility-section .section-body {
+    margin-top: var(--space-xl);
   }
 
   @media (min-width: 900px) {
-    .presence {
+    .credibility-grid {
       grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+    .credibility-section .section-body {
+      margin-top: 0;
     }
   }
 
-  /* "Cómo trabajamos" — cards oscuras con acento y borde que se ilumina, para que
-     contrasten contra el fondo claro (.theme-light) de esta sección (FeatureGrid es
-     compartido con Gastronomía/Retail/Servicios, por eso el scope va acá). */
-  .values-panel :global(.feature-grid) {
-    gap: 1.25rem !important;
-  }
-  .values-panel :global(.feature) {
+  /* ---------- Clientes (mouse image trail) ---------- */
+  .clients-trail {
     position: relative;
+    width: 100%;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #0e0e0e 0%, #141815 50%, #0e0e0e 100%);
     overflow: hidden;
-    background: var(--dot-dark) !important;
-    border: 1px solid color-mix(in srgb, var(--card-values-accent, var(--dot-micelio)) 45%, transparent) !important;
-    transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+    user-select: none;
+    padding-inline: var(--container-pad);
   }
-  .values-panel :global(.feature:hover) {
-    border-color: var(--card-values-accent, var(--dot-micelio)) !important;
-    box-shadow: 0 0 30px color-mix(in srgb, var(--card-values-accent, var(--dot-micelio)) 30%, transparent);
-    transform: translateY(-4px);
+  @media (hover: hover) and (pointer: fine) {
+    .clients-trail {
+      cursor: crosshair;
+    }
   }
-  .values-panel :global(.feature:nth-child(4n + 1)) {
-    --card-values-accent: var(--dot-micelio);
+  .clients-trail-copy {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    pointer-events: none;
   }
-  .values-panel :global(.feature:nth-child(4n + 2)) {
-    --card-values-accent: var(--dot-moss);
+  .clients-trail-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dot-micelio);
+    margin-bottom: var(--space-sm);
   }
-  .values-panel :global(.feature:nth-child(4n + 3)) {
-    --card-values-accent: var(--dot-sage);
+  .clients-trail-title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2.25rem, 6.5vw, 4.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dot-light);
+    max-width: 60rem;
   }
-  .values-panel :global(.feature:nth-child(4n + 4)) {
-    --card-values-accent: var(--dot-forest);
-  }
-  .values-panel :global(.feature h3) {
-    color: var(--dot-light) !important;
-  }
-  .values-panel :global(.feature p) {
-    color: color-mix(in srgb, var(--dot-light) 75%, transparent) !important;
+  .clients-trail-subtitle {
+    margin-top: var(--space-md);
+    max-width: 34rem;
+    font-size: var(--text-base);
+    color: color-mix(in srgb, var(--dot-light) 60%, transparent);
   }
 
-  /* CTA final — mismo tratamiento que Gastronomía/Retail: card negra sólida con borde
-     micelio resplandeciente, título en micelio y cuerpo en blanco. */
-  .final-cta :global(.cta-panel) {
-    background: var(--dot-dark) !important;
-    border: 1px solid var(--dot-micelio) !important;
-    box-shadow: 0 0 36px color-mix(in srgb, var(--dot-micelio) 40%, transparent) !important;
+  /* Tarjetas del trail — position:fixed porque siguen al cursor en
+     coordenadas de viewport (clientX/clientY), sin importar el scroll. */
+  :global(.clients-trail-img) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-overlay);
+    width: clamp(6rem, 9vw, 8rem);
+    height: auto;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background: rgba(24, 24, 24, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+    pointer-events: none;
+    opacity: 0;
   }
-  .final-cta :global(.cta-panel h2) {
-    color: var(--dot-micelio) !important;
+
+  /* ---------- Acto 5 — Cierre ---------- */
+  .closing-section {
+    background: linear-gradient(180deg, #0e0e0e 0%, #141815 50%, #0e0e0e 100%);
+    padding-block: var(--space-2xl);
   }
-  .final-cta :global(.cta-panel p) {
-    color: var(--dot-light) !important;
+  .closing-inner {
+    max-width: 56rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .closing-card {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.5rem, 3vw, 2rem);
+    background: #141414;
+    border: 1px solid color-mix(in srgb, var(--dot-micelio) 40%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 60px color-mix(in srgb, var(--dot-micelio) 25%, transparent);
+  }
+  .closing-message {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dot-light);
+  }
+  .closing-subtitle {
+    margin-top: var(--space-sm);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--dot-light) 70%, transparent);
+  }
+  .closing-cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-md);
+    padding: 0.9rem 2rem;
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+    font-weight: 600;
+    font-size: var(--text-base);
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    box-shadow: 0 0 50px color-mix(in srgb, var(--dot-micelio) 45%, transparent);
+    animation: closing-cta-pulse 2.6s ease-in-out infinite;
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  }
+  .closing-cta:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 70px color-mix(in srgb, var(--dot-micelio) 65%, transparent);
+    animation-play-state: paused;
+  }
+  .closing-cta .arrow {
+    font-size: 1.25em;
+    transition: transform var(--transition-fast);
+  }
+  .closing-cta:hover .arrow {
+    transform: translateX(6px);
+  }
+  @keyframes closing-cta-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 50px color-mix(in srgb, var(--dot-micelio) 45%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 70px color-mix(in srgb, var(--dot-micelio) 65%, transparent);
+    }
   }
 </style>

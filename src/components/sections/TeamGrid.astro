@@ -33,6 +33,18 @@ const TEAM_FILES = [
   'luis-felipe.jpg',
 ];
 
+// Mismo orden 1:1 — perfil de LinkedIn de cada persona.
+const LINKEDIN_URLS = [
+  'https://www.linkedin.com/in/hector-vera-velarde-416a0639/',
+  'https://www.linkedin.com/in/felipe-ignacio-machuca-a-7640a6112/',
+  'https://www.linkedin.com/in/manuel-villavicencio-ram%C3%ADre-00236214/',
+  'https://www.linkedin.com/in/benjamin-belfus/',
+  'https://www.linkedin.com/in/cristian-andres-huerta-caro-45754948/',
+  'https://www.linkedin.com/in/juan-eduardo-v%C3%A1squez-moraga-22101849/',
+  'https://www.linkedin.com/in/david-miranda-atenas/',
+  'https://www.linkedin.com/in/lfmolina5/',
+];
+
 const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'var(--dot-forest)'];
 
 function initials(name: string) {
@@ -45,7 +57,7 @@ function initials(name: string) {
 }
 ---
 
-<section class="team-hz" data-team-hz>
+<section class="team-hz" data-team-hz style={`--team-bg-image: url(${withBase('/images/hero2.jpg')})`}>
   <div class="team-hz-container" data-team-hz-container>
     <div class="team-hz-header container">
       <p class="team-hz-eyebrow">
@@ -57,7 +69,15 @@ function initials(name: string) {
 
     <div class="team-hz-track" data-team-hz-track>
       {members.map((member, i) => (
-        <article class="member-card" data-member-card style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}`}>
+        <a
+          class="member-card"
+          data-member-card
+          href={LINKEDIN_URLS[i]}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${member.name} — LinkedIn`}
+          style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}`}
+        >
           <span class="member-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
           <div class="member-photo">
             {TEAM_FILES[i] ? (
@@ -68,7 +88,7 @@ function initials(name: string) {
           </div>
           <p class="member-name">{member.name}</p>
           <p class="member-role">{member.role}</p>
-        </article>
+        </a>
       ))}
     </div>
 
@@ -79,96 +99,41 @@ function initials(name: string) {
       <div class="team-hz-progress-bar" data-team-hz-progress-bar></div>
     </div>
   </div>
+
+  <div class="member-cursor" data-member-cursor aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.6" />
+      <path
+        d="M7 10.5v6.5M7 7.2v.01M11.2 17v-4.3a2.3 2.3 0 0 1 4.6 0V17M11.2 10.5V17"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
 </section>
-
-<script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  function initTeamHorizontalScroll() {
-    const section = document.querySelector<HTMLElement>('[data-team-hz]');
-    const containerEl = document.querySelector<HTMLElement>('[data-team-hz-container]');
-    const trackEl = document.querySelector<HTMLElement>('[data-team-hz-track]');
-    const progressBar = document.querySelector<HTMLElement>('[data-team-hz-progress-bar]');
-    const counterCurrent = document.querySelector<HTMLElement>('[data-team-hz-counter-current]');
-    if (!section || !containerEl || !trackEl) return;
-
-    const cards = gsap.utils.toArray<HTMLElement>('[data-member-card]', trackEl);
-    const mm = gsap.matchMedia();
-
-    mm.add('(min-width: 1025px)', () => {
-      const tween = gsap.to(trackEl, {
-        x: () => -(trackEl.scrollWidth - window.innerWidth),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerEl,
-          pin: true,
-          scrub: 0.6,
-          start: 'top top',
-          end: () => `+=${trackEl.scrollWidth - window.innerWidth}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressBar) progressBar.style.width = `${self.progress * 100}%`;
-            if (counterCurrent) {
-              const idx = Math.min(cards.length - 1, Math.floor(self.progress * cards.length));
-              counterCurrent.textContent = String(idx + 1).padStart(2, '0');
-            }
-          },
-        },
-      });
-
-      const cardTriggers = cards.map((card) =>
-        gsap.fromTo(
-          card,
-          { opacity: 0.2, scale: 0.88, y: 40 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              containerAnimation: tween,
-              start: 'left 92%',
-              end: 'left 55%',
-              scrub: true,
-            },
-          }
-        )
-      );
-
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-        cardTriggers.forEach((t) => t.scrollTrigger?.kill());
-        gsap.set(trackEl, { clearProps: 'transform' });
-        gsap.set(cards, { clearProps: 'opacity,transform' });
-        if (progressBar) progressBar.style.width = '0%';
-        if (counterCurrent) counterCurrent.textContent = '01';
-      };
-    });
-
-    mm.add('(max-width: 1024px)', () => () => {});
-
-    document.addEventListener('astro:before-swap', () => mm.revert(), { once: true });
-  }
-
-  document.addEventListener('astro:page-load', initTeamHorizontalScroll);
-</script>
+<!-- La lógica GSAP (pin del filmstrip + cursor de LinkedIn) vive en el
+     <script> consolidado de Nosotros.astro, no acá — un <script> propio en
+     este componente corría en un módulo aparte cuyo orden de ejecución
+     relativo al resto de los pines de la página no era determinista, lo que
+     hacía que este filmstrip se pineara demasiado temprano y quedara
+     superpuesto con la sección anterior. Ver Nosotros.astro para el detalle. -->
 
 <style>
   .team-hz {
     position: relative;
     padding-block: var(--space-xl) 0;
     overflow: hidden;
+    background-image: var(--team-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   .team-hz-header {
-    text-align: center;
-    max-width: 46rem;
-    margin-inline: auto;
+    text-align: left;
     margin-bottom: var(--space-sm);
   }
   .team-hz-eyebrow {
@@ -180,7 +145,7 @@ function initials(name: string) {
     color: var(--dot-micelio);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: var(--space-xs);
   }
   .team-hz-eyebrow .dot {
@@ -216,16 +181,54 @@ function initials(name: string) {
 
   .member-card {
     position: relative;
+    display: block;
     padding: 1rem;
+    background: #141414;
     border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
     border-radius: var(--radius-lg);
     text-align: center;
+    text-decoration: none;
+    color: inherit;
     transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out);
   }
   .member-card:hover {
     border-color: var(--card-accent);
     box-shadow: 0 0 28px color-mix(in srgb, var(--card-accent) 25%, transparent);
     transform: translateY(-4px);
+  }
+
+  /* Cursor circular (Verde Micelio + LinkedIn) que sigue al mouse — sólo
+     aparece con hover real (desktop, ver matchMedia en el script). */
+  .member-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-overlay);
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-top: -1.75rem;
+    margin-left: -1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--dot-micelio);
+    color: var(--dot-dark);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--dot-micelio) 55%, transparent);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.6);
+  }
+  .member-cursor svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  @media (min-width: 1025px) and (hover: hover) {
+    .member-card {
+      cursor: none;
+    }
   }
 
   .member-index {

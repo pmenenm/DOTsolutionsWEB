@@ -172,52 +172,197 @@
   },
   "about": {
     "metaTitle": "Quiénes somos",
-    "metaDescription": "El equipo detrás de DOT Solutions: partner SAP en Latinoamérica que implementa y acompaña la tecnología que hace operar tu negocio. Especialistas en retail y hospitality.",
+    "metaDescription": "Filosofía, pilares y equipo de DOT Solutions: el socio estratégico que diseña la infraestructura operativa de tu negocio, no solo software.",
     "hero": {
-      "eyebrow": "Quiénes somos",
-      "title": "El equipo detrás de tu operación",
-      "subtitle": "Somos un partner tecnológico, no un proveedor de licencias. Implementamos SAP Business One y el ecosistema que tu negocio necesita para operar — y te acompañamos de punta a punta."
+      "tag": "Infraestructura viva",
+      "title": "Transformamos complejidad en claridad. Datos en decisiones y procesos en crecimiento.",
+      "manifesto": "No somos una empresa que implementa software; somos el socio que diseña la infraestructura operativa para crecer con control, eficiencia y visión de futuro. Representamos el Lujo Silencioso: interfaces que no gritan, sistemas que no fallan y un servicio consultivo que respeta el tiempo de nuestros clientes. Hacemos que lo complejo se vuelva invisible, dejando a la vista solo los resultados."
     },
-    "office": {
-      "eyebrow": "Nuestra casa · Santiago de Chile",
-      "caption": "Un solo equipo que diseña, implementa y acompaña, desde un mismo lugar.",
-      "alt": "Equipo de DOT Solutions trabajando en la oficina de Santiago"
+    "whoWeAre": {
+      "title": "Quiénes somos",
+      "text": "No somos una empresa que implementa software; somos el socio que diseña la infraestructura operativa para crecer con control, eficiencia y visión de futuro."
+    },
+    "pillars": {
+      "eyebrow": "Los 4 pilares",
+      "title": "La arquitectura conceptual de DOT",
+      "items": [
+        {
+          "name": "El Concreto",
+          "concept": "Arquitectura",
+          "tag": "Estructura & estabilidad",
+          "desc": "El peso corporativo. La infraestructura técnica robusta (backend) que soporta el volumen real de tus operaciones sin tambalearse."
+        },
+        {
+          "name": "La Raíz",
+          "concept": "Integración",
+          "tag": "Dirección & distribución",
+          "desc": "Al igual que el micelio distribuye nutrientes en el bosque, nuestras soluciones (APIs, bases de datos) conectan sistemas aislados para que la información fluya sin fricción."
+        },
+        {
+          "name": "El Bosque",
+          "concept": "Ecosistema",
+          "tag": "Escalabilidad & resiliencia",
+          "desc": "Un árbol aislado es vulnerable; un bosque es un sistema resiliente. No ofrecemos parches aislados, sino un ecosistema integrado que crece junto a tu negocio."
+        },
+        {
+          "name": "La Luz",
+          "concept": "Claridad",
+          "tag": "Decisión & frontera",
+          "desc": "El destello bioluminiscente. Tableros de control y analítica avanzada que permiten a los líderes ver con claridad absoluta en un mar de datos."
+        }
+      ]
+    },
+    "persona": {
+      "eyebrow": "Personalidad estratégica",
+      "title": "Si DOT fuera una persona:",
+      "quote": "No sería el programador encerrado en una oficina. Tampoco el vendedor que promete magia. Sería el asesor estratégico que entra a una sala de directorio, escucha atentamente, identifica el problema real y diseña el camino más eficiente para resolverlo.",
+      "speakTitle": "Cómo hablamos",
+      "speak": [
+        {
+          "trait": "Directos",
+          "desc": "Vamos al punto. Sin rodeos ni complejidad innecesaria."
+        },
+        {
+          "trait": "Estratégicos",
+          "desc": "Hablamos de impacto real en el negocio, no de características técnicas."
+        },
+        {
+          "trait": "Sofisticados",
+          "desc": "Autoridad transmitida desde la sobriedad, nunca desde la ostentación."
+        },
+        {
+          "trait": "Humanos",
+          "desc": "La tecnología es compleja; nuestra comunicación no."
+        }
+      ],
+      "neverTitle": "Cómo nunca hablamos",
+      "never": [
+        {
+          "trait": "Arrogantes",
+          "desc": "Cero tecnicismos para aparentar conocimiento."
+        },
+        {
+          "trait": "Informales",
+          "desc": "La cercanía jamás reemplaza el rigor profesional."
+        },
+        {
+          "trait": "Genéricos",
+          "desc": "Cada mensaje debe aportar valor real."
+        },
+        {
+          "trait": "Exagerados",
+          "desc": "No prometemos magia; entregamos precisión técnica."
+        }
+      ]
     },
     "mission": {
-      "eyebrow": "Nuestra misión",
-      "title": "Impulsamos eficiencia. Transformamos tu negocio.",
+      "title": "Nuestra misión",
+      "tagline": "Impulsamos eficiencia. Transformamos tu negocio.",
       "body": "Convertimos la tecnología en resultados: optimizamos operaciones y habilitamos decisiones inteligentes con ERP, punto de venta, BI, fidelización y facturación integrados en una sola plataforma. No vendemos software; diseñamos e implementamos la arquitectura que tu empresa necesita para crecer.",
-      "points": [
+      "facts": [
         "Un solo equipo que diseña, implementa y soporta de punta a punta",
-        "Especialistas en retail y hospitality, partner SAP para toda industria",
+        "Especialistas en retail y hospitality, Partner Gold de SAP Business One",
         "Presencia y soporte en toda Latinoamérica"
       ]
     },
-    "values": {
-      "eyebrow": "Cómo trabajamos",
-      "title": "Un socio, no un proveedor",
+    "archetypes": {
+      "eyebrow": "El equipo detrás de la infraestructura",
+      "title": "Cuatro arquetipos. Un solo equipo multidisciplinario.",
       "items": [
         {
-          "title": "Expertos certificados",
+          "name": "El socio empático",
+          "desc": "Comprendemos los desafíos operativos porque trabajamos junto a quienes los viven. Escuchamos antes de proponer; entendemos antes de intervenir."
+        },
+        {
+          "name": "El experto accesible",
+          "desc": "Conocimiento técnico profundo, pero la verdadera sofisticación consiste en hacer comprensible lo complejo."
+        },
+        {
+          "name": "El provocador estratégico",
+          "desc": "El crecimiento requiere cuestionar lo establecido. No evitamos las conversaciones difíciles ni las preguntas incómodas."
+        },
+        {
+          "name": "El equipo con alma",
+          "desc": "La tecnología sigue siendo una herramienta. Las relaciones son lo que genera confianza."
+        }
+      ]
+    },
+    "gallery": {
+      "eyebrow": "Novedades & experiencia",
+      "title": "La evolución de nuestros proyectos en imágenes",
+      "items": [
+        {
+          "src": "/images/novedades/NOV1.jpg",
+          "title": "Implementación Retail Pro",
+          "date": "Agosto 2026"
+        },
+        {
+          "src": "/images/novedades/NOV2.jpg",
+          "title": "Ecosistema SAP Business One",
+          "date": "Julio 2026"
+        },
+        {
+          "src": "/images/novedades/NOV3.jpeg",
+          "title": "Arquitectura de Datos BI",
+          "date": "Junio 2026"
+        },
+        {
+          "src": "/images/novedades/NOV4.jpg",
+          "title": "Operación Gastronómica Conectada",
+          "date": "Mayo 2026"
+        },
+        {
+          "src": "/images/novedades/novedad2.jpeg",
+          "title": "Infraestructura Cloud & APIs",
+          "date": "Abril 2026"
+        },
+        {
+          "src": "/images/novedades/novedad3.jpeg",
+          "title": "Transformación Operativa LATAM",
+          "date": "Marzo 2026"
+        },
+        {
+          "src": "/images/novedades/novedad4.jpeg",
+          "title": "Cultura y Equipo DOT",
+          "date": "Febrero 2026"
+        },
+        {
+          "src": "/images/novedades/novedad6.jpeg",
+          "title": "Lanzamiento Nuevos Add-ons",
+          "date": "Enero 2026"
+        }
+      ]
+    },
+    "howWeWork": {
+      "title": "Cómo trabajamos",
+      "tagline": "Un socio, no un proveedor",
+      "items": [
+        {
+          "name": "Expertos certificados",
           "desc": "Especialistas certificados en cada área funcional, con años implementando SAP."
         },
         {
-          "title": "Soluciones a la medida",
+          "name": "Soluciones a la medida",
           "desc": "Adaptadas a las necesidades reales de tu operación, no plantillas genéricas."
         },
         {
-          "title": "Acompañamiento integral",
+          "name": "Acompañamiento integral",
           "desc": "Diseño, implementación y soporte de punta a punta, en el día a día."
         },
         {
-          "title": "Resultados medibles",
+          "name": "Resultados medibles",
           "desc": "Eficiencia, control y rentabilidad que se pueden comprobar."
         }
       ]
     },
+    "closing": {
+      "message": "Conversemos sobre tu operación",
+      "button": "Diseñar la infraestructura de mi empresa",
+      "subtitle": "Cuéntanos tus desafíos y te mostramos cómo podemos ayudarte a operar mejor."
+    },
     "team": {
       "eyebrow": "Nuestro equipo",
-      "title": "Las personas detrás de DOT",
+      "title": "El equipo detrás de tu operación",
       "members": [
         {
           "name": "Héctor Vera",
@@ -257,19 +402,66 @@
       "eyebrow": "Dónde estamos",
       "title": "Presencia en toda Latinoamérica",
       "subtitle": "Acompañamos e implementamos en 8 países de la región, con casa matriz en Santiago de Chile.",
-      "officeLabel": "Casa matriz",
-      "office": "Av. del Valle Nte. 928, oficina 503, Huechuraba, Santiago de Chile",
-      "photoAlt": "Sala de reuniones en la casa matriz de DOT Solutions, con vista a Santiago"
+      "core": {
+        "name": "Chile",
+        "flag": "🇨🇱"
+      },
+      "coreLabel": "Casa matriz",
+      "nodes": [
+        {
+          "name": "Perú",
+          "flag": "🇵🇪"
+        },
+        {
+          "name": "Colombia",
+          "flag": "🇨🇴"
+        },
+        {
+          "name": "México",
+          "flag": "🇲🇽"
+        },
+        {
+          "name": "Panamá",
+          "flag": "🇵🇦"
+        },
+        {
+          "name": "Argentina",
+          "flag": "🇦🇷"
+        }
+      ]
     },
     "credibility": {
       "eyebrow": "Nuestro respaldo",
       "title": "Años de experiencia que se traducen en confianza",
-      "partner": "Partner SAP en Latinoamérica"
+      "subtitle": "Partner SAP en Latinoamérica",
+      "stats": [
+        {
+          "value": 300,
+          "prefix": "+",
+          "label": "Clientes activos y satisfechos"
+        },
+        {
+          "value": 16,
+          "prefix": "+",
+          "label": "Años de experiencia en retail"
+        },
+        {
+          "value": 75,
+          "prefix": "+",
+          "label": "Profesionales especializados"
+        },
+        {
+          "value": 14,
+          "prefix": "+",
+          "label": "Años de experiencia en SAP"
+        }
+      ],
+      "closing": "+300 empresas ya operan con DOT"
     },
-    "cta": {
-      "title": "Conversemos sobre tu operación",
-      "body": "Cuéntanos tus desafíos y te mostramos cómo podemos ayudarte a operar mejor.",
-      "button": "Hablar con un experto"
+    "clientsTrail": {
+      "tag": "Autoridad & experiencia operativa",
+      "title": "+300 empresas ya operan con DOT",
+      "subtitle": "Mueve el cursor para explorar la red de operaciones conectadas en Latinoamérica."
     }
   },
   "home": {
