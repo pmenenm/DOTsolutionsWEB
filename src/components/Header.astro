@@ -667,13 +667,15 @@ const industriesItems = t.home.industries.items.map((item) => ({
     margin-block: var(--space-md);
   }
 
-  /* Cuadrícula de 4 columnas para los 7 productos restantes — sin bordes
+  /* Cuadrícula de 5 columnas para los 10 productos restantes — sin bordes
      internos esta vez (eso era la iteración "Eco-Brutalismo" anterior);
      separación por espacio generoso, más cercana a un mega menú enterprise
-     clásico. */
+     clásico. 5 columnas (no 4) para que 10 items cierren en exactamente 2
+     filas: con 4 quedaba una 3ra fila suelta (ChefCloud/AyHungry) que en
+     viewports de alto normal (~800px) caía fuera de pantalla sin scroll. */
   .mega-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--space-lg) var(--space-md);
   }
 
