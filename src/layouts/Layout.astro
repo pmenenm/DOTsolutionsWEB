@@ -46,6 +46,17 @@ const { title, description, lang, path, image, hideFooter = false } = Astro.prop
       </div>
     </div>
 
+    <!-- Botón flotante "volver arriba" — vive en el layout compartido, así
+         que aparece en todas las páginas. Se posiciona pegado al borde
+         izquierdo real del viewport (fuera del margen lateral del contenido,
+         que en desktop es --container-pad = 10rem), no alineado con el
+         contenido. Aparece recién pasado cierto scroll (ver script). -->
+    <button type="button" class="back-to-top" data-back-to-top aria-label="Volver arriba">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
     <!-- Motor de movimiento global — Lenis + GSAP -->
     <script>
       import Lenis from 'lenis';
@@ -61,6 +72,8 @@ const { title, description, lang, path, image, hideFooter = false } = Astro.prop
       let lenis: InstanceType<typeof Lenis> | undefined;
       let rafCallback: ((time: number) => void) | undefined;
       let refreshHandler: (() => void) | undefined;
+      let backToTopClick: (() => void) | undefined;
+      let backToTopEl: HTMLButtonElement | null = null;
 
       function init() {
         window.scrollTo(0, 0);
@@ -73,6 +86,24 @@ const { title, description, lang, path, image, hideFooter = false } = Astro.prop
         });
 
         lenis.on('scroll', ScrollTrigger.update);
+
+        // Botón "volver arriba": visible recién pasado cierto scroll, y usa
+        // el mismo Lenis para el scroll suave (no el nativo, que Lenis ya
+        // intercepta). Se re-consulta el nodo en cada `init()` (corre de
+        // nuevo en cada navegación) y se saca el listener anterior con la
+        // MISMA referencia guardada en scope de módulo — si sólo se creara
+        // una función nueva cada vez, removeEventListener no podría sacar
+        // la anterior y se irían acumulando clicks duplicados.
+        backToTopEl = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+        if (backToTopEl) {
+          if (backToTopClick) backToTopEl.removeEventListener('click', backToTopClick);
+          backToTopClick = () => lenis?.scrollTo(0, { duration: 1.2 });
+          backToTopEl.addEventListener('click', backToTopClick);
+          backToTopEl.classList.toggle('is-visible', window.scrollY > 400);
+          lenis.on('scroll', (e: { scroll: number }) => {
+            backToTopEl?.classList.toggle('is-visible', e.scroll > 400);
+          });
+        }
 
         refreshHandler = () => lenis?.resize();
         ScrollTrigger.addEventListener('refresh', refreshHandler);
@@ -140,5 +171,44 @@ const { title, description, lang, path, image, hideFooter = false } = Astro.prop
 
       document.addEventListener('astro:page-load', init);
     </script>
+
+    <style>
+      .back-to-top {
+        position: fixed;
+        left: 1.25rem;
+        bottom: 1.5rem;
+        z-index: var(--z-overlay);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0;
+        border: 1px solid color-mix(in srgb, var(--dot-light) 15%, transparent);
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--dot-dark) 85%, transparent);
+        backdrop-filter: blur(8px);
+        color: var(--dot-light);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+          border-color 0.3s var(--ease-out), visibility 0.3s;
+      }
+      .back-to-top.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .back-to-top:hover {
+        border-color: var(--dot-micelio);
+        color: var(--dot-micelio);
+      }
+      .back-to-top svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    </style>
   </body>
 </html>

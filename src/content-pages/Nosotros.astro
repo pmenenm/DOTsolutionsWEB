@@ -984,13 +984,8 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     border-radius: 1.5rem;
     overflow: hidden;
     background: #141414;
-    border: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    transition: border-color 0.3s var(--ease-out);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     scroll-snap-align: start;
-  }
-  .gallery-card:hover {
-    border-color: color-mix(in srgb, var(--dot-micelio) 60%, transparent);
   }
   .gallery-card-img {
     display: block;
