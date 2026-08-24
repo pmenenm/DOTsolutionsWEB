@@ -142,6 +142,8 @@ const industriesItems = t.home.industries.items.map((item) => ({
        la pantalla justo debajo de la barra — no un dropdown flotante
        centrado en el trigger. -->
   <div class="mega-panel" id="mega-panel" role="menu">
+    <div class="mega-edge mega-edge-left" aria-hidden="true"></div>
+    <div class="mega-edge mega-edge-right" aria-hidden="true"></div>
     <div class="container mega-panel-inner">
       <div class="mega-top">
         <div class="mega-top-copy">
@@ -165,6 +167,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
 
       <hr class="mega-divider" />
 
+      <p class="mega-category">{t.nav.solutionsMenu.productsLabel}</p>
       <div class="mega-grid">
         {gridItems.map((item) => (
           <a
@@ -298,6 +301,8 @@ const industriesItems = t.home.industries.items.map((item) => ({
     // el 100% del ancho de la pantalla en vez de flotar bajo el trigger) —
     // por eso el hover/outside-click se maneja sobre wrapper Y panel.
     const panel = document.getElementById('mega-panel');
+    const inner = panel?.querySelector<HTMLElement>('.mega-panel-inner');
+    const edges = panel?.querySelectorAll<HTMLElement>('.mega-edge');
     if (!wrapper || !trigger || !panel) return;
 
     let hoverTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -332,6 +337,14 @@ const industriesItems = t.home.industries.items.map((item) => ({
       wrapper.addEventListener('mouseleave', scheduleClose);
       panel.addEventListener('mouseenter', cancelClose);
       panel.addEventListener('mouseleave', scheduleClose);
+
+      // Los márgenes izquierdo/derecho del panel (el padding del .container,
+      // vacío a propósito) son parte del panel full-width, así que moverse
+      // hacia los costados nunca lo cerraba — acá se tratan como zona de
+      // salida: entrar ahí agenda el cierre igual que salir del panel entero,
+      // y volver al contenido real (.mega-panel-inner) lo cancela de nuevo.
+      inner?.addEventListener('mouseenter', cancelClose);
+      edges?.forEach((edge) => edge.addEventListener('mouseenter', scheduleClose));
     }
 
     trigger.addEventListener('click', (e) => {
@@ -603,6 +616,26 @@ const industriesItems = t.home.industries.items.map((item) => ({
     pointer-events: auto;
   }
 
+  /* Zonas de salida — el margen izquierdo/derecho del panel es el padding
+     vacío de .container, pero al vivir dentro del mismo full-width .mega-panel
+     nunca disparaba el cierre. Estos overlays lo capturan como "afuera": max()
+     iguala el padding del container en pantallas normales y crece para cubrir
+     también el margen real fuera del tope de --container-max en monitores
+     ultra anchos. */
+  .mega-edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: max(var(--container-pad), calc((100% - var(--container-max)) / 2 + var(--container-pad)));
+  }
+  .mega-edge-left {
+    left: 0;
+  }
+  .mega-edge-right {
+    right: 0;
+  }
+
   .mega-panel-inner {
     padding-block: var(--space-lg);
   }
@@ -667,6 +700,19 @@ const industriesItems = t.home.industries.items.map((item) => ({
     margin-block: var(--space-md);
   }
 
+  /* Categoría de la grilla — mismo lenguaje "eyebrow" (mayúsculas, chico,
+     tracking) que el resto del sitio, para que la grilla de productos no
+     aparezca sin encabezado propio como pasaba antes. */
+  .mega-category {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--dot-micelio);
+    margin-bottom: var(--space-sm);
+  }
+
   /* Cuadrícula de 5 columnas para los 10 productos restantes — sin bordes
      internos esta vez (eso era la iteración "Eco-Brutalismo" anterior);
      separación por espacio generoso, más cercana a un mega menú enterprise
@@ -723,10 +769,13 @@ const industriesItems = t.home.industries.items.map((item) => ({
   /* Smart Order y BiPyxis se ven visiblemente más chicos que el resto a la
      misma altura fija — 30% más grandes para emparejar el peso visual. */
   .mega-logo img[src*='smart-order'],
-  .mega-logo img[src*='bipyxis'],
+  .mega-logo img[src*='bipyxis'] {
+    height: 3.9rem;
+  }
+  /* ChefCloud y AyHungry, 15% más chicos que ese mismo ajuste. */
   .mega-logo img[src*='chefcloud'],
   .mega-logo img[src*='ayhungry'] {
-    height: 3.9rem;
+    height: 3.315rem;
   }
   .mega-logo img[src*='sap'] {
     height: 3.6rem;
@@ -936,6 +985,15 @@ const industriesItems = t.home.industries.items.map((item) => ({
   .nav-mobile {
     display: none;
     flex-direction: column;
+    /* El header es position:fixed, así que este panel no participa del
+       scroll normal de la página — sin un tope propio, un despliegue más
+       alto que la pantalla (celular chico + los 10 items de soluciones)
+       dejaba el final inalcanzable. max-height + overflow-y lo scrollea
+       por dentro en vez de cortarlo. */
+    max-height: calc(100svh - 4.5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: var(--space-sm) var(--container-pad) var(--space-md);
     gap: var(--space-xs);
     background: color-mix(in srgb, var(--dot-dark) 96%, transparent);
@@ -990,7 +1048,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--accent-secondary);
+    color: var(--dot-micelio);
   }
 
   .mobile-presence-title {
@@ -1040,6 +1098,22 @@ const industriesItems = t.home.industries.items.map((item) => ({
 
   @media (min-width: 900px) and (max-width: 1150px) {
     .flags {
+      display: none;
+    }
+  }
+
+  /* Mobile: hamburguesa y logo agrupados a la izquierda (en vez de separados
+     en los extremos, que es lo que hace .navbar-inner por defecto con
+     space-between) — de ahí el flex-start acá. El pill de idioma se oculta
+     porque ya vive dentro del propio desplegable, como .lang-switch-mobile. */
+  @media (max-width: 899px) {
+    .navbar-inner {
+      justify-content: flex-start;
+    }
+    .nav-right {
+      order: -1;
+    }
+    .lang-pill {
       display: none;
     }
   }

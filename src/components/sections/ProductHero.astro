@@ -26,14 +26,17 @@ interface Props {
   paragraph: string;
   cta: string;
   ctaHref: string;
-  /** Logo mostrado en el panel visual de la derecha. Se omite si se pasa
-      backgroundImage (esa imagen ya trae el logo incorporado). */
+  /** Logo mostrado centrado sobre el título — activa el layout de una sola
+      columna, todo centrado (logo, título, copy y CTAs). */
   logo?: string;
+  /** Factor de escala del logo centrado (1 = tamaño por defecto) — para
+      emparejar el peso visual entre logos con proporciones muy distintas. */
+  logoScale?: number;
   /** Logo pequeño sobre el título, dentro de la columna de copy — distinto
-      de `logo` (panel lateral), pensado para el modo con backgroundImage. */
+      de `logo`, pensado para el modo con backgroundImage. */
   topLogo?: string;
   /** Stats mostrados en el panel de la derecha, en vez del logo — activa el
-      layout de 2 columnas igual que `logo` (mutuamente excluyentes). */
+      layout de 2 columnas (mutuamente excluyente con `logo`). */
   stats?: Stat[];
   /** Foto de fondo a cobertura completa en vez del grid-texture genérico —
       colapsa la grilla a una sola columna (sin panel visual aparte). */
@@ -53,6 +56,7 @@ const {
   cta,
   ctaHref,
   logo,
+  logoScale = 1,
   topLogo,
   stats,
   backgroundImage,
@@ -75,11 +79,12 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
   <div
     class:list={[
       'container product-hero-grid',
-      { 'no-visual': !logo && !stats, 'has-stats': !logo && !!stats },
+      { 'no-visual': !logo && !stats, 'has-stats': !logo && !!stats, 'has-logo': !!logo },
     ]}
   >
     <div class="product-hero-copy">
       {topLogo && <img class="top-logo" src={withBase(topLogo)} alt="" />}
+      {logo && <img class="hero-logo" style={`--hero-logo-scale: ${logoScale}`} src={withBase(logo)} alt="" />}
       <h1>
         <span class="line-mask"><span class="line-inner">{line1}</span></span>
         {line3 ? (
@@ -124,14 +129,6 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
       </div>
     </div>
 
-    {logo && (
-      <div class="product-hero-visual" aria-hidden="true">
-        <div class="visual-panel">
-          <img src={withBase(logo)} alt="" />
-        </div>
-      </div>
-    )}
-
     {!logo && stats && (
       <div class="product-hero-stats">
         <StatBar stats={stats} />
@@ -143,6 +140,7 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
 <style>
   .product-hero {
     position: relative;
+    width: 100%;
     background: var(--dot-dark);
     padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
     overflow: hidden;
@@ -202,6 +200,32 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     margin-bottom: var(--space-sm);
   }
 
+  /* Variante centrada (todos los sub-productos, excepto SAP): logo, título,
+     copy y CTAs apilados en una sola columna, todo alineado al centro. */
+  .product-hero-grid.has-logo {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .product-hero-grid.has-logo .product-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 48rem;
+  }
+  @media (min-width: 1025px) {
+    .product-hero-grid.has-logo .product-hero-copy {
+      max-width: 62rem;
+    }
+  }
+  .hero-logo {
+    display: block;
+    height: calc(clamp(2.75rem, 6vw, 4rem) * var(--hero-logo-scale, 1));
+    width: auto;
+    margin-bottom: var(--space-md);
+  }
+
   /* Logo que reemplaza el texto de la última línea del título — mismo alto
      de línea que el texto de las otras, para no romper el ritmo vertical. */
   .title-logo {
@@ -229,6 +253,14 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
   }
   .product-hero-grid.has-stats .product-hero-copy h1 {
     max-width: 40ch;
+  }
+  .product-hero-grid.has-logo .product-hero-copy h1 {
+    max-width: 26ch;
+  }
+  @media (min-width: 1025px) {
+    .product-hero-grid.has-logo .product-hero-copy h1 {
+      max-width: 34ch;
+    }
   }
 
   /* Hard-Edge Mask Reveal — mismo mecanismo que el Hero de Home: corte
@@ -296,6 +328,11 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     color: var(--dot-sage);
     max-width: 42ch;
   }
+  .product-hero-grid.has-logo .subtitle {
+    max-width: none;
+    width: 100%;
+    margin-inline: auto;
+  }
 
   .paragraph {
     margin-top: var(--space-xs);
@@ -305,6 +342,11 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     color: var(--text-secondary);
     max-width: 48ch;
   }
+  .product-hero-grid.has-logo .paragraph {
+    max-width: none;
+    width: 100%;
+    margin-inline: auto;
+  }
 
   .product-hero-actions {
     display: flex;
@@ -312,6 +354,9 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     align-items: center;
     gap: var(--space-sm);
     margin-top: var(--space-md);
+  }
+  .product-hero-grid.has-logo .product-hero-actions {
+    justify-content: center;
   }
 
   .cta {
@@ -352,39 +397,6 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     transform: translateX(3px);
   }
 
-  .product-hero-visual {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .visual-panel {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    max-width: 22rem;
-    background: var(--dot-gray);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-lg);
-  }
-  .visual-panel::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius-lg);
-    background: radial-gradient(ellipse 70% 60% at 50% 40%, color-mix(in srgb, var(--dot-micelio) 18%, transparent) 0%, transparent 75%);
-    pointer-events: none;
-  }
-  .visual-panel img {
-    position: relative;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-
   .product-hero-stats {
     display: flex;
     align-items: center;
@@ -402,14 +414,11 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
   }
 
   @media (min-width: 900px) {
-    .product-hero-grid:not(.no-visual) {
+    .product-hero-grid:not(.no-visual):not(.has-logo) {
       grid-template-columns: 3fr 2fr;
     }
     .product-hero-grid.has-stats {
       grid-template-columns: 7fr 3fr;
-    }
-    .product-hero-grid:not(.no-visual):not(.has-stats) .product-hero-copy h1 {
-      max-width: 14ch;
     }
   }
 </style>

@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import HeroReveal from '../components/sections/HeroReveal.astro';
 import Hero from '../components/sections/Hero.astro';
-import ClientLogos from '../components/sections/ClientLogos.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
 import IndustriesTeaser from '../components/sections/IndustriesTeaser.astro';
 import ServicesShowcase from '../components/sections/ServicesShowcase.astro';
@@ -33,9 +32,8 @@ const t = useTranslations(lang);
       ctaSecondary={t.home.hero.ctaSecondary}
       ctaSecondaryHref={getRelativeLocaleUrl(lang, 'servicios')}
       capabilities={t.home.hero.capabilities}
+      clientsTitle={t.common.clientsTitle}
     />
-
-    <ClientLogos title={t.common.clientsTitle} />
 
     <ServicesShowcase
       eyebrow={t.home.servicesTeaser.eyebrow}

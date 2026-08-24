@@ -1,4 +1,6 @@
 ---
+import ClientLogos from './ClientLogos.astro';
+
 interface Props {
   eyebrow: string;
   title1: string;
@@ -10,10 +12,22 @@ interface Props {
   ctaSecondary: string;
   ctaSecondaryHref: string;
   capabilities: string[];
+  clientsTitle?: string;
 }
 
-const { eyebrow, title1, title2, title3, subtitle, cta, ctaHref, ctaSecondary, ctaSecondaryHref, capabilities } =
-  Astro.props;
+const {
+  eyebrow,
+  title1,
+  title2,
+  title3,
+  subtitle,
+  cta,
+  ctaHref,
+  ctaSecondary,
+  ctaSecondaryHref,
+  capabilities,
+  clientsTitle,
+} = Astro.props;
 ---
 
 <div class="hero">
@@ -49,6 +63,13 @@ const { eyebrow, title1, title2, title3, subtitle, cta, ctaHref, ctaSecondary, c
         <li>{c}</li>
       ))}
     </ul>
+
+    {clientsTitle && (
+      <div class="hero-logos" data-reveal>
+        <p class="hero-logos-label">{clientsTitle}</p>
+        <ClientLogos compact />
+      </div>
+    )}
   </div>
 </div>
 
@@ -243,5 +264,29 @@ const { eyebrow, title1, title2, title3, subtitle, cta, ctaHref, ctaSecondary, c
   .capabilities li:hover {
     background: var(--dot-micelio);
     color: var(--dot-dark);
+  }
+
+  /* Franja de logos — vive DENTRO de la misma casilla de vidrio esmerilado
+     (.hero-card), en su parte inferior, separada por un divisor sutil en
+     vez de tener su propio fondo/blur. */
+  .hero-logos {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--dot-light) 12%, transparent);
+  }
+  @media (min-width: 768px) {
+    .hero-logos {
+      margin-top: 2.25rem;
+    }
+  }
+
+  .hero-logos-label {
+    margin-bottom: 0.75rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
   }
 </style>

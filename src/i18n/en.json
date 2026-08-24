@@ -18,13 +18,14 @@
       "ecosystemTitle": "The Dot Solutions Ecosystem",
       "ecosystemTagline": "All your management, sales and operations software natively integrated.",
       "moreLabel": "Learn more",
+      "productsLabel": "Products",
       "viewAll": "See all services",
       "items": [
         {
           "title": "SAP Business One",
           "category": "ERP",
           "desc": "The ERP that integrates finance, sales, inventory and analytics in a single platform.",
-          "logo": "/logos/sap.png",
+          "logo": "/logos/sap-mega.png",
           "href": "sap-business-one"
         },
         {
@@ -379,6 +380,8 @@
     "team": {
       "eyebrow": "Our team",
       "title": "The team behind your operation",
+      "leadershipLabel": "Leadership",
+      "managementLabel": "Management",
       "members": [
         {
           "name": "Héctor Vera",
@@ -1499,11 +1502,10 @@
     "metaTitle": "RetailPro Prism",
     "metaDescription": "RetailPro Prism, the omnichannel retail management system from Retail Pro (A Nayax Company), implemented by DOT Solutions alongside SAP Business One. Manage stores, e-commerce and franchises from a single platform.",
     "hero": {
-      "line1": "Store management",
-      "line2": "that's efficient, scalable",
-      "line3": "and omnichannel",
-      "subtitle": "A robust system that streamlines sales, inventory and analytics, letting you manage physical stores, kiosks and e-commerce from a single platform.",
-      "paragraph": "RetailPro Prism centralizes POS, back office and inventory, and integrates natively with SAP Business One. It scales with your business, from a single store to a franchise network, without losing control or visibility.",
+      "line1": "Retail management,",
+      "line2": "simple and omnichannel",
+      "subtitle": "RetailPro Prism is the retail management system that centralizes sales, inventory and analytics for physical stores, kiosks and e-commerce on one platform.",
+      "paragraph": "With native integration to SAP Business One, RetailPro Prism connects POS, back office and inventory in real time. It scales without friction, from a single store to a franchise network, without losing control or visibility.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -1595,11 +1597,10 @@
     "metaTitle": "TCPOS",
     "metaDescription": "TCPOS, the agile point of sale implemented by DOT Solutions alongside SAP Business One. Coordinates kitchen, bar and register in real time, with precise inventory control.",
     "hero": {
-      "line1": "Control and efficiency",
-      "line2": "at every point of",
-      "line3": "sale",
-      "subtitle": "Optimize order, payment and inventory management with a system built to coordinate your team better.",
-      "paragraph": "Less time managing, more time operating: TCPOS connects kitchen, bar and register in real time, with native integration to SAP Business One.",
+      "line1": "The point of sale",
+      "line2": "that runs your operation",
+      "subtitle": "TCPOS is the point-of-sale system for restaurants and hospitality that optimizes orders, payments and inventory in real time.",
+      "paragraph": "With native integration to SAP Business One, TCPOS connects kitchen, bar and register in a single flow, cutting errors and dead time on every shift.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -1691,11 +1692,10 @@
     "metaTitle": "Loyalty",
     "metaDescription": "Loyalty Engine, DOT Solutions' customizable loyalty app with geolocation, points and native payments, synced in real time with SAP Business One.",
     "hero": {
-      "line1": "Turn every visit",
-      "line2": "into an experience,",
-      "line3": "into loyalty",
-      "subtitle": "A customizable loyalty app that combines geolocation, points accumulation and native payments.",
-      "paragraph": "Built for retail and hospitality ecosystems that want to own the customer journey, with a robust backend and a 100% white-label frontend, synced in real time with SAP Business One.",
+      "line1": "The app that turns",
+      "line2": "every visit into loyalty",
+      "subtitle": "Loyalty Engine is the fully customizable loyalty app with built-in geolocation, points accumulation and native payments.",
+      "paragraph": "Built for retail and hospitality brands that want to own the customer journey, with a robust backend, a 100% white-label frontend, and real-time integration with SAP Business One.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -1784,13 +1784,13 @@
     }
   },
   "gastronomia": {
-    "metaTitle": "Food & Beverage Ecosystem",
-    "metaDescription": "ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing — all natively integrated with SAP Business One for restaurants and F&B chains.",
+    "metaTitle": "Software for Restaurants & F&B Chains",
+    "metaDescription": "Software ecosystem for restaurants and F&B chains across LATAM: ERP, point of sale, purchasing, Business Intelligence, loyalty, delivery and electronic invoicing, natively integrated with SAP Business One.",
     "hero": {
       "eyebrow": "Ecosystem · Food & Beverage",
       "title": "Everything your restaurant needs. In one place.",
-      "subtitle": "One core, seven pieces, zero friction.",
-      "desc": "DOT brings together all the software your restaurant needs —ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing— natively integrated and automating processes end to end.",
+      "subtitle": "The software ecosystem for restaurants that centralizes ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing on a single platform.",
+      "desc": "With native integration to SAP Business One, DOT connects every process in your restaurant or F&B chain —from purchasing to electronic invoicing— eliminating double data entry and giving you real-time visibility end to end.",
       "bullets": [
         "One single provider for all your software",
         "End-to-end automated processes",
@@ -2143,11 +2143,10 @@
     "metaTitle": "Hostdot",
     "metaDescription": "Hostdot, DOT Solutions' high-performance cloud infrastructure: NVMe SSD, LiteSpeed and 24/7 support for restaurants and businesses with critical operations across LATAM.",
     "hero": {
-      "line1": "High-performance",
-      "line2": "cloud infrastructure for",
-      "line3": "demanding businesses",
-      "subtitle": "The digital engine behind LATAM's most demanding restaurants and businesses.",
-      "paragraph": "Premium hosting, VPS servers and expert support on NVMe SSD and LiteSpeed. Maximum speed and security, with a live team behind your operation, 24/7.",
+      "line1": "Cloud infrastructure",
+      "line2": "for zero-downtime businesses",
+      "subtitle": "Hostdot is the high-performance cloud infrastructure behind LATAM's most demanding restaurants and businesses.",
+      "paragraph": "Premium hosting, VPS servers and expert support on NVMe SSD and LiteSpeed, backed by a live team available 24/7 to keep your operation running.",
       "cta": "Talk to an expert",
       "ctaSecondary": "Visit Hostdot"
     },
@@ -2240,11 +2239,10 @@
     "metaTitle": "BiPyxis",
     "metaDescription": "BiPyxis, DOT Solutions' Business Intelligence SaaS platform with native integration to SAP Business One: dynamic reports and real-time financial visibility.",
     "hero": {
-      "line1": "Turn your financial",
-      "line2": "data into intelligent",
-      "line3": "decisions",
-      "subtitle": "A Business Intelligence platform for businesses that want agility and precision in their analysis.",
-      "paragraph": "Centralize and analyze your company's financial information, with native integration to SAP Business One and real-time visibility, with no dependency on technical teams.",
+      "line1": "Financial data,",
+      "line2": "turned into decisions",
+      "subtitle": "BiPyxis is the Business Intelligence platform that turns your financial data into fast, precise decisions.",
+      "paragraph": "With native integration to SAP Business One, BiPyxis centralizes and analyzes your company's financial data with real-time visibility, no technical team required.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -2336,11 +2334,10 @@
     "metaTitle": "Electronic Invoicing DTE",
     "metaDescription": "DOT Solutions' DTE electronic invoicing: automatic issuing and stamping with the SII, native integration to SAP Business One, and documents backed up for 6 years.",
     "hero": {
-      "line1": "Electronic invoicing",
-      "line2": "DTE, natively integrated",
-      "line3": "with SAP Business One",
-      "subtitle": "Generate, manage and distribute your electronic tax documents in compliance with SII regulations.",
-      "paragraph": "Automate issuing and stamping your DTEs with the SII, with no friction or compliance risk, with automatic validations before issuing and documents backed up for 6 years.",
+      "line1": "Electronic invoicing DTE,",
+      "line2": "native to SAP Business One",
+      "subtitle": "The electronic invoicing module that generates, manages and distributes your DTE tax documents in compliance with Chile's SII regulations.",
+      "paragraph": "Automate issuing and stamping your DTEs with the SII with no friction or compliance risk, with automatic validations before issuing and documents backed up for 6 years.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -2436,11 +2433,10 @@
     "metaTitle": "Smart Order",
     "metaDescription": "Smart Order, DOT Solutions' SaaS platform for restaurants and chains: centralized purchasing, inventory and production, with native integration to SAP Business One.",
     "hero": {
-      "line1": "Control your purchasing,",
-      "line2": "inventory and production",
-      "line3": "in one place",
-      "subtitle": "The SaaS platform built for restaurants and chains that need order, visibility and efficiency.",
-      "paragraph": "Centralize and automate purchasing, inventory, production and analytics, with native integration to SAP Business One and an AI that predicts supplies and detects anomalies.",
+      "line1": "Your whole restaurant,",
+      "line2": "purchasing, stock, production",
+      "subtitle": "Smart Order is the SaaS platform that brings order, visibility and efficiency to restaurants and food chains.",
+      "paragraph": "Centralize and automate purchasing, inventory and production with native integration to SAP Business One and an AI that predicts supplies and flags anomalies before they hit your operation.",
       "cta": "Talk to an expert",
       "ctaSecondary": "Visit smart-order.io",
       "ctaSecondaryHref": "https://smart-order.io/"
@@ -2535,18 +2531,65 @@
     "metaDescription": "Mobile One, DOT Solutions' mobile selling: sell, charge and issue documents right next to the customer, without depending on the register, with native SAP Business One integration.",
     "hero": {
       "line1": "Sell and charge",
-      "line2": "right next to your customer,",
-      "line3": "no register required",
-      "subtitle": "Mobile selling that goes where your customer is.",
-      "paragraph": "Sell, charge and issue documents right next to the customer, without depending on the register, with native integration to SAP Business One.",
+      "line2": "wherever your customer is",
+      "subtitle": "Mobile One is the mobile selling solution that brings your point of sale right next to the customer.",
+      "paragraph": "Sell, charge and issue tax documents from anywhere in the store —an aisle, a fitting room, a table—, compatible with Transbank, Getnet and Mercado Pago, with native integration to SAP Business One that keeps your inventory and sales always in sync.",
       "cta": "Talk to an expert"
+    },
+    "bento": {
+      "eyebrow": "The diagnosis",
+      "title": "When the register becomes your store's bottleneck",
+      "items": [
+        {
+          "title": "Do your registers get jammed right at peak hours?",
+          "desc": "Any salesperson can charge from their own mobile device, without waiting for a register to free up."
+        },
+        {
+          "title": "Are you losing sales because customers get tired of waiting in line?",
+          "desc": "Salespeople charge wherever the customer is —an aisle, a fitting room, a table— without the sale depending on reaching a register."
+        },
+        {
+          "title": "Is your sales team stuck behind the counter instead of following the customer?",
+          "desc": "With the point of sale on their phone, they close the sale right there, without losing the customer on the way to the register."
+        },
+        {
+          "title": "Do dispatches and pickups pile up and become a bottleneck?",
+          "desc": "Manage scheduled dispatches, exchanges and pickups from anywhere in the store, without going back to the counter."
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "intro": "Mobile One turns any phone or handheld into a full point of sale, connected in real time with the rest of your operation.",
+      "title": "Your whole point of sale, on a mobile device",
+      "steps": [
+        {
+          "title": "Sell from anywhere in the store",
+          "desc": "Scan the product's barcode (EAN or SKU) and apply the same promotions and discounts as at the register."
+        },
+        {
+          "title": "Charge with your usual payment method",
+          "desc": "Direct integration with Transbank, Getnet, OnePay and Multicaja: the amount is transferred instantly to your payment terminal."
+        },
+        {
+          "title": "Issue the document right there",
+          "desc": "Electronic receipts, invoices and exchange tickets, with DTE connected to the SII, no extra steps or double entry."
+        },
+        {
+          "title": "Keep selling even if the network fails",
+          "desc": "Smooth operation on iOS, Android and Windows, built to keep selling even if the main connection drops."
+        }
+      ]
     },
     "benefits": {
       "title": "Benefits that impact your day-to-day operation.",
       "items": [
         "Sell and charge from anywhere in your store, no register lines.",
-        "Issue tax documents instantly, right next to the customer.",
-        "Native integration with SAP Business One."
+        "Issue electronic receipts, invoices and exchange tickets instantly, right next to the customer.",
+        "Check real-time stock across different stores before promising a sale.",
+        "Compatible with Transbank, Getnet, OnePay and Multicaja.",
+        "Works on iOS, Android and Windows, without locking you into one device.",
+        "Native integration with SAP Business One and TCPOS."
       ]
     },
     "authority": {
@@ -2899,11 +2942,10 @@
     "metaTitle": "ChefCloud",
     "metaDescription": "ChefCloud connects Rappi, PedidosYa, Uber Eats and more directly to the point of sale and kitchen ticket, no extra tablets and no manual transcription.",
     "hero": {
-      "line1": "Delivery,",
-      "line2": "straight to",
-      "line3": "the kitchen",
-      "subtitle": "Rappi, PedidosYa, Uber Eats and more enter the same point of sale and the same kitchen ticket.",
-      "paragraph": "No extra tablets and no one re-typing orders by hand — built for chains, dark kitchens and restaurants running dine-in and delivery.",
+      "line1": "All your delivery,",
+      "line2": "one kitchen ticket",
+      "subtitle": "ChefCloud is the integration that connects Rappi, PedidosYa, Uber Eats and more straight into your point of sale and kitchen ticket.",
+      "paragraph": "No extra tablets, no orders re-typed by hand: ChefCloud is built for chains, dark kitchens and restaurants running dine-in and delivery at the same time.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -2995,11 +3037,10 @@
     "metaTitle": "AyHungry",
     "metaDescription": "AyHungry digitizes service and reservations: pre-orders, table management and service from the customer's own phone, with sentiment analysis.",
     "hero": {
-      "line1": "No lines.",
-      "line2": "No waiting.",
-      "line3": "No frustrated customers.",
-      "subtitle": "Pre-orders, reservations and table management, with service from the customer's own phone.",
-      "paragraph": "The line isn't just discomfort — it's sales that never happen. AyHungry digitizes service and adds sentiment analysis for every visit.",
+      "line1": "No lines, no waiting.",
+      "line2": "No customers walking away",
+      "subtitle": "AyHungry is the app that digitizes pre-orders, reservations and table management, with service straight from the customer's phone.",
+      "paragraph": "Every line is a sale that never happens. AyHungry cuts the wait and adds sentiment analysis to every visit, so no customer leaves unhappy.",
       "cta": "Talk to an expert"
     },
     "bento": {
@@ -3091,11 +3132,10 @@
     "metaTitle": "Terminal POS AXIS-J64",
     "metaDescription": "AXIS-J64 POS Terminal: industrial-grade hardware for high-traffic points of sale, certified and validated with SAP Business One, RetailPro and more.",
     "hero": {
-      "line1": "Industrial speed",
-      "line2": "for your point",
-      "line3": "of sale",
-      "subtitle": "AXIS-J64 POS Terminal: the hardware your management software was waiting for.",
-      "paragraph": "Built to keep pace with your business, certified and validated with SAP, RetailPro and your point-of-sale software.",
+      "line1": "Industrial POS terminal",
+      "line2": "for your point of sale",
+      "subtitle": "AXIS-J64 is the industrial POS terminal your management software has been waiting for.",
+      "paragraph": "Certified and validated with SAP Business One, RetailPro and your point-of-sale software, the AXIS-J64 is built to keep pace with high-traffic businesses.",
       "cta": "I want to upgrade my registers"
     },
     "bento": {

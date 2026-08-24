@@ -1,13 +1,9 @@
 ---
-// Página más corta que el resto de los productos a propósito: todavía no
-// tenemos capturas ni material fuente de Mobile One para "El diagnóstico" ni
-// "Cómo funciona" (solo la descripción corta que ya existía en el mega menú)
-// — se completará cuando llegue más información, sin inventar dolores/pasos
-// de proceso que no tenemos. Mismo riel horizontal que el resto, con 2
-// paneles en vez de 4.
 import Layout from '../layouts/Layout.astro';
 import ProductHero from '../components/sections/ProductHero.astro';
 import SectionHeading from '../components/sections/SectionHeading.astro';
+import PainBento from '../components/sections/PainBento.astro';
+import ProcessTimelineAnimated from '../components/sections/ProcessTimelineAnimated.astro';
 import BenefitsList from '../components/sections/BenefitsList.astro';
 import AuthorityCTA from '../components/sections/AuthorityCTA.astro';
 import ProductHorizontalScroll from '../components/sections/ProductHorizontalScroll.astro';
@@ -31,16 +27,40 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
       <ProductHero
         line1={s.hero.line1}
         line2={s.hero.line2}
-        line3={s.hero.line3}
         subtitle={s.hero.subtitle}
         paragraph={s.hero.paragraph}
         cta={s.hero.cta}
         ctaHref={contactHref}
         logo="/logos/isotipos/mobileoneiso.svg"
+        logoScale={1.3}
       />
     </section>
 
-    <!-- Panel 02 — Beneficios -->
+    <!-- Panel 02 — Diagnóstico -->
+    <section class="h-panel">
+      <div class="h-inner" data-h-reveal>
+        <div class="panel-heading">
+          <SectionHeading eyebrow={s.bento.eyebrow} title={s.bento.title} align="left" />
+        </div>
+        <div class="h-body">
+          <PainBento items={s.bento.items} compact />
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 03 — Cómo funciona -->
+    <section class="h-panel">
+      <div class="h-inner" data-h-reveal>
+        <div class="glass-panel process-panel">
+          <SectionHeading eyebrow={s.process.eyebrow} title={s.process.title} subtitle={s.process.intro} align="center" />
+          <div class="h-body narrow">
+            <ProcessTimelineAnimated steps={s.process.steps} compact />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 04 — Beneficios -->
     <section class="h-panel">
       <div class="h-inner" data-h-reveal>
         <div class="panel-heading">
@@ -74,8 +94,18 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
   .h-body {
     margin-top: var(--space-lg);
   }
+  .h-body.narrow {
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
 
-  .panel-heading :global(.title) {
+  .process-panel {
+    padding: clamp(1.95rem, 3.9vw, 2.925rem);
+    border: none;
+  }
+
+  .panel-heading :global(.title),
+  .process-panel :global(.heading .title) {
     background: linear-gradient(
       90deg,
       var(--dot-light) 0%,
@@ -96,7 +126,8 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .panel-heading :global(.title) {
+    .panel-heading :global(.title),
+    .process-panel :global(.heading .title) {
       animation: none;
       background-position: 50% 0;
     }
@@ -105,14 +136,17 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
   @media (min-width: 1025px) {
     .h-panel--hero {
       padding-inline: 0;
-      justify-content: flex-start;
     }
-    .h-panel--hero :global(.container.product-hero-grid) {
-      max-width: none !important;
-      margin-inline: 0 !important;
-    }
-    .panel-heading :global(.title) {
+    .panel-heading :global(.title),
+    .process-panel :global(.heading .title) {
       font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
+    }
+    .process-panel :global(.heading .subtitle) {
+      font-size: 1.17rem !important;
+      margin-top: 0.455rem !important;
+    }
+    .h-body.narrow {
+      margin-top: 1.95rem !important;
     }
 
     .h-panel--hero :global(.product-hero-copy h1) {
@@ -128,45 +162,6 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     .h-panel--hero :global(.product-hero-actions .cta) {
       padding: 0.8rem 1.75rem !important;
       font-size: 0.875rem !important;
-    }
-
-    .h-panel--hero :global(.product-hero-grid:not(.no-visual)) {
-      grid-template-columns: 1fr auto !important;
-    }
-
-    .h-panel--hero :global(.visual-panel) {
-      max-width: 16rem !important;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
-    }
-    .h-panel--hero :global(.visual-panel::before) {
-      display: none !important;
-    }
-    .h-panel--hero :global(.visual-panel img) {
-      animation: hero-logo-orbit 7s ease-in-out infinite;
-    }
-    @keyframes hero-logo-orbit {
-      0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-      }
-      25% {
-        transform: translate(10px, -16px) scale(1.08) rotate(3deg);
-      }
-      50% {
-        transform: translate(-6px, -6px) scale(0.94) rotate(-2deg);
-      }
-      75% {
-        transform: translate(-12px, -14px) scale(1.05) rotate(2deg);
-      }
-      100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .h-panel--hero :global(.visual-panel img) {
-        animation: none;
-      }
     }
   }
 

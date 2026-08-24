@@ -47,7 +47,6 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
         cta={s.hero.cta}
         ctaHref={contactHref}
         backgroundImage="/images/background_1.jpg"
-        titleLogo="/logos/logos dot/sapone.png"
         stats={s.heroStats}
       />
     </section>
@@ -510,19 +509,45 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
     .sap-h-panel--hero :global(.product-hero-copy h1) {
       font-size: clamp(1.5rem, 2.6vw, 2.15rem) !important;
     }
-    .sap-h-panel--hero :global(.top-logo) {
-      height: 1.75rem !important;
+    .sap-h-panel--hero :global(.subtitle) {
+      margin-top: var(--space-xs) !important;
     }
-    .sap-h-panel--hero :global(.title-logo) {
-      height: clamp(1.75rem, 4vw, 2.5rem) !important;
+    .sap-h-panel--hero :global(.paragraph) {
+      margin-top: var(--space-xs) !important;
+    }
+    .sap-h-panel--hero :global(.product-hero-actions) {
+      margin-top: var(--space-sm) !important;
     }
     .sap-h-panel--hero :global(.product-hero-actions .cta),
     .sap-h-panel--hero :global(.product-hero-actions .cta-secondary) {
       padding: 0.8rem 1.75rem !important;
       font-size: 0.875rem !important;
     }
+    .sap-h-panel--hero :global(.product-hero-stats) {
+      padding-block: var(--space-sm) !important;
+    }
     .sap-h-panel--hero :global(.product-hero-stats .value) {
       font-size: clamp(1.25rem, 2vw, 1.625rem) !important;
+    }
+
+    /* .product-hero (con foto de fondo) crece con su propio contenido
+       (min-height, no height) — dentro de este panel, que sí está fijo a
+       100vh con overflow:hidden (necesario para el riel pineado), ese
+       crecimiento empujaba a .hero-bg/.hero-bg-overlay (inset:0, heredan el
+       alto real de .product-hero, no el del panel) más allá del borde
+       visible, así que el degradé recién llegaba a su punto 100% (sólido)
+       por debajo de donde el panel ya cortaba todo — se veía la foto
+       todavía visible justo donde empieza el panel siguiente. Fijando la
+       imagen y su degradé a 100vh en vez de heredar el alto de .product-hero,
+       quedan siempre calzados con el borde real y visible del panel, sin
+       importar cuánto crezca el contenido de arriba. */
+    .sap-h-panel--hero :global(.product-hero.has-background) {
+      height: 100vh !important;
+      padding-bottom: var(--space-md) !important;
+    }
+    .sap-h-panel--hero :global(.hero-bg),
+    .sap-h-panel--hero :global(.hero-bg-overlay) {
+      height: 100vh !important;
     }
   }
 

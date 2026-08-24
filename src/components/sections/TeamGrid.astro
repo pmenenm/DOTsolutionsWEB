@@ -17,9 +17,13 @@ interface Props {
   eyebrow: string;
   title: string;
   members: Member[];
+  /** Encabezado del primer grupo (las primeras 4 cards — liderazgo ejecutivo). */
+  leadershipLabel: string;
+  /** Encabezado del segundo grupo (las siguientes 4 cards — gerencias de área). */
+  managementLabel: string;
 }
 
-const { eyebrow, title, members } = Astro.props;
+const { eyebrow, title, members, leadershipLabel, managementLabel } = Astro.props;
 
 // Orden 1:1 con about.team.members en los diccionarios de i18n.
 const TEAM_FILES = [
@@ -69,26 +73,37 @@ function initials(name: string) {
 
     <div class="team-hz-track" data-team-hz-track>
       {members.map((member, i) => (
-        <a
-          class="member-card"
-          data-member-card
-          href={LINKEDIN_URLS[i]}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${member.name} — LinkedIn`}
-          style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}`}
-        >
-          <span class="member-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <div class="member-photo">
-            {TEAM_FILES[i] ? (
-              <img src={withBase(`/team/${TEAM_FILES[i]}`)} alt={member.name} loading="lazy" />
-            ) : (
-              <span class="member-fallback">{initials(member.name)}</span>
-            )}
-          </div>
-          <p class="member-name">{member.name}</p>
-          <p class="member-role">{member.role}</p>
-        </a>
+        <>
+          {i === 0 && (
+            <div class="team-divider" aria-hidden="true">
+              <span class="team-divider-label">{leadershipLabel}</span>
+            </div>
+          )}
+          {i === 4 && (
+            <div class="team-divider" aria-hidden="true">
+              <span class="team-divider-label">{managementLabel}</span>
+            </div>
+          )}
+          <a
+            class:list={['member-card', i < 4 ? 'member-card--lead' : 'member-card--manager']}
+            data-member-card
+            href={LINKEDIN_URLS[i]}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${member.name} — LinkedIn`}
+            style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}`}
+          >
+            <div class="member-photo">
+              {TEAM_FILES[i] ? (
+                <img src={withBase(`/team/${TEAM_FILES[i]}`)} alt={member.name} loading="lazy" />
+              ) : (
+                <span class="member-fallback">{initials(member.name)}</span>
+              )}
+            </div>
+            <p class="member-name">{member.name}</p>
+            <p class="member-role">{member.role}</p>
+          </a>
+        </>
       ))}
     </div>
 
@@ -231,15 +246,46 @@ function initials(name: string) {
     }
   }
 
-  .member-index {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.75rem;
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
+  /* Jerarquía: liderazgo (primeras 4 cards) queda con borde de acento
+     permanente y nombre en mayor peso — visible incluso sin hover; gerencias
+     (siguientes 4) usan el mismo trato neutro que antes, solo se destacan
+     al pasar el mouse. La diferencia de tamaño de card completa el efecto
+     en desktop (ver media query 1024px+ abajo). */
+  .member-card--lead {
+    border-color: color-mix(in srgb, var(--card-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--card-accent) 4%, #141414);
+  }
+  .member-card--lead .member-name {
     font-weight: 700;
-    letter-spacing: 0.05em;
-    color: color-mix(in srgb, var(--card-accent) 70%, transparent);
+  }
+
+  /* Divisor de sección dentro del propio riel — reemplaza los números de
+     card por un quiebre narrativo real: "Liderazgo" abre el filmstrip,
+     "Gerencias" marca dónde empieza el segundo nivel. En mobile (grid) es
+     una franja horizontal de ancho completo; en desktop (filmstrip) es una
+     columna angosta con texto vertical, como un separador de capítulo. */
+  .team-divider {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-block: var(--space-xs);
+  }
+  .team-divider::before,
+  .team-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--dot-light) 16%, transparent);
+  }
+  .team-divider-label {
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dot-micelio);
   }
 
   .member-photo {
@@ -270,7 +316,12 @@ function initials(name: string) {
   }
   .member-role {
     font-size: var(--text-sm);
+    line-height: 1.4;
     color: var(--text-secondary);
+    /* Reserva el alto de 2 líneas siempre — sin esto, un rol más largo que
+       envuelve a 2 líneas (ej. "Gerente de Infraestructura") hace que esa
+       card quede más alta que sus 3 pares del mismo grupo. */
+    min-height: calc(1.4em * 2);
   }
 
   /* ---------- Desktop (1024px+): filmstrip horizontal pineado. ---------- */
@@ -305,14 +356,39 @@ function initials(name: string) {
       width: min(17rem, 40vw);
       padding: 1.5rem;
     }
-    .member-index {
-      font-size: 0.8rem;
+    /* Liderazgo ocupa más espacio que gerencias — el tamaño de la card
+       comunica jerarquía de un vistazo, sin depender solo del texto. */
+    .member-card--lead {
+      width: min(18.5rem, 42vw);
+    }
+    .member-card--manager {
+      width: min(15rem, 36vw);
     }
     .member-photo {
       margin-bottom: var(--space-md);
     }
     .member-name {
       font-size: var(--text-lg);
+    }
+
+    /* El divisor pasa de franja horizontal (mobile) a columna angosta con
+       texto vertical — un quiebre de capítulo dentro del propio filmstrip. */
+    .team-divider {
+      flex-direction: column;
+      flex-shrink: 0;
+      align-self: stretch;
+      width: 2.5rem;
+      margin-block: 0;
+    }
+    .team-divider::before,
+    .team-divider::after {
+      width: 1px;
+      height: auto;
+    }
+    .team-divider-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
     }
 
     .team-hz-counter {

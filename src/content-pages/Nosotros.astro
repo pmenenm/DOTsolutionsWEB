@@ -385,8 +385,16 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
           },
         });
 
-        const cardTriggers = cards.map((card) =>
-          gsap.fromTo(
+        const cardTriggers = cards.map((card, i) => {
+          // La última card del riel nunca recorre tanto como las demás: el
+          // scroll se detiene apenas termina de entrar en pantalla, así que
+          // su posición final (~70-80% del viewport) nunca cruza el umbral
+          // "left 55%" que usan las demás — se quedaba a mitad de la
+          // animación (más chica y más transparente) sin importar cuánto
+          // scrolleara el usuario. Un umbral más permisivo para esta sola
+          // card asegura que sí llegue a su tamaño real.
+          const isLast = i === cards.length - 1;
+          return gsap.fromTo(
             card,
             { opacity: 0.2, scale: 0.88, y: 40 },
             {
@@ -398,12 +406,12 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
                 trigger: card,
                 containerAnimation: tween,
                 start: 'left 92%',
-                end: 'left 55%',
+                end: isLast ? 'left 85%' : 'left 55%',
                 scrub: true,
               },
             }
-          )
-        );
+          );
+        });
 
         return () => {
           tween.scrollTrigger?.kill();
@@ -473,6 +481,58 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
       const logos: string[] = JSON.parse(section.dataset.logos ?? '[]');
       if (!logos.length) return () => {};
 
+      const nextLogo = gsap.utils.wrap(logos);
+      let index = 0;
+
+      // Las cards viven DENTRO de la sección (position:absolute, no fixed) —
+      // así la lluvia queda contenida por su overflow:hidden en vez de
+      // escapar hacia el viewport y sumarle alto scrolleable real a la
+      // página, sin importar cuánto caigan.
+      function createCard(): HTMLImageElement {
+        const img = document.createElement('img');
+        img.src = nextLogo(index++);
+        img.className = 'clients-trail-img';
+        img.setAttribute('aria-hidden', 'true');
+        section.appendChild(img);
+        return img;
+      }
+
+      // ---------- Lluvia atada al scroll: nada de timers ni loops propios —
+      // se crean todas las gotas de una vez y una sola timeline con scrub
+      // reparte su caída a lo largo del tramo de scroll de la sección. Scrollear
+      // hacia abajo hace caer la lluvia; scrollear hacia arriba la revierte. ----------
+      const DROP_COUNT = 28;
+      const DROP_SPAN = 15; // % de la timeline virtual que dura la caída de UNA gota
+
+      function buildRain(triggerVars: { start: string; end: string }) {
+        const rect = section.getBoundingClientRect();
+        const fall = rect.height + 120;
+        const master = gsap.timeline({
+          scrollTrigger: { trigger: section, scrub: true, ...triggerVars },
+        });
+
+        for (let i = 0; i < DROP_COUNT; i++) {
+          const img = createCard();
+          img.style.left = `${gsap.utils.random(5, 95)}%`;
+          img.style.top = '-4rem';
+          const startAt = gsap.utils.random(0, 100 - DROP_SPAN);
+          const dropTl = gsap
+            .timeline()
+            .fromTo(
+              img,
+              { opacity: 0, rotation: gsap.utils.random(-6, 6) },
+              { opacity: 0.9, duration: DROP_SPAN * 0.2, ease: 'power1.out' }
+            )
+            .to(img, { y: fall, duration: DROP_SPAN, ease: 'none' }, 0)
+            .to(img, { opacity: 0, duration: DROP_SPAN * 0.25 }, `>-${DROP_SPAN * 0.25}`);
+          master.add(dropTl, startAt);
+        }
+
+        return master;
+      }
+
+      // ---------- Trail al hover: además de la lluvia, en puntero fino los
+      // logos también siguen al cursor (comportamiento previo, sin tocar). ----------
       const mm = gsap.matchMedia();
 
       mm.add('(hover: hover) and (pointer: fine)', () => {
@@ -482,18 +542,20 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
         const st = ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: '+=120%',
+          end: '+=220%',
           pin: true,
         });
 
+        // Misma ventana de scroll que el pin — la lluvia recorre exactamente
+        // el mismo tramo que el usuario scrollea mientras está pineado.
+        const rain = buildRain({ start: 'top top', end: '+=220%' });
+
         const GAP = 80; // distancia mínima (px) entre disparos consecutivos
-        const nextLogo = gsap.utils.wrap(logos);
 
         let mouseX = 0;
         let mouseY = 0;
         let lastX = 0;
         let lastY = 0;
-        let index = 0;
         let started = false;
 
         function onMouseMove(e: MouseEvent) {
@@ -508,36 +570,34 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
           }
         }
 
-        function playAnimation(el: HTMLElement) {
+        function playBurst(el: HTMLElement) {
           // fromTo explícito, no `.from()`: la card arranca en opacity:0 por
           // CSS (estado de reposo antes de ser disparada), así que un
           // `.from()` capturaría ESE mismo 0 como valor "final" y la
           // animación entera correría siempre invisible.
-          const tl = gsap.timeline({ onComplete: () => el.remove() });
-          tl.fromTo(
-            el,
-            { opacity: 0, scale: 0.2 },
-            { opacity: 1, scale: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' }
-          )
+          gsap
+            .timeline({ onComplete: () => el.remove() })
+            .fromTo(
+              el,
+              { opacity: 0, scale: 0.2 },
+              { opacity: 1, scale: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' }
+            )
             .to(el, { rotation: gsap.utils.random(-25, 25), duration: 0.4 }, '<')
             .to(el, { y: '60vh', opacity: 0, ease: 'power2.in', duration: 1.2 }, 0.2);
         }
 
-        function fire(x: number, y: number) {
-          const img = document.createElement('img');
-          img.src = nextLogo(index++);
-          img.className = 'clients-trail-img';
-          img.style.left = `${x}px`;
-          img.style.top = `${y}px`;
-          img.setAttribute('aria-hidden', 'true');
-          document.body.appendChild(img);
-          playAnimation(img);
+        function fireBurst(x: number, y: number) {
+          const rect = section.getBoundingClientRect();
+          const img = createCard();
+          img.style.left = `${x - rect.left}px`;
+          img.style.top = `${y - rect.top}px`;
+          playBurst(img);
         }
 
         function tick() {
           const dist = Math.hypot(mouseX - lastX, mouseY - lastY);
           if (dist > GAP) {
-            fire(mouseX, mouseY);
+            fireBurst(mouseX, mouseY);
             lastX = mouseX;
             lastY = mouseY;
           }
@@ -548,15 +608,30 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
 
         return () => {
           st.kill();
+          rain.scrollTrigger?.kill();
+          rain.kill();
           section.removeEventListener('mousemove', onMouseMove);
           gsap.ticker.remove(tick);
           document.querySelectorAll('.clients-trail-img').forEach((el) => el.remove());
         };
       });
 
-      mm.add('(hover: none), (pointer: coarse)', () => () => {});
+      mm.add('(hover: none), (pointer: coarse)', () => {
+        // Sin pin acá — la sección scrollea de forma normal, así que la
+        // lluvia se reparte a lo largo de su propio tramo natural en pantalla.
+        const rain = buildRain({ start: 'top bottom', end: 'bottom top' });
 
-      return () => mm.revert();
+        return () => {
+          rain.scrollTrigger?.kill();
+          rain.kill();
+          document.querySelectorAll('.clients-trail-img').forEach((el) => el.remove());
+        };
+      });
+
+      return () => {
+        mm.revert();
+        document.querySelectorAll('.clients-trail-img').forEach((el) => el.remove());
+      };
     }
 
     function initNosotrosAnimations() {
@@ -578,7 +653,13 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     document.addEventListener('astro:page-load', initNosotrosAnimations);
   </script>
 
-  <TeamGrid eyebrow={about.team.eyebrow} title={about.team.title} members={about.team.members} />
+  <TeamGrid
+    eyebrow={about.team.eyebrow}
+    title={about.team.title}
+    members={about.team.members}
+    leadershipLabel={about.team.leadershipLabel}
+    managementLabel={about.team.managementLabel}
+  />
 
   <!-- ============ DÓNDE ESTAMOS (presencia regional) ============ -->
   <section class="section presence-section">
@@ -1256,10 +1337,12 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     color: color-mix(in srgb, var(--dot-light) 60%, transparent);
   }
 
-  /* Tarjetas del trail — position:fixed porque siguen al cursor en
-     coordenadas de viewport (clientX/clientY), sin importar el scroll. */
+  /* Tarjetas del trail — position:absolute dentro de .clients-trail (que
+     tiene overflow:hidden), no fixed: así la caída de 60vh queda recortada
+     por la propia sección en vez de escapar hacia el viewport y sumarle
+     alto scrolleable real a la página. */
   :global(.clients-trail-img) {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: var(--z-overlay);

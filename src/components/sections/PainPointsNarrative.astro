@@ -50,12 +50,14 @@ interface Props {
   /** Frase exacta dentro de `phrase2` que se tipea en verde y luego "crece" hasta desaparecer. */
   phrase2Highlight?: string;
   phrase3: string;
-  items: Item[];
+  /** Fase 2 (puntos de dolor, uno a la vez) — omitible: sin items, `phrase3` aparece
+      directo después de `phrase2`, sin la secuencia intermedia. */
+  items?: Item[];
   closingEyebrow?: string;
   closingTitle?: string;
 }
 
-const { phrase1, phrase2, phrase2Highlight, phrase3, items, closingEyebrow, closingTitle } = Astro.props;
+const { phrase1, phrase2, phrase2Highlight, phrase3, items = [], closingEyebrow, closingTitle } = Astro.props;
 const hasClosing = Boolean(closingEyebrow && closingTitle);
 
 // Circuito de la card de cierre — idéntico al de DataFlowCard.astro (mismas rutas, mismo
@@ -243,7 +245,6 @@ const parsedItems = items.map((item, i) => {
       !typeLayer ||
       !mainEl ||
       !highlightEl ||
-      !itemLayers.length ||
       !svgEl ||
       !svgLayer ||
       !stageEl ||
