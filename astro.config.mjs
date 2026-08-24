@@ -44,8 +44,22 @@ export default defineConfig({
         },
       },
     },
+    // Los sub-paths de gsap (ScrollTrigger, TextPlugin, MorphSVGPlugin) no se
+    // detectan en el escaneo inicial de Vite (sólo `import gsap from 'gsap'`
+    // lo dispara) — sin listarlos acá quedan afuera del pre-bundle y Vite los
+    // optimiza recién al primer pedido, en caliente; si esa optimización
+    // tarda o el caché queda desincronizado, el request cuelga con 504 y,
+    // al ser un import estático, tira abajo en silencio TODO el script que
+    // lo importa (sin animaciones, sin excepción visible en consola).
     optimizeDeps: {
-      include: ['gsap', 'lenis'],
+      include: ['gsap', 'lenis', 'gsap/ScrollTrigger', 'gsap/TextPlugin', 'gsap/MorphSVGPlugin'],
     },
+  },
+
+  // Solo afecta a `astro dev` (nunca al build de producción) — permite
+  // acceder al dev server a través de un túnel público (ej. localtunnel)
+  // sin que se rechace el Host header por no ser localhost.
+  server: {
+    allowedHosts: true,
   },
 });

@@ -255,6 +255,10 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
         }
 
         typeEl.textContent = '';
+        // Disparo único al entrar en pantalla, no scrub: atado 1:1 al scroll
+        // dentro de una franja tan angosta (85%→35%) el texto se quedaba a
+        // medio tipear si el usuario no scrolleaba exactamente a ese ritmo,
+        // y nunca terminaba de escribirse.
         const tween = gsap.to(typeEl, {
           text,
           duration: Math.max(text.length * MS_PER_CHAR, 1.5),
@@ -262,8 +266,7 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
           scrollTrigger: {
             trigger: panel,
             start: 'top 85%',
-            end: 'top 35%',
-            scrub: 0.5,
+            once: true,
           },
         });
 
@@ -635,14 +638,26 @@ const clientTrailLogos = CLIENT_TRAIL_FILES.map((f) => withBase(`/clients/${f}`)
     }
 
     function initNosotrosAnimations() {
-      const cleanups = [
-        initHeroWhoWeAre(),
-        initMissionRule(),
-        initGallery(),
-        initTeamHorizontalScroll(),
-        initMemberCursor(),
-        initClientsTrail(),
+      // Cada init corre aislado: si UNO falla (ej. una dependencia que no
+      // cargó), no debe tirar abajo en silencio el resto de las animaciones
+      // de la página — antes, un error temprano en la lista cortaba la
+      // construcción del array entero y ninguna de las siguientes corría.
+      const steps: [string, () => () => void][] = [
+        ['initHeroWhoWeAre', initHeroWhoWeAre],
+        ['initMissionRule', initMissionRule],
+        ['initGallery', initGallery],
+        ['initTeamHorizontalScroll', initTeamHorizontalScroll],
+        ['initMemberCursor', initMemberCursor],
+        ['initClientsTrail', initClientsTrail],
       ];
+      const cleanups: (() => void)[] = [];
+      for (const [name, fn] of steps) {
+        try {
+          cleanups.push(fn());
+        } catch (err) {
+          console.error(`[nosotros] ${name} failed to initialize:`, err);
+        }
+      }
       document.addEventListener(
         'astro:before-swap',
         () => cleanups.forEach((fn) => fn()),
