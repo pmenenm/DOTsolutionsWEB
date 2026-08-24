@@ -30,13 +30,26 @@ const { steps, compact = false } = Astro.props;
       </li>
     ))}
   </ol>
+  {steps.length > 1 && (
+    <div class="timeline-counter" aria-hidden="true">
+      <span data-timeline-current>1</span> / {steps.length}
+    </div>
+  )}
 </div>
 
 <script>
-  function initTimeline() {
-    const timelines = document.querySelectorAll<HTMLElement>('.process-timeline');
-    if (!timelines.length) return;
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Mobile (≤1024px): en vez de revelar todos los pasos juntos (quedaban
+  // apretados/ilegibles, sobre todo en la variante `compact` que los pone en
+  // fila), se pinea la sección y se hace crossfade de a un paso por vez a
+  // medida que se scrollea — se lee el paso actual, avanza, aparece el
+  // siguiente. Desktop mantiene el reveal-en-conjunto original (ahí sí hay
+  // espacio horizontal suficiente para leerlos todos a la vez).
+  function initFadeTogether(el: HTMLElement) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -48,14 +61,99 @@ const { steps, compact = false } = Astro.props;
       { threshold: 0.2 }
     );
 
-    timelines.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('is-visible');
-      } else {
-        observer.observe(el);
-      }
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('is-visible');
+    } else {
+      observer.observe(el);
+    }
+
+    return () => observer.disconnect();
+  }
+
+  function initStepper(el: HTMLElement, stepsList: HTMLElement, steps: HTMLLIElement[]) {
+    el.classList.add('process-timeline--stepper');
+
+    const maxHeight = Math.max(...steps.map((s) => s.scrollHeight));
+    stepsList.style.height = `${maxHeight}px`;
+
+    gsap.set(steps, { opacity: 0, clearProps: 'transform' });
+    gsap.set(steps[0], { opacity: 1 });
+
+    const counter = el.querySelector<HTMLElement>('[data-timeline-current]');
+    if (counter) counter.textContent = '1';
+
+    const pinDistancePerStep = Math.max(400, window.innerHeight * 0.5);
+    const navbarHeight = document.getElementById('navbar')?.offsetHeight ?? 0;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        pin: true,
+        // El panel vive dentro de .glass-panel (backdrop-filter), que por
+        // spec crea containing block para position:fixed — el pinType
+        // 'fixed' automático de GSAP no lo detecta (solo chequea
+        // transform/perspective/filter, no backdrop-filter) y el pin queda
+        // roto (el fixed termina posicionado relativo a ese ancestro en vez
+        // del viewport). 'transform' evita el problema de raíz.
+        pinType: 'transform',
+        scrub: 1,
+        start: `top top+=${navbarHeight}`,
+        end: () => `+=${(steps.length - 1) * pinDistancePerStep}`,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (!counter) return;
+          const idx = Math.min(steps.length - 1, Math.round(self.progress * (steps.length - 1)));
+          counter.textContent = String(idx + 1);
+        },
+      },
     });
+
+    steps.forEach((step, i) => {
+      if (i === 0) return;
+      tl.to(steps[i - 1], { opacity: 0, duration: 0.5 }, i - 1);
+      tl.to(step, { opacity: 1, duration: 0.5 }, i - 1);
+    });
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      el.classList.remove('process-timeline--stepper');
+      stepsList.style.height = '';
+      gsap.set(steps, { clearProps: 'opacity' });
+    };
+  }
+
+  function initTimeline() {
+    const timelines = document.querySelectorAll<HTMLElement>('.process-timeline');
+    if (!timelines.length) return;
+
+    const mm = gsap.matchMedia();
+    const cleanups: (() => void)[] = [];
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    timelines.forEach((el) => {
+      const stepsList = el.querySelector<HTMLElement>('.timeline-steps');
+      const steps = Array.from(el.querySelectorAll<HTMLLIElement>('.timeline-step'));
+      if (!stepsList || steps.length === 0) return;
+
+      if (steps.length < 2 || reduced) {
+        cleanups.push(initFadeTogether(el));
+        return;
+      }
+
+      mm.add('(min-width: 1025px)', () => initFadeTogether(el));
+      mm.add('(max-width: 1024px)', () => initStepper(el, stepsList, steps));
+    });
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        mm.revert();
+        cleanups.forEach((fn) => fn());
+      },
+      { once: true }
+    );
   }
 
   document.addEventListener('astro:page-load', initTimeline);
@@ -189,5 +287,60 @@ const { steps, compact = false } = Astro.props;
   .process-timeline--compact .step-copy p {
     font-size: 0.975rem;
     line-height: 1.45;
+  }
+
+  /* ---------- Modo "stepper" (mobile ≤1024px, ver script): un paso visible
+     a la vez, superpuestos, con crossfade controlado por scroll. Se activa
+     agregando esta clase desde JS — nunca por CSS puro — y anula tanto el
+     layout en fila de --compact como el track/fill de progreso conjunto,
+     que no tienen sentido cuando los pasos se leen de a uno. ---------- */
+  .timeline-counter {
+    display: none;
+  }
+  .process-timeline--stepper .timeline-track {
+    display: none;
+  }
+  .process-timeline--stepper .timeline-counter {
+    display: block;
+    margin-top: var(--space-sm);
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+  }
+  .process-timeline--stepper .timeline-steps {
+    position: relative;
+  }
+  .process-timeline--stepper .timeline-step {
+    position: absolute;
+    inset: 0;
+    transition: none;
+    /* opacity inicial la fija GSAP (gsap.set) al armar el timeline */
+  }
+  /* Reset del layout en fila de --compact — en modo stepper cada paso ocupa
+     la tarjeta entera, así que vuelve al formato base (marcador a la
+     izquierda, texto al lado) sin importar si vino con `compact`. */
+  .process-timeline--stepper.process-timeline--compact .timeline-step {
+    flex-direction: row;
+    gap: var(--space-md);
+    padding-left: 2.75rem;
+    padding-top: 0;
+  }
+  .process-timeline--stepper.process-timeline--compact .step-marker {
+    left: 0;
+    top: 0;
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.7rem;
+  }
+  .process-timeline--stepper.process-timeline--compact .step-copy h3 {
+    font-size: var(--text-xl);
+    line-height: 1.3;
+  }
+  .process-timeline--stepper.process-timeline--compact .step-copy p {
+    font-size: var(--text-base);
+    line-height: 1.6;
   }
 </style>

@@ -354,11 +354,9 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
     line-height: 1.5 !important;
   }
 
-  /* ---------- Panel de proceso — timeline horizontal compacto. El
-     componente original apila los pasos en columna con gaps grandes
-     (pensado para scroll vertical normal) y no cabe en un panel de 100vh;
-     acá se reordena en fila (marcador arriba, texto abajo) para que se lea
-     de un vistazo y sume al lenguaje "horizontal" del resto de la página. ---------- */
+  /* ---------- Panel de proceso — título/subtítulo del panel (aplica en
+     todos los anchos; el reordenamiento en fila de los pasos vive movido
+     dentro del bloque "Desktop (1025px+)" más abajo, ver ese comentario). ---------- */
   .process-panel :global(.heading .title) {
     font-size: clamp(2.325rem, 4.06vw, 3.38rem) !important;
   }
@@ -368,54 +366,6 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
   }
   .sap-h-body.narrow {
     margin-top: 1.95rem !important;
-  }
-  .sap-h-body.narrow :global(.process-timeline) {
-    max-width: none !important;
-  }
-  .sap-h-body.narrow :global(.timeline-track) {
-    left: 0 !important;
-    right: 0 !important;
-    top: 1.235rem !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: 2.6px !important;
-  }
-  .sap-h-body.narrow :global(.timeline-fill) {
-    width: 0% !important;
-    height: 100% !important;
-    transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-  .sap-h-body.narrow :global(.process-timeline.is-visible .timeline-fill) {
-    width: 100% !important;
-    height: 100% !important;
-  }
-  .sap-h-body.narrow :global(.timeline-steps) {
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 1.3rem !important;
-  }
-  .sap-h-body.narrow :global(.timeline-step) {
-    flex: 1 !important;
-    min-width: 0 !important;
-    gap: 0.65rem !important;
-    padding-left: 0 !important;
-    padding-top: 3.25rem !important;
-    flex-direction: column !important;
-  }
-  .sap-h-body.narrow :global(.step-marker) {
-    left: 0 !important;
-    top: 0 !important;
-    width: 2.47rem !important;
-    height: 2.47rem !important;
-    font-size: 0.91rem !important;
-  }
-  .sap-h-body.narrow :global(.step-copy h3) {
-    font-size: 1.219rem !important;
-    line-height: 1.3 !important;
-  }
-  .sap-h-body.narrow :global(.step-copy p) {
-    font-size: 0.975rem !important;
-    line-height: 1.45 !important;
   }
 
   /* ---------- Barra de progreso — más presencia visual + marcas de los
@@ -548,6 +498,63 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
     .sap-h-panel--hero :global(.hero-bg),
     .sap-h-panel--hero :global(.hero-bg-overlay) {
       height: 100vh !important;
+    }
+
+    /* ---------- Panel de proceso — timeline horizontal compacto. El
+       componente original apila los pasos en columna con gaps grandes
+       (pensado para scroll vertical normal) y no cabe en un panel de 100vh;
+       acá se reordena en fila (marcador arriba, texto abajo) para que se lea
+       de un vistazo y sume al lenguaje "horizontal" del resto de la página.
+       Solo en desktop: en mobile ProcessTimelineAnimated ya resuelve su
+       propio layout "un paso a la vez" (.process-timeline--stepper) y estas
+       reglas en fila lo rompían al ganarle por !important. ---------- */
+    .sap-h-body.narrow :global(.process-timeline) {
+      max-width: none !important;
+    }
+    .sap-h-body.narrow :global(.timeline-track) {
+      left: 0 !important;
+      right: 0 !important;
+      top: 1.235rem !important;
+      bottom: auto !important;
+      width: 100% !important;
+      height: 2.6px !important;
+    }
+    .sap-h-body.narrow :global(.timeline-fill) {
+      width: 0% !important;
+      height: 100% !important;
+      transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .sap-h-body.narrow :global(.process-timeline.is-visible .timeline-fill) {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .sap-h-body.narrow :global(.timeline-steps) {
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 1.3rem !important;
+    }
+    .sap-h-body.narrow :global(.timeline-step) {
+      flex: 1 !important;
+      min-width: 0 !important;
+      gap: 0.65rem !important;
+      padding-left: 0 !important;
+      padding-top: 3.25rem !important;
+      flex-direction: column !important;
+    }
+    .sap-h-body.narrow :global(.step-marker) {
+      left: 0 !important;
+      top: 0 !important;
+      width: 2.47rem !important;
+      height: 2.47rem !important;
+      font-size: 0.91rem !important;
+    }
+    .sap-h-body.narrow :global(.step-copy h3) {
+      font-size: 1.219rem !important;
+      line-height: 1.3 !important;
+    }
+    .sap-h-body.narrow :global(.step-copy p) {
+      font-size: 0.975rem !important;
+      line-height: 1.45 !important;
     }
   }
 
