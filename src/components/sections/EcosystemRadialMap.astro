@@ -80,6 +80,13 @@ const hoverRules = nodes
   )}
 
   <div class="container radial-map" data-radial-map data-radius-min={radiusMin} data-radius-max={radiusMax}>
+    <!-- Mobile: sin el diagrama radial (que necesita espacio real), la
+         "raíz de micelio" que conecta el núcleo con cada pieza se resuelve
+         acá como una línea vertical simple detrás de la lista, que crece
+         a medida que se scrollea (ver initEcoMobileLine). En desktop no se
+         ve — ahí ya cumplen ese rol los .eco-path del SVG radial. -->
+    <div class="eco-mobile-line" data-eco-mobile-line aria-hidden="true"></div>
+
     <svg class="radial-svg" data-radial-svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       {nodes.map((n) => (
         <path id={`eco-path-${n.index}`} class="eco-path" data-index={n.index} d="M 0 0" fill="none" />
@@ -123,6 +130,11 @@ const hoverRules = nodes
 </div>
 
 <script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
   // Posiciona el núcleo y las cards en un círculo cuyo radio es siempre
   // proporcional al tamaño REAL medido del contenedor (nunca un % fijo del
   // viewBox, que se aplasta y superpone las cards en contenedores bajos).
@@ -132,7 +144,23 @@ const hoverRules = nodes
     const paths = Array.from(map.querySelectorAll<SVGPathElement>('.eco-path'));
     if (!svg || nodeEls.length === 0) return;
 
+    // El layout radial (left/top en px calculados con seno/coseno) sólo
+    // tiene sentido con .eco-node en position:absolute (desktop, ≥900px).
+    // En mobile .eco-node es position:relative para la lista vertical del
+    // CSS — sin este guard, el mismo cálculo le seguía aplicando offsets
+    // ahí también, arrastrando las cards a posiciones sueltas en vez de
+    // dejar la lista simple tal cual la arma el CSS.
+    const desktopMq = window.matchMedia('(min-width: 900px)');
+
     function layout() {
+      if (!desktopMq.matches) {
+        nodeEls.forEach((el) => {
+          el.style.removeProperty('left');
+          el.style.removeProperty('top');
+        });
+        return;
+      }
+
       const rect = map.getBoundingClientRect();
       const w = rect.width;
       const h = rect.height;
@@ -190,8 +218,47 @@ const hoverRules = nodes
     );
   }
 
+  // Línea "raíz de micelio" del layout mobile (lista vertical) — crece 1:1
+  // con el scroll de arriba a abajo de la propia lista, mismo lenguaje
+  // visual que las raíces del SVG radial en desktop.
+  function initEcoMobileLine(map: HTMLElement) {
+    const line = map.querySelector<HTMLElement>('[data-eco-mobile-line]');
+    if (!line) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add('(max-width: 899px)', () => {
+      const tween = gsap.fromTo(
+        line,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: map,
+            start: 'top 75%',
+            end: 'bottom 65%',
+            scrub: true,
+          },
+        }
+      );
+
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
+    });
+
+    mm.add('(min-width: 900px)', () => () => {});
+
+    document.addEventListener('astro:before-swap', () => mm.revert(), { once: true });
+  }
+
   function initRadialMaps() {
-    document.querySelectorAll<HTMLElement>('[data-radial-map]').forEach(layoutRadialMap);
+    document.querySelectorAll<HTMLElement>('[data-radial-map]').forEach((map) => {
+      layoutRadialMap(map);
+      initEcoMobileLine(map);
+    });
   }
 
   document.addEventListener('astro:page-load', initRadialMaps);
@@ -262,6 +329,31 @@ const hoverRules = nodes
   }
   .radial-svg {
     display: none;
+  }
+
+  /* Línea vertical detrás de la lista — el equivalente mobile de las raíces
+     del SVG radial. Nace escondida (scaleY:0, transform-origin:top) y
+     initEcoMobileLine la hace crecer 1:1 con el scroll. Las cards (con
+     fondo propio y sin z-index explícito, o sea por encima en el orden de
+     pintado ya que van después en el DOM) la tapan en su tramo y sólo
+     queda visible en los gaps entre una y otra — efecto de "hilo" que las
+     va uniendo. */
+  .eco-mobile-line {
+    position: absolute;
+    left: 50%;
+    top: 1.75rem;
+    bottom: 1.75rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--dot-micelio),
+      color-mix(in srgb, var(--dot-micelio) 35%, transparent)
+    );
+    box-shadow: 0 0 6px color-mix(in srgb, var(--dot-micelio) 60%, transparent);
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top;
+    pointer-events: none;
+    z-index: 0;
   }
   .eco-core {
     position: relative;
@@ -360,6 +452,9 @@ const hoverRules = nodes
 
   /* ---------- Desktop (900px+): layout radial real. ---------- */
   @media (min-width: 900px) {
+    .eco-mobile-line {
+      display: none;
+    }
     .ecosystem-radial {
       padding-block: var(--space-md);
     }

@@ -261,7 +261,10 @@ const ICONS = [
     position: relative;
     max-width: 42rem;
     margin-inline: auto;
-    padding-inline: var(--space-xl);
+    /* var(--space-xl) fijo (128px) no se achicaba en mobile — en una
+       pantalla de 375px dejaba casi todo el ancho como margen vacío. Usa
+       el mismo margen lateral responsive que el resto del sitio. */
+    padding-inline: var(--container-pad);
   }
 
   .pc-stage {

@@ -212,6 +212,7 @@ const industriesItems = t.home.industries.items.map((item) => ({
       ))}
     </ul>
 
+    <p class="mobile-solutions-title">{t.nav.solutionsMenu.productsLabel}</p>
     <ul class="mobile-solutions">
       {t.nav.solutionsMenu.items.map((item) => (
         <li>
@@ -1038,9 +1039,6 @@ const industriesItems = t.home.industries.items.map((item) => ({
     width: 2.25rem;
     height: 1.5rem;
     object-fit: contain;
-    background: var(--dot-light);
-    border-radius: var(--radius-sm);
-    padding: 0.2rem;
   }
 
   .mobile-solutions-title {
@@ -1115,6 +1113,19 @@ const industriesItems = t.home.industries.items.map((item) => ({
     }
     .lang-pill {
       display: none;
+    }
+    /* El mega-panel de "Servicios" es un dropdown de escritorio (nada lo
+       abre en mobile, acá se usa el drawer .nav-mobile en su lugar) — pero
+       al vivir fuera de .nav-left (ver comentario más arriba, "no vive
+       dentro de .mega") su propio display no dependía de que el nav
+       quedara oculto. Su grilla de 5 columnas seguía calculando su ancho
+       real de contenido aunque estuviera invisible (opacity:0), y eso
+       inflaba el scroll horizontal de toda la página. display:none lo saca
+       del cálculo de layout por completo.
+       (edges: al ser hijos de una regla que anula display, no hace falta
+        ocultarlos aparte — dejan de existir en el layout con el padre.) */
+    .mega-panel {
+      display: none !important;
     }
   }
 </style>

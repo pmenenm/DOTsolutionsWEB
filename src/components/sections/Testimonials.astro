@@ -177,11 +177,18 @@ const PHOTOS: Record<string, string> = {
     position: relative;
     max-width: 48rem;
     margin-inline: auto;
-    padding-inline: var(--space-xl);
+    /* var(--space-xl) fijo (128px) no se achicaba en mobile — en una
+       pantalla de 375px dejaba casi todo el ancho como margen vacío. Usa
+       el mismo margen lateral responsive que el resto del sitio. */
+    padding-inline: var(--container-pad);
   }
 
   .cf-stage {
     position: relative;
+    /* Las cards prev/next viven corridas fuera de vista (translateX), pero
+       sin overflow:hidden acá ese contenido "invisible" seguía contando
+       para el ancho scrolleable de toda la página. */
+    overflow: hidden;
     transition: height var(--transition-smooth);
   }
 
@@ -189,7 +196,13 @@ const PHOTOS: Record<string, string> = {
     position: absolute;
     top: 0;
     left: 50%;
-    width: min(90vw, 34rem);
+    /* Antes: min(90vw, 34rem) — 90vw es relativo al viewport COMPLETO, no
+       al ancho real disponible dentro de .cf (que ya resta su propio
+       padding-inline). Por debajo de ~480px de ancho (la mayoría de los
+       celulares) esa cuenta daba una card más ancha que el propio
+       contenedor, empujando el layout más allá del borde derecho de la
+       página. 100% acá SÍ está acotado al ancho real de .cf. */
+    width: min(100%, 34rem);
     box-sizing: border-box;
     background: var(--dot-gray);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -206,9 +219,18 @@ const PHOTOS: Record<string, string> = {
   .cf-quote {
     font-family: var(--font-body);
     font-weight: 300;
-    font-size: var(--text-lg);
+    /* Más chico en mobile — a text-lg (20px) con el ancho real de la card
+       (ya corregido, ver .cf-card) envolvía en más líneas de lo que el
+       padding de la card daba espacio cómodo para leer, sensación de todo
+       apretado. */
+    font-size: var(--text-base);
     line-height: 1.5;
     color: var(--dot-light);
+  }
+  @media (min-width: 768px) {
+    .cf-quote {
+      font-size: var(--text-lg);
+    }
   }
 
   .cf-author {
