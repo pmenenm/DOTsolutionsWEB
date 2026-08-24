@@ -62,20 +62,12 @@ const { items, compact = false } = Astro.props;
     max-width: var(--content-max);
   }
 
-  .benefit-card:nth-child(4n + 1) {
-    --card-accent: var(--dot-micelio);
-  }
-  .benefit-card:nth-child(4n + 2) {
-    --card-accent: var(--dot-moss);
-  }
-  .benefit-card:nth-child(4n + 3) {
-    --card-accent: var(--dot-sage);
-  }
-  .benefit-card:nth-child(4n + 4) {
-    --card-accent: var(--dot-forest);
-  }
-
   .benefit-card {
+    /* Antes rotaba 4 colores distintos por posición (nth-child) — se veía
+       inconsistente entre cards y entre páginas. Un solo acento (Micelio,
+       el color de interacción/hover del resto del sitio) para que todos
+       los benefit-check se vean y se comporten igual siempre. */
+    --card-accent: var(--dot-micelio);
     position: relative;
     overflow: hidden;
     display: flex;
