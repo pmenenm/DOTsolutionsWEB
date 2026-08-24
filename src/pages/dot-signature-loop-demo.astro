@@ -1,0 +1,21 @@
+---
+// src/pages/dot-signature-loop-demo.astro
+// Página de preview aislada para DotSignatureLoop — sin el Layout del sitio,
+// mismo criterio que las demos anteriores (Tailwind no debe filtrarse al
+// resto del sitio).
+import DotSignatureLoop from '../components/DotSignatureLoop.jsx';
+import '../styles/tailwind.css';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>DotSignatureLoop — preview</title>
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-[#1b1b1b] p-8">
+    <DotSignatureLoop client:load />
+  </body>
+</html>

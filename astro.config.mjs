@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 
 import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 
 // BUILD_TARGET=gh-pages activa un build estático para el preview en GitHub
 // Pages (sin adapter de Cloudflare, con el base path del repo). El build de
@@ -28,6 +29,10 @@ export default defineConfig({
   compressHTML: true,
 
   vite: {
+    // Tailwind sólo se usa en DotBrandMotion.jsx y su página de preview — el
+    // plugin sólo genera CSS para los archivos que efectivamente importan
+    // "tailwindcss", así que no toca el CSS vanilla del resto del sitio.
+    plugins: [tailwindcss()],
     build: {
       cssCodeSplit: true,
       rollupOptions: {

@@ -1,0 +1,24 @@
+---
+// src/pages/epic-brand-reveal-demo.astro
+// Página de preview aislada para EpicBrandReveal — sin el Layout del sitio,
+// mismo criterio que dot-brand-motion-demo.astro (el reset de Tailwind no
+// debe filtrarse al resto del sitio).
+import EpicBrandReveal from '../components/EpicBrandReveal.jsx';
+import '../styles/tailwind.css';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>EpicBrandReveal — preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-[#1b1b1b] p-8">
+    <EpicBrandReveal client:load />
+  </body>
+</html>
