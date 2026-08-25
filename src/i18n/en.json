@@ -863,10 +863,8 @@
     "metaTitle": "SAP Business One",
     "metaDescription": "Strategic SAP Business One implementation for small and medium businesses. Finance, sales and inventory unified in a single intelligent platform.",
     "hero": {
-      "line1": "Take full control",
-      "line2": "of your company with a",
-      "line3": "Strategic Implementation of",
-      "line4": "SAP Business One",
+      "line1": "Strategic Implementation of",
+      "line2": "SAP Business One",
       "subtitle": "Accessible, easy-to-use business management software, built specifically for small and medium enterprises.",
       "paragraph": "Stop operating blind. We unify finance, sales and inventory in a single intelligent platform. Built for growing companies that demand real data, not estimates.",
       "cta": "Talk to an expert"
@@ -1788,7 +1786,7 @@
     "metaDescription": "Software ecosystem for restaurants and F&B chains across LATAM: ERP, point of sale, purchasing, Business Intelligence, loyalty, delivery and electronic invoicing, natively integrated with SAP Business One.",
     "hero": {
       "eyebrow": "Ecosystem · Food & Beverage",
-      "title": "Everything your restaurant needs. In one place.",
+      "title": "Everything your restaurant needs.\nIn one place.",
       "subtitle": "The software ecosystem for restaurants that centralizes ERP, point of sale, purchasing, BI, loyalty, delivery and invoicing on a single platform.",
       "desc": "With native integration to SAP Business One, DOT connects every process in your restaurant or F&B chain —from purchasing to electronic invoicing— eliminating double data entry and giving you real-time visibility end to end.",
       "bullets": [
@@ -1958,7 +1956,7 @@
     "metaDescription": "Unified commerce: physical store, e-commerce, mobile sales and loyalty on one single SAP Business One core.",
     "hero": {
       "eyebrow": "Ecosystem · Retail",
-      "title": "Unified commerce, from the store to e-commerce.",
+      "title": "Unified commerce, from the store to e‑commerce.",
       "subtitle": "One core, six pieces, every channel.",
       "desc": "Physical store, mobile sales, e-commerce, marketplaces and delivery all running against the same SAP Business One core, with stock, customers and finances always in sync.",
       "bullets": [

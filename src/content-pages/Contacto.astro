@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import ContactHero from '../components/sections/ContactHero.astro';
 import ContactForm from '../components/sections/ContactForm.astro';
 import { useTranslations, type Lang } from '../i18n/utils';
-import { withBase } from '../utils/paths';
 
 interface Props {
   lang: Lang;
@@ -30,77 +29,9 @@ const c = t.contacto;
       </div>
     </div>
   </ContactHero>
-
-  <section class="section direct-section">
-    <aside class="direct-card" data-reveal>
-      <div class="direct-photo-wrap">
-        <img src={withBase('/office/office-santiago.jpg')} alt="" class="direct-photo" loading="lazy" />
-        <div class="direct-photo-fade" aria-hidden="true"></div>
-      </div>
-      <div class="direct-body">
-        <div class="direct-body-inner">
-          <h2>
-            <svg class="direct-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H8l-4.5 3.5V6a1 1 0 0 1 1-1Z"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linejoin="round"
-              />
-            </svg>
-            {c.direct.title}
-          </h2>
-
-          <div class="direct-info">
-            <div class="direct-info-row">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-                <path d="M3.5 6.5 12 13l8.5-6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <div class="direct-info-copy">
-                <p class="direct-label">Email</p>
-                <a href={`mailto:${c.direct.email}`} class="direct-value">{c.direct.email}</a>
-              </div>
-            </div>
-
-            <div class="direct-info-row">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-                <circle cx="12" cy="9.5" r="2.25" fill="none" stroke="currentColor" stroke-width="1.5" />
-              </svg>
-              <div class="direct-info-copy">
-                <p class="direct-label">{c.direct.addressLabel}</p>
-                <p class="direct-value">{c.direct.address}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </section>
 </Layout>
 
 <style>
-  .section {
-    padding-block: var(--space-lg);
-  }
-  .section-body {
-    margin-top: var(--space-lg);
-  }
-
   /* Card del formulario — vive dentro del slot de ContactHero, junto al
      copy, no como sección propia: así ambos se ven de entrada. */
   .form-card {
@@ -127,132 +58,5 @@ const c = t.contacto;
   }
   .form-card-inner {
     position: relative;
-  }
-
-  /* Full-bleed a propósito — a diferencia de las demás cards de la página,
-     esta ocupa todo el ancho de la pantalla (sin .container ni max-width).
-     El contenido de texto se centra y limita adentro vía .direct-body-inner. */
-  /* Sin card a propósito — foto e info conviven en el layout abierto de la
-     sección, sin fondo/borde/radio que las encierre. */
-  .direct-card {
-    display: block;
-  }
-
-  .direct-photo-wrap {
-    position: relative;
-    overflow: hidden;
-  }
-  .direct-photo {
-    display: block;
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    transition: transform 0.6s var(--ease-out);
-  }
-  .direct-card:hover .direct-photo {
-    transform: scale(1.05);
-  }
-  .direct-photo-fade {
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 45%;
-    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--dot-dark) 70%, transparent) 100%);
-    pointer-events: none;
-  }
-
-  .direct-body {
-    padding: clamp(1.5rem, 3vw, 2rem);
-  }
-  .direct-body-inner {
-    max-width: 32rem;
-    margin-inline: auto;
-  }
-  .direct-body h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-heading);
-    font-weight: 500;
-    font-size: var(--text-xl);
-    color: var(--text-primary);
-    margin-bottom: var(--space-md);
-  }
-  .direct-icon {
-    flex-shrink: 0;
-    width: 1.35rem;
-    height: 1.35rem;
-    color: var(--accent-secondary);
-  }
-
-  .direct-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .direct-info-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    padding-block: var(--space-sm);
-    border-top: 1px solid color-mix(in srgb, var(--dot-light) 10%, transparent);
-  }
-  .direct-info-row:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
-  .direct-info-row:last-child {
-    padding-bottom: 0;
-  }
-  .direct-info-row svg {
-    flex-shrink: 0;
-    width: 1.15rem;
-    height: 1.15rem;
-    margin-top: 0.15rem;
-    color: var(--accent-secondary);
-  }
-  .direct-info-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-  .direct-label {
-    font-size: var(--text-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-  }
-  .direct-value {
-    display: block;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: var(--text-base);
-    line-height: 1.5;
-  }
-  a.direct-value:hover {
-    color: var(--dot-micelio);
-  }
-
-  /* En pantallas grandes la card de contacto directo se acuesta: foto a un
-     costado, info al otro — ahora que tiene su propio ancho completo de
-     sección, en vez de competir por espacio junto al formulario. Un
-     min-height fijo evita que la foto se estire a una altura arbitraria
-     (dependiente del contenido de .direct-body) y quede desproporcionada. */
-  @media (min-width: 800px) {
-    .direct-card {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      align-items: stretch;
-      min-height: 24rem;
-    }
-    .direct-photo {
-      height: 100%;
-      aspect-ratio: auto;
-    }
-    .direct-body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: clamp(1.75rem, 4vw, 2.75rem);
-    }
   }
 </style>

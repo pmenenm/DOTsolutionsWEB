@@ -151,7 +151,7 @@ const colorOnDark = categoryAccentOnDark(post.category);
   }
   .blog-card-body p {
     margin-top: 0.6rem;
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     line-height: 1.55;
     color: color-mix(in srgb, var(--dot-light) 82%, var(--dot-dark) 18%);
     display: -webkit-box;
@@ -193,12 +193,8 @@ const colorOnDark = categoryAccentOnDark(post.category);
       justify-content: center;
       padding: clamp(1.5rem, 3vw, 3rem);
     }
-    .blog-card.featured .blog-card-body h3 {
-      font-size: clamp(1.5rem, 2.6vw, 2.25rem);
-    }
     .blog-card.featured .blog-card-body p {
       -webkit-line-clamp: 4;
-      font-size: var(--text-base);
     }
   }
 </style>

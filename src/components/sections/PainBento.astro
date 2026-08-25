@@ -76,18 +76,10 @@ const DEFAULT_ICONS = [
     gap: 1rem;
   }
 
-  /* Cada card lleva un color de la paleta distinto como acento de fondo —
-     4 identidades visuales en vez de un gris plano repetido 4 veces. */
-  .bento-card:nth-child(1) {
-    --card-accent: var(--dot-forest);
-  }
-  .bento-card:nth-child(2) {
-    --card-accent: var(--dot-moss);
-  }
-  .bento-card:nth-child(3) {
-    --card-accent: var(--dot-sage);
-  }
-  .bento-card:nth-child(4) {
+  /* Un solo acento (Micelio) para las 4 cards — mismo criterio que
+     BenefitsList: antes cada card llevaba un color de la paleta distinto
+     y se veía inconsistente entre cards y entre páginas. */
+  .bento-card {
     --card-accent: var(--dot-micelio);
   }
 
@@ -169,11 +161,14 @@ const DEFAULT_ICONS = [
     color: color-mix(in srgb, var(--card-accent) 80%, var(--dot-light) 20%);
   }
 
+  /* h3/p en var(--text-lg)/var(--text-base) fijo, sin clamp() por posición
+     — antes cada card (y cada breakpoint) tenía su propio tamaño y se veía
+     inconsistente entre cards y entre páginas del sitio. */
   .bento-card h3 {
     position: relative;
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-size: var(--text-lg);
     line-height: 1.3;
     letter-spacing: -0.01em;
     color: var(--dot-micelio);
@@ -188,15 +183,6 @@ const DEFAULT_ICONS = [
     line-height: 1.65;
     color: var(--text-secondary);
     max-width: 42ch;
-  }
-
-  .bento-card:nth-child(2) h3,
-  .bento-card:nth-child(3) h3 {
-    font-size: clamp(1.375rem, 2.3vw, 1.75rem);
-  }
-  .bento-card:nth-child(2) p,
-  .bento-card:nth-child(3) p {
-    font-size: clamp(1.0625rem, 1.4vw, 1.125rem);
   }
 
   @media (min-width: 900px) {
@@ -224,13 +210,11 @@ const DEFAULT_ICONS = [
     }
     .bento-card:nth-child(1) h3,
     .bento-card:nth-child(4) h3 {
-      font-size: clamp(2.25rem, 4.2vw, 3.25rem);
       max-width: none;
       margin-bottom: 1.25rem;
     }
     .bento-card:nth-child(1) p,
     .bento-card:nth-child(4) p {
-      font-size: clamp(1rem, 1.5vw, 1.25rem);
       line-height: 1.6;
       max-width: none;
     }
@@ -261,7 +245,6 @@ const DEFAULT_ICONS = [
     .bento--compact .bento-card:nth-child(2) h3,
     .bento--compact .bento-card:nth-child(3) h3,
     .bento--compact .bento-card:nth-child(4) h3 {
-      font-size: 1.05rem;
       line-height: 1.3;
       margin-bottom: 0.4rem;
       padding-right: 2rem;
@@ -271,7 +254,6 @@ const DEFAULT_ICONS = [
     .bento--compact .bento-card:nth-child(2) p,
     .bento--compact .bento-card:nth-child(3) p,
     .bento--compact .bento-card:nth-child(4) p {
-      font-size: 0.825rem;
       line-height: 1.5;
       max-width: none;
     }

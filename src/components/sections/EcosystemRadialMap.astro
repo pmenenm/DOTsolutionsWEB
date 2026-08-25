@@ -358,11 +358,25 @@ const hoverRules = nodes
   .eco-core {
     position: relative;
     order: -1;
+    /* .radial-map es flex en mobile — con `order` en juego, un z-index:auto
+       no alcanza: los elementos flex se pintan en orden "order-modified",
+       no en orden real del DOM, así que esta card (la única con order:-1)
+       terminaba pintándose ANTES que .eco-mobile-line (order:0 default,
+       aunque venga después en el DOM) y la línea le quedaba por encima.
+       Un z-index explícito, mayor al de la línea, fuerza que gane siempre
+       sin importar el order. */
+    z-index: 1;
     width: 100%;
     padding: var(--space-lg);
     text-align: center;
-    background: color-mix(in srgb, #6fa8f0 25%, transparent);
-    backdrop-filter: blur(20px);
+    /* Antes 25% sobre transparent, después un dark-mix — en ambos casos
+       seguía viéndose (aunque fuera sutil) la línea Micelio naciendo por
+       detrás de la card en mobile. Blanco sólido de la paleta (--dot-light)
+       es 100% opaco de verdad, sin ninguna duda posible. El logo SAP ya
+       trae su propio fondo azul, así que se ve igual sobre blanco; el
+       label/sublabel de texto pasan a oscuros (ver más abajo) para
+       mantener contraste sobre el fondo claro. */
+    background: var(--dot-light);
     border: 2px solid #6fa8f0;
     border-radius: var(--radius-lg);
     box-shadow: 0 0 40px color-mix(in srgb, #6fa8f0 30%, transparent);
@@ -377,7 +391,9 @@ const hoverRules = nodes
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: var(--text-lg);
-    color: var(--text-primary);
+    /* Antes var(--text-primary) (claro) — sobre el fondo blanco quedaba
+       ilegible. */
+    color: var(--dot-dark);
   }
   .eco-core-sublabel {
     margin-top: 0.25rem;
@@ -385,7 +401,10 @@ const hoverRules = nodes
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #6fa8f0;
+    /* Antes #6fa8f0 (el mismo azul del logo) — muy poco contraste sobre
+       blanco. Un azul bastante más oscuro mantiene el guiño a SAP sin
+       perder legibilidad. */
+    color: #1a4c7a;
   }
 
   .eco-node {

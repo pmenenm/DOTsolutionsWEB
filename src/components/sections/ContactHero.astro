@@ -90,6 +90,19 @@ const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/ima
     align-items: center;
   }
 
+  /* Grid item — su min-width automático por defecto ('auto') se resuelve al
+     contenido más ancho de sus descendientes, y ese "más ancho" acá es el
+     riel del marquee de ClientLogos (width: max-content, pensado para su
+     loop infinito) dentro de .hero-trust: aunque el marquee se recorta con
+     overflow:hidden, ese ancho intrínseco igual empujaba a esta columna
+     (y por lo tanto al .subtitle de abajo, capado a 42ch) más ancha que la
+     pantalla en mobile — el .contact-hero exterior tiene overflow:hidden,
+     así que ese excedente no se veía como scroll sino como texto cortado a
+     la derecha. min-width:0 deja que la columna encoja a su espacio real. */
+  .contact-hero-copy {
+    min-width: 0;
+  }
+
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -114,12 +127,14 @@ const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/ima
     overflow: hidden;
     margin-bottom: -0.1em;
   }
+  /* font-size unificado con el resto de los h1 del sitio (Hero, ProductHero,
+     IndustryHero, PageHero, BlogPost) — mismo clamp en los 7. */
   .mask-inner {
     display: block;
     padding-bottom: 0.1em;
     font-family: var(--font-heading);
     font-weight: 500;
-    font-size: clamp(1.625rem, 3vw, 2.5rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: var(--text-primary);
@@ -139,7 +154,12 @@ const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/ima
     font-weight: 300;
     line-height: 1.6;
     color: var(--text-primary);
-    max-width: 42ch;
+    /* min(42ch, 100%), no 42ch a secas — 42ch es un ancho fijo (~414px) que
+       no cede en pantallas angostas; como .contact-hero tiene overflow:
+       hidden, ese excedente no se veía como scroll, se veía como texto
+       cortado a la derecha. 100% lo deja encoger a la columna real
+       disponible sin perder el límite de lectura en pantallas anchas. */
+    max-width: min(42ch, 100%);
   }
 
   /* Prueba social compacta — logos y resultados conviven bajo el copy,
@@ -165,7 +185,28 @@ const { eyebrow, title, subtitle, clientsTitle, statsTitle, stats, image = '/ima
 
   @media (min-width: 900px) {
     .contact-hero-grid {
-      grid-template-columns: 1.1fr 1fr;
+      /* minmax(0, Xfr), no Xfr a secas — un track `fr` sin ese piso no
+         encoge más allá del min-content de su contenido (los inputs en fila
+         de .row dentro del form), así que a este ancho el grid se estiraba
+         más que el viewport y el form-card quedaba cortado, "empujado" fuera
+         de pantalla por la derecha en vez de comprimirse. */
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+
+    /* Solo en desktop: con "resultados que nos respaldan" al fondo del
+       copy, en una ventana de alto normal (~760-800px, laptop con barra del
+       navegador) el +75 quedaba cortado bajo el pliegue. Menos aire arriba
+       del hero y del bloque de prueba social para que todo el copy entre
+       sin scroll — en mobile no hacía falta, ahí ya entraba completo. */
+    .contact-hero {
+      padding-block: calc(var(--space-hero) * 0.35) var(--space-lg);
+    }
+    .hero-trust {
+      margin-top: var(--space-md);
+      padding-top: var(--space-sm);
+    }
+    .hero-trust-label--stats {
+      margin-top: var(--space-sm);
     }
   }
 </style>

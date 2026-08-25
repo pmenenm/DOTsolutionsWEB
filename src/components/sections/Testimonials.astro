@@ -187,9 +187,21 @@ const PHOTOS: Record<string, string> = {
     position: relative;
     /* Las cards prev/next viven corridas fuera de vista (translateX), pero
        sin overflow:hidden acá ese contenido "invisible" seguía contando
-       para el ancho scrolleable de toda la página. */
+       para el ancho scrolleable de toda la página — un problema real en
+       mobile/tablet, donde el padding lateral (--container-pad) es chico y
+       las cards vecinas se salen del viewport. En desktop (160px de padding
+       lateral, breakpoint ≥1280px del sistema) sobra espacio de sobra para
+       que esas cards "peek" se vean completas sin arriesgar overflow de
+       página — y son justamente esas cards de segundo plano, borrosas y
+       semitransparentes, las que dan el efecto coverflow; con overflow:
+       hidden quedaban recortadas a una tira casi invisible. */
     overflow: hidden;
     transition: height var(--transition-smooth);
+  }
+  @media (min-width: 1280px) {
+    .cf-stage {
+      overflow: visible;
+    }
   }
 
   .cf-card {

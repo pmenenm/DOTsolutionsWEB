@@ -346,11 +346,9 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
     height: 1.4rem !important;
   }
   .sap-h-panel--modules :global(.module-card h3) {
-    font-size: 0.9375rem !important;
     margin-bottom: 0.3rem !important;
   }
   .sap-h-panel--modules :global(.module-card p) {
-    font-size: 0.75rem !important;
     line-height: 1.5 !important;
   }
 
@@ -452,21 +450,24 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
       opacity: 0;
     }
 
-    /* El hero (ProductHero con foto de fondo) usa la tipografía pensada
-       para una página normal de ancho completo — acá, comprimido en un
-       panel de 100vh dentro del riel horizontal, se reduce todo un escalón
-       para que se lea cómodo junto al resto de los paneles. */
-    .sap-h-panel--hero :global(.product-hero-copy h1) {
-      font-size: clamp(1.5rem, 2.6vw, 2.15rem) !important;
-    }
+    /* El h1 achicado que vivía acá se sacó: todos los h1 del sitio ahora
+       comparten el mismo font-size (ver ProductHero.astro) por consistencia
+       — este panel ya tiene suficiente aire vertical (ver centrado más
+       abajo) para bancarse el tamaño completo sin desbordar. */
+    /* Antes: subtitle y paragraph a --space-xs (8px) y actions a --space-sm
+       (16px) — títulos→subtítulo quedaba en 16px (heredado, sin
+       override) pero subtítulo→párrafo en solo 8px, la mitad, así que el
+       ritmo vertical era irregular y el bloque se sentía apretado en el
+       medio. Los 3 saltos ahora usan el mismo valor (--space-md) para que
+       el texto respire de forma pareja de arriba a abajo. */
     .sap-h-panel--hero :global(.subtitle) {
-      margin-top: var(--space-xs) !important;
+      margin-top: var(--space-md) !important;
     }
     .sap-h-panel--hero :global(.paragraph) {
-      margin-top: var(--space-xs) !important;
+      margin-top: var(--space-md) !important;
     }
     .sap-h-panel--hero :global(.product-hero-actions) {
-      margin-top: var(--space-sm) !important;
+      margin-top: var(--space-md) !important;
     }
     .sap-h-panel--hero :global(.product-hero-actions .cta),
     .sap-h-panel--hero :global(.product-hero-actions .cta-secondary) {
@@ -493,7 +494,11 @@ import ProcessTimelineAnimated from './ProcessTimelineAnimated.astro';
        importar cuánto crezca el contenido de arriba. */
     .sap-h-panel--hero :global(.product-hero.has-background) {
       height: 100vh !important;
-      padding-bottom: var(--space-md) !important;
+      /* padding-block simétrico (no solo padding-bottom): con
+         align-items:center en .product-hero, un padding asimétrico corre
+         el contenido centrado hacia el lado con menos padding — antes
+         quedaba sesgado hacia arriba. */
+      padding-block: var(--space-md) !important;
     }
     .sap-h-panel--hero :global(.hero-bg),
     .sap-h-panel--hero :global(.hero-bg-overlay) {

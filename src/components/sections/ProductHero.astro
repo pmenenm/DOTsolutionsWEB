@@ -145,15 +145,15 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     padding-block: calc(var(--space-lg) + var(--space-sm)) var(--space-lg);
     overflow: hidden;
   }
-  /* Con foto de fondo, el texto se ancla abajo en vez de arriba — deja
-     que la imagen respire arriba y el copy se lee sobre la zona ya
-     oscurecida del overlay (ver .hero-bg-overlay). */
+  /* Con foto de fondo: todo el copy centrado verticalmente en la pantalla
+     (antes anclado abajo con align-items:flex-end — quedaba muy pegado al
+     borde inferior). */
   .product-hero.has-background {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     min-height: 100vh;
     min-height: 100svh;
-    padding-bottom: var(--space-xl);
+    padding-block: var(--space-lg);
   }
 
   .grid-texture {
@@ -235,10 +235,12 @@ const isExternalSecondary = ctaSecondaryHref?.startsWith('http');
     vertical-align: middle;
   }
 
+  /* font-size unificado con el resto de los h1 del sitio (Hero, IndustryHero,
+     PageHero, ContactHero, BlogPost) — mismo clamp en los 7. */
   .product-hero-copy h1 {
     font-family: var(--font-heading);
     font-weight: 500;
-    font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.15;
     letter-spacing: -0.03em;
     color: var(--text-primary);

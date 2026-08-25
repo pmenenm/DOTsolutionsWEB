@@ -183,16 +183,23 @@ const { form, lang } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    /* Un grid item mide como mínimo el min-content de su contenido salvo
+       que se lo pise: el <select> con las opciones más largas (industria/
+       solución) fijaba un piso ancho que el grid de .row no podía encoger,
+       y el form-card terminaba desbordado fuera de la pantalla en vez de
+       comprimirse en anchos intermedios (tablet). */
+    min-width: 0;
     font-size: var(--text-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--accent-secondary);
+    color: var(--dot-micelio);
   }
 
   input,
   select,
   textarea {
+    min-width: 0;
     background: color-mix(in srgb, var(--dot-dark) 35%, transparent);
     border: 1px solid color-mix(in srgb, var(--dot-light) 14%, transparent);
     border-radius: var(--radius-sm);
@@ -272,7 +279,7 @@ const { form, lang } = Astro.props;
 
   @media (min-width: 640px) {
     .row {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 </style>

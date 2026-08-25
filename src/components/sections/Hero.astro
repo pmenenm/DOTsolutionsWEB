@@ -134,19 +134,17 @@ const {
     background: var(--dot-micelio);
   }
 
+  /* font-size unificado con el resto de los h1 del sitio (IndustryHero,
+     PageHero, ContactHero, ProductHero, BlogPost) — mismo clamp en los 7,
+     ver notas en cada archivo. */
   h1 {
     font-family: var(--font-heading);
     font-weight: 500;
-    font-size: 2rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.15;
     letter-spacing: -0.025em;
     color: var(--text-primary);
     max-width: 32ch;
-  }
-  @media (min-width: 768px) {
-    h1 {
-      font-size: 3.25rem;
-    }
   }
 
   /* Hard-Edge Mask Reveal — mismo mecanismo que el resto del sitio, sin JS. */
@@ -279,16 +277,23 @@ const {
       margin-top: 2.25rem;
     }
   }
-  /* En desktop la franja de logos ya vive dentro del hero, sobre el pliegue
-     — no tiene sentido esperar el fade-in por scroll de [data-reveal]
-     (Layout.astro) para algo que ya está a la vista al entrar a la
-     página. !important porque ese fade-in fija opacity/transform inline
-     vía GSAP. */
-  @media (min-width: 1024px) {
-    .hero-logos {
-      opacity: 1 !important;
-      transform: none !important;
-    }
+  /* La franja de logos ya vive dentro del hero, sobre el pliegue en
+     cualquier tamaño de pantalla — no tiene sentido esperar el fade-in por
+     scroll de [data-reveal] (Layout.astro) para algo que ya está a la
+     vista al entrar a la página. !important porque ese fade-in fija
+     opacity/transform inline vía GSAP. ClientLogos.astro trae SU PROPIO
+     [data-reveal] en la <section> raíz que renderiza (independiente de
+     este .hero-logos que lo envuelve) — sin neutralizar ESE también, el
+     marquee seguía esperando el scroll aunque el wrapper ya estuviera
+     visible; :global() porque .client-logos vive en el componente hijo,
+     fuera del scope de este <style>. */
+  .hero-logos {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-logos :global(.client-logos) {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .hero-logos-label {

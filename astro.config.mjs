@@ -52,7 +52,7 @@ export default defineConfig({
     // al ser un import estático, tira abajo en silencio TODO el script que
     // lo importa (sin animaciones, sin excepción visible en consola).
     optimizeDeps: {
-      include: ['gsap', 'lenis', 'gsap/ScrollTrigger', 'gsap/TextPlugin', 'gsap/MorphSVGPlugin'],
+      include: ['gsap', 'lenis', 'gsap/ScrollTrigger', 'gsap/TextPlugin', 'gsap/MorphSVGPlugin', 'gsap/MotionPathPlugin'],
     },
   },
 

@@ -1,0 +1,475 @@
+---
+// src/components/DotCircuitReveal.astro
+//
+// Demo: firma de marca "dot" combinando dos capas independientes en la misma
+// pantalla —
+//
+//   1) FONDO — circuito impreso: líneas finas con esquinas redondeadas
+//      (mismo generador `roundedOrthogonalPath` que ya usa DataFlowCard.astro)
+//      con "trenes" de puntos verdes (Micelio) recorriéndolas en loop vía
+//      GSAP MotionPathPlugin (en vez del SMIL <animateMotion> que usa
+//      DataFlowCard — acá interesa poder controlar la velocidad en runtime
+//      desde JS, algo que SMIL no ofrece de forma simple).
+//
+//   2) PRIMER PLANO — la secuencia de marca completa, en loop:
+//        a) 3 círculos "rebotan" como un loader mientras cargan
+//        b) se transforman en las letras d/o/t (GSAP MorphSVGPlugin)
+//        c) el resto del logotipo ("solutions") aparece con un reveal
+//        d) se mantiene armado un rato, y se deshace en reversa para
+//           volver a arrancar el ciclo
+//      Las letras "dot" son el isotipo grande (mismo vector que
+//      SeparatorDot.astro, viewBox nativo 1920×1080); "solutions" viene del
+//      imagotipo real (public/logos/imagotipo.svg, viewBox nativo
+//      258×119.24) — dos assets a escalas distintas, alineados entre sí con
+//      un transform calculado por getBBox() (ver el <g id="dot-circuit-solutions">
+//      en el markup). Ninguna letra está dibujada a mano para este demo.
+//
+// Ambas capas corren en paralelo, cada una con su propio timeline GSAP, así
+// que ajustar la velocidad de una no afecta a la otra (ver CONFIG más abajo,
+// dentro del <script>).
+
+const VB_W = 1600;
+const VB_H = 900;
+
+// Convierte una lista de waypoints (cada segmento estrictamente horizontal o
+// vertical) en un `d` de SVG con esquinas redondeadas — idéntico al helper de
+// DataFlowCard.astro, portado tal cual porque el resultado (trazos estilo
+// PCB/mapa de metro) es exactamente el pedido.
+function roundedOrthogonalPath(points: number[][], radius: number) {
+  let d = `M ${points[0][0]} ${points[0][1]}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const [x0, y0] = points[i - 1];
+    const [x1, y1] = points[i];
+    const [x2, y2] = points[i + 1];
+    const d1x = x1 - x0;
+    const d1y = y1 - y0;
+    const len1 = Math.hypot(d1x, d1y);
+    const d2x = x2 - x1;
+    const d2y = y2 - y1;
+    const len2 = Math.hypot(d2x, d2y);
+    const r = Math.min(radius, len1 / 2, len2 / 2);
+    const beforeX = x1 - (d1x / len1) * r;
+    const beforeY = y1 - (d1y / len1) * r;
+    const afterX = x1 + (d2x / len2) * r;
+    const afterY = y1 + (d2y / len2) * r;
+    d += ` L ${beforeX} ${beforeY} Q ${x1} ${y1} ${afterX} ${afterY}`;
+  }
+  const [lastX, lastY] = points[points.length - 1];
+  d += ` L ${lastX} ${lastY}`;
+  return d;
+}
+
+// Rutas del circuito — entran/salen por los bordes, dejando el centro del
+// viewBox relativamente despejado (ahí va a sentarse el logo, en la capa de
+// encima). Agregá/quitá rutas libremente: cada una genera su propio "tren"
+// de puntos en el script de abajo.
+const ROUTES = [
+  [[-20, 120], [300, 120], [300, 40], [700, 40], [700, 180], [1620, 180]],
+  [[-20, 780], [260, 780], [260, 860], [620, 860], [620, 680], [1000, 680], [1000, 780], [1620, 780]],
+  [[200, 920], [200, 600], [520, 600], [520, 240], [1620, 240]],
+  [[1150, -20], [1150, 300], [1400, 300], [1400, 420], [1620, 420]],
+  [[-20, 340], [420, 340], [420, 90], [860, 90], [860, 620], [1620, 620]],
+  [[1620, 80], [1300, 80], [1300, 320], [880, 320], [880, 780]],
+  [[-20, 600], [160, 600], [160, 480], [520, 480]],
+  [[1620, 540], [1360, 540], [1360, 700], [1080, 700]],
+];
+
+const CIRCUIT_PATHS = ROUTES.map((points, i) => ({
+  id: `dot-circuit-line-${i}`,
+  d: roundedOrthogonalPath(points, 36),
+}));
+---
+
+<div class="dot-circuit" data-dot-circuit>
+  <!-- ---------- Capa 1: fondo, circuito + puntos ---------- -->
+  <svg class="circuit-svg" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g class="circuit-lines">
+      {CIRCUIT_PATHS.map((p) => (
+        <path id={p.id} class="circuit-line" d={p.d} fill="none" />
+      ))}
+    </g>
+    <!-- Los puntos (con su estela) se generan en JS: la cantidad de puntos
+         por línea y su velocidad son ajustables desde un solo lugar (ver
+         CONFIG.dots en el <script>) sin tocar este markup. -->
+    <g class="circuit-orbs" data-circuit-orbs></g>
+  </svg>
+
+  <!-- ---------- Capa 2: primer plano, el logo "dot solutions" completo ---------- -->
+  <!-- "dot" (letras + posición de los 3 círculos) es el isotipo grande
+       original (viewBox nativo 1920×1080, el mismo que usa SeparatorDot.astro).
+       "solutions" es el vector real del imagotipo (public/logos/imagotipo.svg,
+       viewBox nativo 258×119.24) — un activo DISTINTO, a otra escala — así
+       que su <g> lleva un transform (translate + scale) calculado por
+       getBBox() para que:
+         1) su ancho total calce EXACTO con el ancho del bloque "dot"
+            (mismo margen izquierdo/derecho, "solutions" no se sale ni
+            queda más angosto — de ahí que las letras salgan más chicas que
+            si se hubiese igualado la ALTURA de letra con "dot", que era el
+            criterio anterior),
+         2) quede centrado debajo, con un gap proporcional a esa escala.
+       Si algún día cambia el isotipo grande, este transform hay que
+       recalcularlo (no es una proporción "mágica"). -->
+  <svg class="logo-svg" viewBox="0 -20 1920 1420" aria-hidden="true">
+    <defs>
+      <g id="dot-circuit-letters">
+        <!-- Vector real del isotipo de marca (el mismo que usa
+             SeparatorDot.astro) — no son letras aproximadas para el demo. -->
+        <path id="dot-circuit-letter-d" d="M353.87,1001.1c39.42,0,77.46-6.09,114.12-18.12,36.24-12.03,69.58-30.57,100.7-55.19,31.12-24.62,55.19-57.54,73.31-99.32,18.12-41.77,27.39-89.08,27.39-142.47V78.9h-121.17v381.49l-7.47-9.68c-4.7-5.53-13-13-25.04-22.27s-25.04-18.54-40.39-27.39c-15.35-8.85-34.86-16.18-58.93-22.27-23.65-6.09-49.24-9.27-75.66-9.27h-2.35c-97.93.97-172.21,30.57-222.7,89.63-51.04,58.93-76.08,134.59-76.08,226.43s29.19,168.48,87.28,227.4c57.96,58.51,134.17,87.7,227.82,87.7l-.97.41h.14ZM214.72,539.38c36.24-39.42,82.58-59.34,139.29-59.34s104.02,19.92,141.5,59.34c38.04,39.42,57.13,88.11,57.13,146.21s-19.09,106.79-57.13,146.62c-38.04,39.84-85.35,59.89-141.5,59.89s-103.05-19.92-139.29-59.34c-36.24-39.42-54.36-88.66-54.36-146.62s18.12-107.2,54.36-146.62v-.14Z" />
+        <path id="dot-circuit-letter-o" d="M1390.32,684.62c0-86.31-31.12-160.59-92.81-222.28-61.69-61.69-135.97-92.81-222.28-92.81s-160.59,31.12-222.28,92.81c-61.69,61.69-92.81,135.97-92.81,222.28s31.12,160.59,92.81,222.28c61.69,61.69,135.97,92.81,222.28,92.81s160.59-31.12,222.28-92.81c61.69-61.69,92.81-135.97,92.81-222.28ZM1212.02,829.86c-34.86,39.01-80.23,57.96-136.94,57.96s-102.5-19.5-138.32-57.96c-35.69-39.01-53.39-87.28-53.39-145.24s17.57-106.79,53.39-145.24c35.69-39.01,81.75-57.96,138.32-57.96s102.08,19.5,136.94,57.96c34.86,38.45,52.01,87.28,52.01,145.24s-17.15,106.79-52.01,145.24Z" />
+        <path id="dot-circuit-letter-t" d="M1843.19,877.16c-57.54,0-104.02-17.57-140.12-52.84-35.69-35.27-53.81-81.2-53.81-138.74V140.18h-121.17v242.2h-116.05v103.05h116.05v200.01c0,86.31,30.57,158.66,91.85,216.34,61.28,57.68,135.97,86.73,222.7,86.73v-111.35h.55Z M1793.12,347.25c-48.27,0-87.28,39.01-87.28,87.28s39.01,87.28,87.28,87.28,87.28-39.01,87.28-87.28-39.01-87.28-87.28-87.28Z" />
+      </g>
+    </defs>
+
+    <!-- Estado inicial: 3 círculos simples alineados. El JS los convierte a
+         <path> (MorphSVGPlugin.convertToPath), los hace "rebotar" un rato, y
+         recién ahí anima su `d` hasta calzar con las letras de arriba. -->
+    <circle id="dot-circuit-c1" cx="370" cy="540" r="150" />
+    <circle id="dot-circuit-c2" cx="1080" cy="540" r="150" />
+    <circle id="dot-circuit-c3" cx="1650" cy="540" r="150" />
+
+    <!-- "solutions" — oculto hasta que "dot" termina de armarse (ver
+         CONFIG.solutions en el script). Mismos <path>/<rect> del imagotipo
+         real; el transform del <g> es lo único "calculado" acá, el `d` de
+         cada letra es el original, intacto. -->
+    <g
+      id="dot-circuit-solutions"
+      data-solutions-group
+      transform="translate(6.7193,491.5605) scale(7.3889)"
+      aria-hidden="true"
+    >
+      <path d="M8.9,92.55c0-3.09,3.56-5.64,7.92-5.64,5.84,0,8.79,3.15,9.13,7.28h3.36c-.5-6.21-5-10.2-12.41-10.2-6.58,0-11.41,3.79-11.41,8.56,0,11.84,20.5,6.41,20.5,15.5,0,3.15-2.92,5.94-7.85,5.94-6.34,0-9.83-2.52-10.33-6.78h-3.36c.7,6.41,6.01,9.7,13.76,9.7,6.44,0,11.21-3.69,11.21-8.79,0-12.11-20.5-6.44-20.5-15.57Z" />
+      <path d="M50.64,83.99c-9.19,0-15.64,6.91-15.64,16.47s6.44,16.47,15.64,16.47,15.57-6.98,15.57-16.47-6.41-16.47-15.57-16.47ZM50.64,113.52c-7.21,0-12.21-5.44-12.21-13.05s5-13.05,12.21-13.05,12.15,5.37,12.15,13.05-5,13.05-12.15,13.05h0Z" />
+      <rect x="74.19" y="77.18" width="3.29" height="39.16" />
+      <path d="M111.57,100.47c0,7.48-4.63,13.05-10.77,13.05s-10.94-5.5-10.94-13.05v-15.84h-3.42v15.84c0,9.43,6.07,16.47,14.39,16.47s14.06-7.01,14.06-16.47v-15.84h-3.29v15.84h-.03Z" />
+      <path d="M124.92,77.18h-3.42v26.47c0,8.29,4.5,13.29,13.62,13.29v-3.29c-7.21,0-10.2-3.69-10.2-10v-15.57h10.2v-3.42h-10.2v-7.48h0Z" />
+      <path d="M145.76,76.41c-1.51,0-2.48,1.07-2.48,2.52s.94,2.52,2.48,2.52,2.48-1.14,2.48-2.52-.94-2.52-2.48-2.52Z" />
+      <rect x="144.05" y="88.22" width="3.42" height="28.08" />
+      <path d="M171.83,83.99c-9.19,0-15.64,6.91-15.64,16.47s6.44,16.47,15.64,16.47,15.57-6.98,15.57-16.47-6.41-16.47-15.57-16.47ZM171.83,113.52c-7.21,0-12.21-5.44-12.21-13.05s5-13.05,12.21-13.05,12.15,5.37,12.15,13.05-5,13.05-12.15,13.05h0Z" />
+      <path d="M208.2,83.99c-8.19,0-14.26,7.01-14.26,16.47v15.84h3.36v-15.84c0-7.62,4.56-13.05,10.9-13.05s10.77,5.57,10.77,13.05v15.84h3.42v-15.84c0-9.43-6.01-16.47-14.19-16.47h0Z" />
+      <path d="M233.06,92.55c0-3.09,3.56-5.64,7.92-5.64,5.84,0,8.79,3.15,9.13,7.28h3.36c-.5-6.21-5-10.2-12.41-10.2-6.58,0-11.41,3.79-11.41,8.56,0,11.84,20.5,6.41,20.5,15.5,0,3.15-2.92,5.94-7.85,5.94-6.34,0-9.83-2.52-10.33-6.78h-3.36c.7,6.41,6.01,9.7,13.76,9.7,6.44,0,11.21-3.69,11.21-8.79,0-12.11-20.5-6.44-20.5-15.57h0Z" />
+    </g>
+  </svg>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+
+  gsap.registerPlugin(MorphSVGPlugin, MotionPathPlugin);
+
+  // ============================================================
+  //  CONFIG — los dos únicos lugares que hace falta tocar para
+  //  ajustar velocidades. Todo lo demás (cuántas líneas, su forma,
+  //  el vector de las letras) vive en el frontmatter/markup de
+  //  arriba y no necesita cambiar cuando solo querés otro timing.
+  // ============================================================
+  const CONFIG = {
+    dots: {
+      // Segundos que tarda UN punto en recorrer toda su línea, de punta a
+      // punta. Más bajo = más rápido. Es independiente por línea (variación
+      // aleatoria leve) para que no se sientan todas sincronizadas.
+      baseSpeed: 6,
+      speedVariance: 0.35, // 0–1: cuánta variación aleatoria de velocidad entre líneas
+      // Cuántos puntos forman la "estela" de cada línea (1 = sin estela,
+      // solo el punto principal).
+      trailLength: 3,
+      // Separación entre puntos de una misma estela, como fracción del
+      // recorrido total (0.12 = cada punto va 12% "atrás" del anterior).
+      trailSpacing: 0.12,
+      radius: 4.5, // radio del punto principal (px, en el viewBox 1600×900)
+    },
+    // Fase A: relevo de izquierda a derecha — cada círculo rebota mientras
+    // tiene la energía (Micelio), y se la pasa al vecino de la derecha
+    // antes de que le toque rebotar a él. Ver CONFIG.energy para los colores.
+    bounce: {
+      hopsPerCircle: 1, // cuántos rebotes (subida+bajada) hace cada círculo antes de pasar la posta
+      height: 125, // qué tan alto rebota, en unidades del viewBox (3525 de ancho total)
+      duration: 0.14, // segundos que tarda cada subida (o bajada)
+    },
+    // El "pase de energía": el verde Micelio viaja círculo 1 → 2 → 3, y
+    // justo cuando el 3 (el de más a la derecha) lo recibe, lo suelta al
+    // transformarse en "t" — ver más abajo, se lee en el mismo timeline.
+    energy: {
+      transferDuration: 0.1, // segundos que tarda el crossfade de color entre vecinos
+    },
+    // Fase B: círculos → letras "d o t".
+    logo: {
+      morphDuration: 0.6, // segundos que tarda cada círculo en convertirse en letra
+      morphStagger: 0.08, // segundos de diferencia entre el inicio de cada letra (d, luego o, luego t)
+      holdDuration: 3.4, // segundos que el logo se queda armado antes de deshacerse
+      loop: true, // false = se arma una vez y se queda como logo, sin deshacerse ni repetir
+      ease: 'power2.inOut',
+    },
+    // Fase C: reveal de "solutions", una vez que "dot" ya se armó.
+    solutions: {
+      duration: 0.3, // segundos que tarda cada letra en aparecer
+      stagger: 0.025, // desfase entre letras consecutivas
+      distance: 80, // cuánto se desliza verticalmente al aparecer (unidades del viewBox)
+    },
+  };
+
+  function initDotCircuit(root: HTMLElement) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cleanups: (() => void)[] = [];
+
+    // ---------- Capa 1: puntos del circuito ----------
+    const orbsGroup = root.querySelector<SVGGElement>('[data-circuit-orbs]');
+    const lines = Array.from(root.querySelectorAll<SVGPathElement>('.circuit-line'));
+
+    if (orbsGroup && lines.length && !reduced) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const orbTweens: gsap.core.Tween[] = [];
+
+      lines.forEach((line, i) => {
+        // Variación de velocidad por línea, determinística (no random puro)
+        // para que no cambie entre recargas y sea fácil de razonar.
+        const variance = 1 + ((i % 5) / 4 - 0.5) * 2 * CONFIG.dots.speedVariance;
+        const duration = CONFIG.dots.baseSpeed * variance;
+
+        for (let t = 0; t < CONFIG.dots.trailLength; t++) {
+          const dot = document.createElementNS(svgNS, 'circle');
+          const fadeStep = 0.75 / CONFIG.dots.trailLength;
+          const scaleStep = 0.6 / CONFIG.dots.trailLength;
+          dot.setAttribute('r', String(CONFIG.dots.radius * (1 - t * scaleStep)));
+          dot.setAttribute('class', t === 0 ? 'circuit-orb' : 'circuit-orb circuit-orb--trail');
+          dot.style.opacity = String(1 - t * fadeStep);
+          orbsGroup.appendChild(dot);
+
+          const tween = gsap.to(dot, {
+            duration,
+            repeat: -1,
+            ease: 'none',
+            // Delay negativo: arranca el tween ya "adelantado" en su propio
+            // recorrido, así el punto t=1 nace un tramo atrás del t=0 en vez
+            // de esperar a que dé una vuelta completa para alcanzarlo.
+            delay: -(t * CONFIG.dots.trailSpacing * duration),
+            motionPath: {
+              path: line,
+              align: line,
+              alignOrigin: [0.5, 0.5],
+              autoRotate: false,
+            },
+          });
+          orbTweens.push(tween);
+        }
+      });
+
+      cleanups.push(() => orbTweens.forEach((tw) => tw.kill()));
+    }
+
+    // ---------- Capa 2: círculos → rebote → letras → reveal "solutions" ----------
+    const logoSvg = root.querySelector<SVGSVGElement>('.logo-svg');
+    if (logoSvg) {
+      const circles = Array.from(logoSvg.querySelectorAll<SVGCircleElement>('circle'));
+      const solutionsEls = Array.from(
+        logoSvg.querySelectorAll<SVGElement>('[data-solutions-group] > *')
+      );
+
+      // convertToPath devuelve los <path> ya convertidos, en el mismo orden —
+      // guardamos su `d` original ACÁ (círculo, antes de morphear) para poder
+      // volver a esa forma exacta más adelante, sin necesidad de un segundo
+      // set de círculos ocultos solo para morphear "de vuelta".
+      const paths = MorphSVGPlugin.convertToPath(circles) as unknown as SVGPathElement[];
+      const originalCircleD = paths.map((p) => p.getAttribute('d') || '');
+
+      if (reduced) {
+        // Sin motion: mostrar directamente el resultado final armado, sin
+        // rebote ni loop.
+        gsap.set(paths[0], { morphSVG: '#dot-circuit-letter-d' });
+        gsap.set(paths[1], { morphSVG: '#dot-circuit-letter-o' });
+        gsap.set(paths[2], { morphSVG: '#dot-circuit-letter-t' });
+        gsap.set(solutionsEls, { opacity: 1, y: 0 });
+      } else {
+        const { hopsPerCircle, height, duration: bounceDuration } = CONFIG.bounce;
+        const { transferDuration } = CONFIG.energy;
+        const { morphDuration, morphStagger, holdDuration, loop, ease } = CONFIG.logo;
+        const { duration: solDuration, stagger: solStagger, distance } = CONFIG.solutions;
+
+        // Colores del "pase de energía" — se leen de las custom properties
+        // del sitio (con el mismo fallback hardcodeado que el resto del
+        // componente) para no duplicar los hex a mano.
+        const rootStyle = getComputedStyle(document.documentElement);
+        const baseColor = rootStyle.getPropertyValue('--dot-light').trim() || '#ebe9e3';
+        const activeColor = rootStyle.getPropertyValue('--dot-micelio').trim() || '#5ddb88';
+
+        gsap.set(solutionsEls, { opacity: 0, y: distance });
+
+        const tl = gsap.timeline({ repeat: loop ? -1 : 0 });
+
+        // Un rebote (subida+bajada) para el círculo que tiene la posta.
+        function addBounceHops(path: SVGPathElement) {
+          for (let h = 0; h < hopsPerCircle; h++) {
+            tl.to(path, { y: -height, duration: bounceDuration, ease: 'power1.out' }).to(path, {
+              y: 0,
+              duration: bounceDuration,
+              ease: 'power1.in',
+            });
+          }
+        }
+
+        // Fase A: relevo de izquierda a derecha. Se re-declara al inicio de
+        // cada vuelta del loop (tl.set en vez de fuera del timeline) porque
+        // al final de la vuelta anterior los 3 círculos quedan en baseColor
+        // — sin esto, a partir del segundo loop el 1° círculo ya no
+        // arrancaría iluminado.
+        tl.set(paths[0], { fill: activeColor }).set([paths[1], paths[2]], { fill: baseColor });
+
+        addBounceHops(paths[0]);
+        tl.to(paths[0], { fill: baseColor, duration: transferDuration }, '<').to(
+          paths[1],
+          { fill: activeColor, duration: transferDuration },
+          '<'
+        );
+
+        addBounceHops(paths[1]);
+        tl.to(paths[1], { fill: baseColor, duration: transferDuration }, '<').to(
+          paths[2],
+          { fill: activeColor, duration: transferDuration },
+          '<'
+        );
+
+        addBounceHops(paths[2]);
+
+        // Fase B: círculos → letras "d o t", uno por uno (nunca dos a la
+        // vez): cada `.to()` sin posición explícita arranca recién cuando
+        // termina el anterior — `+=morphStagger` agrega además una pausa
+        // corta entre una letra terminada y que empiece la siguiente. El
+        // último (el que se quedó con la energía, acá el de la derecha)
+        // suelta el verde justo mientras se transforma en "t", como si la
+        // luz se disolviera en el trazo final de la marca.
+        tl.to(paths[0], { morphSVG: '#dot-circuit-letter-d', duration: morphDuration, ease })
+          .to(paths[1], { morphSVG: '#dot-circuit-letter-o', duration: morphDuration, ease }, `+=${morphStagger}`)
+          .to(
+            paths[2],
+            { morphSVG: '#dot-circuit-letter-t', fill: baseColor, duration: morphDuration, ease },
+            `+=${morphStagger}`
+          );
+
+        // Fase C: reveal de "solutions" (arranca apenas termina la última letra).
+        tl.to(solutionsEls, {
+          opacity: 1,
+          y: 0,
+          duration: solDuration,
+          stagger: solStagger,
+          ease: 'power2.out',
+        });
+
+        // Fase D: hold — el logo completo se queda armado un rato.
+        tl.to({}, { duration: holdDuration });
+
+        if (loop) {
+          // Fase E: se deshace en reversa, para volver a arrancar el ciclo.
+          tl.to(solutionsEls, {
+            opacity: 0,
+            y: distance,
+            duration: solDuration * 0.7,
+            stagger: { each: solStagger, from: 'end' },
+            ease: 'power2.in',
+          });
+
+          // Misma lógica que la Fase B: uno por uno, no los 3 a la vez.
+          tl.to(paths[0], { morphSVG: originalCircleD[0], duration: morphDuration, ease })
+            .to(paths[1], { morphSVG: originalCircleD[1], duration: morphDuration, ease }, `+=${morphStagger}`)
+            .to(paths[2], { morphSVG: originalCircleD[2], duration: morphDuration, ease }, `+=${morphStagger}`);
+        }
+
+        cleanups.push(() => tl.kill());
+      }
+    }
+
+    return () => cleanups.forEach((fn) => fn());
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-dot-circuit]').forEach((root) => {
+      const cleanup = initDotCircuit(root);
+      // 'astro:before-swap' solo existe cuando la página vive dentro del
+      // ClientRouter de Astro (<ClientRouter /> en Layout.astro). Esta es una
+      // demo standalone sin ese router, así que el listener simplemente
+      // nunca se dispara — inofensivo dejarlo, pero no hace falta más que eso.
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    });
+  }
+
+  // Página standalone sin <ClientRouter /> (a diferencia del resto del
+  // sitio): 'astro:page-load' nunca se dispara acá, así que se arranca
+  // directo en cuanto el DOM está listo, sin depender de ese evento.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+</script>
+
+<style>
+  /* Lienzo fijo (medida de GIF): 420×420px, no 100vw/100vh — pensado para
+     poder capturarse/exportarse tal cual, sin depender del tamaño de la
+     ventana. Si se necesita otra medida, estos dos números son los únicos
+     que hay que tocar (el resto del componente ya está en % relativo a
+     este contenedor). */
+  .dot-circuit {
+    position: relative;
+    width: 420px;
+    height: 420px;
+    overflow: hidden;
+    background: var(--dot-dark, #1b1b1b);
+  }
+
+  .circuit-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .circuit-line {
+    stroke: color-mix(in srgb, var(--dot-light, #ebe9e3) 22%, transparent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  /* :global() acá es obligatorio: estos <circle> no existen en este markup
+     server-rendeado, los crea el <script> en runtime (document.createElementNS)
+     — Astro solo agrega su atributo de scope a elementos que renderiza él
+     mismo en build-time, así que una regla ".circuit-orb" sin :global()
+     jamás matchea un nodo creado después, en el navegador. */
+  :global(.circuit-orb) {
+    fill: var(--dot-micelio, #5ddb88);
+    filter: drop-shadow(0 0 6px var(--dot-micelio, #5ddb88));
+  }
+  :global(.circuit-orb--trail) {
+    filter: drop-shadow(0 0 4px var(--dot-micelio, #5ddb88));
+  }
+
+  .logo-svg {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    /* % en vez de vw: con el lienzo fijo (.dot-circuit, 420×420) los vw
+       quedarían atados al viewport de la página en vez del contenedor real
+       — % sí resuelve contra .dot-circuit porque este svg es absolute
+       dentro de él. Es el único número a tocar para un logo más grande/chico. */
+    width: 82%;
+    /* Centrar la CAJA del SVG (la de "dot"+"solutions" juntos) deja los 3
+       círculos iniciales visiblemente descentrados: "solutions" solo
+       existe debajo de "dot", así que el bounding box completo no es
+       simétrico respecto al centro real de los círculos.
+       En vez de centrar la caja, centramos el PUNTO donde están los 3
+       círculos dentro del viewBox (cx≈1010, cy≈540 sobre un viewBox
+       "0 -20 1920 1420" → 52.6042% del ancho, 39.4366% del alto) usando el
+       truco de transform-percentage: como translate(%) en CSS se calcula
+       sobre el tamaño del PROPIO elemento, left:50%+top:50% ubica esa
+       esquina en el centro exacto de la pantalla, y este translate negativo
+       corre el SVG hacia atrás esa fracción — dejando el punto (52.60%,
+       39.44%) de su interior, es decir los círculos, exactamente ahí. */
+    left: 50%;
+    top: 50%;
+    transform: translate(-52.6042%, -39.4366%);
+  }
+  .logo-svg circle,
+  .logo-svg path,
+  .logo-svg rect {
+    fill: var(--dot-light, #ebe9e3);
+    fill-rule: evenodd;
+  }
+</style>

@@ -35,7 +35,6 @@ const ICONS = [
   '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 12h18M12 3c2.4 2.4 3.6 5.7 3.6 9s-1.2 6.6-3.6 9c-2.4-2.4-3.6-5.7-3.6-9s1.2-6.6 3.6-9Z" fill="none" stroke="currentColor" stroke-width="1.4"/>',
 ];
 
-const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'var(--dot-forest)'];
 ---
 
 <div class="modules">
@@ -49,7 +48,7 @@ const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'va
 
   <div class="modules-grid" id="modules-grid">
     {modules.map((mod, i) => (
-      <article class="module-card" style={`--card-accent: ${ACCENTS[i % ACCENTS.length]}; transition-delay: ${(i * 0.08).toFixed(2)}s`}>
+      <article class="module-card" style={`transition-delay: ${(i * 0.08).toFixed(2)}s`}>
         <div class="module-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" set:html={ICONS[i % ICONS.length]} />
         </div>
@@ -129,7 +128,11 @@ const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'va
     gap: 1rem;
   }
 
+  /* Un solo acento (Micelio) para todas las cards — mismo criterio que
+     BenefitsList/PainBento: antes rotaba 4 colores de la paleta por
+     posición y se veía inconsistente entre cards y entre páginas. */
   .module-card {
+    --card-accent: var(--dot-micelio);
     position: relative;
     overflow: hidden;
     padding: var(--space-md);
@@ -187,7 +190,7 @@ const ACCENTS = ['var(--dot-micelio)', 'var(--dot-moss)', 'var(--dot-sage)', 'va
   }
   .module-card p {
     position: relative;
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     font-weight: 300;
     line-height: 1.6;
     color: var(--text-secondary);

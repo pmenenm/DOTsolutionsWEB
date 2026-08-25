@@ -152,10 +152,13 @@ const contactHref = getRelativeLocaleUrl(lang, 'contacto');
     background: var(--dot-dark);
     padding-block: var(--space-lg) var(--space-xl);
   }
+  /* Antes clamp(2.6rem, 5.85vw, 3.9rem) — un escalón más grande a
+     propósito (título "de revista"). Unificado con el resto de los h1
+     del sitio para consistencia. */
   .news-stack-title {
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: clamp(2.6rem, 5.85vw, 3.9rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     color: var(--dot-light);
     text-align: center;
   }

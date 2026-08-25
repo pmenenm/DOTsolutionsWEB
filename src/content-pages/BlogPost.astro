@@ -326,10 +326,12 @@ const DIAGRAM_PRESETS: Record<string, { coreLogo: string; coreLabel: string; cor
     margin-bottom: var(--space-sm);
   }
 
+  /* font-size unificado con el resto de los h1 del sitio (Hero, ProductHero,
+     IndustryHero, PageHero, ContactHero) — mismo clamp en los 7. */
   .post-hero-text h1 {
     font-family: var(--font-heading);
     font-weight: 500;
-    font-size: clamp(2.1rem, 4.8vw, 3.4rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
     color: var(--dot-dark);

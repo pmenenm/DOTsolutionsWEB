@@ -1,0 +1,33 @@
+---
+// src/pages/dot-circuit-reveal-demo.astro
+// Página standalone de preview (no usa Layout.astro a propósito, igual que
+// el resto de los *-demo.astro: es una URL interna, no un componente que
+// convive con el header/footer del sitio real).
+import DotCircuitReveal from '../components/DotCircuitReveal.astro';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>DotCircuitReveal — preview</title>
+  </head>
+  <body>
+    <DotCircuitReveal />
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    /* El componente ya tiene su propio tamaño fijo (420×420, medida de
+       GIF) — esta página solo lo centra en pantalla para poder verlo. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0e0e0e;
+  }
+</style>

@@ -98,7 +98,19 @@ const { eyebrow, title, subtitle, desc, bullets, cta, ctaHref, image, titleMaxWi
     border-radius: var(--radius-lg);
     box-shadow: 0 0 40px color-mix(in srgb, var(--dot-micelio) 25%, transparent),
       inset 0 0 24px color-mix(in srgb, var(--dot-micelio) 8%, transparent);
-    padding: clamp(1.75rem, 3vw, 2.5rem);
+    /* Antes clamp(1.75rem, 3vw, 2.5rem) — sumado al margin-top de .bullets
+       y .cta (ver más abajo, ambos usaban --space-lg = 64px, pensado para
+       espaciar SECCIONES enteras, no el contenido de una card chica) dejaba
+       muchísimo aire arriba y abajo del checklist. */
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    /* width:fit-content en vez de ocupar toda la columna del grid: la card
+       se angosta hasta calzar con su contenido real (el checklist), así el
+       padding se ve igual en los 4 lados en vez de quedar con márgenes
+       laterales enormes por el espacio vacío que sobraba a los costados
+       del texto. margin-inline:auto la centra en el espacio que le queda
+       dentro de .hero-right. */
+    width: fit-content;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -137,6 +149,11 @@ const { eyebrow, title, subtitle, desc, bullets, cta, ctaHref, image, titleMaxWi
     line-height: 1.1;
     letter-spacing: -0.02em;
     color: var(--text-primary);
+    /* pre-line: respeta los \n literales del string de i18n (para forzar un
+       quiebre de línea puntual, ej. Gastronomía) sin perder el word-wrap
+       normal del resto del título — normal (el default) colapsaría ese \n
+       a un espacio. */
+    white-space: pre-line;
     transform: translateY(100%);
     animation: industry-hero-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
   }
@@ -163,7 +180,10 @@ const { eyebrow, title, subtitle, desc, bullets, cta, ctaHref, image, titleMaxWi
   }
 
   .bullets {
-    margin-top: var(--space-lg);
+    /* Primer elemento dentro de la card — el padding ya da el aire desde
+       el borde, este margin extra (antes --space-lg = 64px) era espacio
+       duplicado. */
+    margin-top: 0;
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -189,7 +209,8 @@ const { eyebrow, title, subtitle, desc, bullets, cta, ctaHref, image, titleMaxWi
 
   .cta {
     display: inline-flex;
-    margin-top: var(--space-lg);
+    /* Antes --space-lg (64px) — mismo motivo que en .bullets. */
+    margin-top: var(--space-md);
     background: var(--dot-micelio);
     color: var(--dot-dark);
     text-decoration: none;
